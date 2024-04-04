@@ -1,1 +1,1 @@
-# web-store-java-wue
+# web-store-java-vue
