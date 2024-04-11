@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.webstore.model.Status;
-import com.example.webstore.service.StatusServiceImpl;
+import com.example.webstore.model.Good;
+import com.example.webstore.service.GoodServiceImpl;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,23 +22,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
 @RequestMapping("/api")
-public class StatusController {
-    private final StatusServiceImpl statusService;
+public class GoodController {
+    private final GoodServiceImpl goodService;
 
-    public StatusController(StatusServiceImpl statusService) {
-        this.statusService = statusService;
+    public GoodController(GoodServiceImpl goodService) {
+        this.goodService = goodService;
     }
 
     @GetMapping("/status")
-    public ResponseEntity<List<Status>> getAllStatus() {
+    public ResponseEntity<List<Good>> getAllStatus() {
         try {
-            List<Status> statusList = new ArrayList<Status>();
-            statusService.readAll().forEach(statusList::add);
-            if (statusList.isEmpty()) {
+            List<Good> goodList = new ArrayList<Good>();
+            goodService.readAll().forEach(goodList::add);
+            if (goodList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
             
-            return new ResponseEntity<>(statusList, HttpStatus.OK);
+            return new ResponseEntity<>(goodList, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -46,8 +46,8 @@ public class StatusController {
     }
 
     @GetMapping("/status/{id}")
-    public ResponseEntity<Status> getStatusById(@PathVariable("id") int id) {
-        Optional<Status> statusData = statusService.findById(id);
+    public ResponseEntity<Good> getStatusById(@PathVariable("id") int id) {
+        Optional<Good> statusData = goodService.findById(id);
         if (statusData.isPresent()) {
             return new ResponseEntity<>(statusData.get(), HttpStatus.OK);
         } else {

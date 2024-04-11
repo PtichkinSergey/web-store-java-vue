@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 
 @RestController
+@RequestMapping("/api")
 public class UserController {
     private final UserServiceImpl userService;
 
