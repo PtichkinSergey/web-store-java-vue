@@ -1,0 +1,9 @@
+package com.example.webstore.repository;
+
+import com.example.webstore.model.Status;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface StatusRepository extends JpaRepository<Status, Integer>{
+    
+}

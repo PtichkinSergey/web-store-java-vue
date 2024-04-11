@@ -23,14 +23,19 @@ public class User {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "is_admin")
+    private boolean isAdmin;
+
     public User(String firstName, String secondName, String email, boolean isAdmin) {
         this.firstName = firstName;
         this.secondName = secondName;
         this.email = email;
         this.isAdmin = isAdmin;
     }
-    @Column(name = "is_admin")
-    private boolean isAdmin;
+
+    public User() {
+
+    }
 
     public int getId() {
 		return id;
