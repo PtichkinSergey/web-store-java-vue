@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import CatalogView from '@/views/CatalogView.vue'
 import AuthView from '@/views/AuthView.vue'
+import RegisterView from '@/views/RegisterView.vue'
 
 const routes = [
   {
@@ -12,6 +13,11 @@ const routes = [
     path: '/auth',
     name: 'authentification',
     component: AuthView
+  },
+  {
+    path: '/register',
+    name: 'registration',
+    component: RegisterView
   }
 ]
 

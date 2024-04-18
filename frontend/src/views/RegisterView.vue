@@ -2,7 +2,17 @@
     <div class="page">
         <Toolbar/>
         <v-card class="card">
-            <h3>Вход в личный аккаунт</h3>
+            <h3>Регистрация нового пользователя</h3>
+            <v-text-field
+                :rules="rules"
+                hide-details="auto"
+                label="Имя"
+            />
+            <v-text-field
+                :rules="rules"
+                hide-details="auto"
+                label="Фамилия"
+            />
             <v-text-field
                 :rules="rules"
                 hide-details="auto"
@@ -17,13 +27,13 @@
                 class="accept_btn"
                 @click="auth"
             >
-                Войти
+              Зарегистрироваться
             </v-btn>
             <a 
-                @click="this.$router.push('/register');"
+                @click="this.$router.push('/auth');"
                 class="link"
             >
-                Нет аккаунта? Создать
+                Уже есть аккаунт? Войти
             </a>
         </v-card>
     </div>
@@ -32,7 +42,7 @@
 <script>
   import Toolbar from '@/components/Toolbar.vue'
   export default {
-    name: 'AuthView',
+    name: 'RegisterView',
     components: {
       Toolbar
     }
@@ -47,7 +57,7 @@
   display: flex;
   flex-direction: column;
   background-color: white;
-  width: 15vw;
+  width: 25vw;
   border-radius: 15px;
   margin: 20px auto auto auto;
   padding: 20px;
@@ -55,5 +65,6 @@
 .accept_btn {
   margin-top: 10px;
   background-color: rgb(177, 219, 128);
+  font-weight: bold;
 }
 </style>

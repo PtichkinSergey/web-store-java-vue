@@ -1,21 +1,14 @@
 <template>
-    <v-card
-        color="grey-lighten-4"
-        height="200px"
-        rounded="0"
-        flat
-    >
+    <v-card>
         <v-toolbar density="compact">
-
         <CatalogMenu/>
-
         <v-spacer></v-spacer>
-
-        <v-btn>
+        <v-btn
+            @click="this.$router.push('/auth');"
+        >
             Войти
             <v-icon>mdi-account</v-icon>
         </v-btn>
-
         <v-btn>
             Корзина
             <v-icon>mdi-cart</v-icon>
