@@ -41,7 +41,9 @@ export default createStore({
     ]
   },
   getters: {
-
+    getGoodById(state, id) {
+      return state.goods.find((good) => good.id == id);
+    }
   },
   mutations: {
     addGood(state, good) {

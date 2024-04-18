@@ -5,7 +5,7 @@
 <style lang="scss">
 #app {
   text-align: center;
-  background-color: #E0D8C1;
+  background-color: $main_bcg_color;
   height: 100vh;
 }
 </style>

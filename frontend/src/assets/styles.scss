@@ -1,11 +1,21 @@
 .link {
-    color: darkblue;
+    color: $link_color;
     text-align: right;
     margin-top: 10px;
     text-decoration: underline;
-  }
-  .link:hover {
-    color: blue;
+}
+.link:hover {
+    color: $link_hover_color;
     cursor: pointer;
     text-decoration: none;
-  }
+}
+.header_link {
+  color: $header_link_color;
+  text-decoration: underline;
+}
+.header_link:hover {
+  color: $header_link_hover_color;
+  cursor: pointer;
+  text-decoration: none;
+}
+
