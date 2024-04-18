@@ -8,8 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.webstore.model.Good;
-import com.example.webstore.service.GoodServiceImpl;
+import com.example.webstore.model.Order;
+import com.example.webstore.service.OrderServiceImpl;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,34 +17,34 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/api")
-public class GoodController {
-    private final GoodServiceImpl goodService;
+public class OrderController {
+    private final OrderServiceImpl orderService;
 
-    public GoodController(GoodServiceImpl goodService) {
-        this.goodService = goodService;
+    public OrderController(OrderServiceImpl orderService) {
+        this.orderService = orderService;
     }
 
-    @GetMapping("/goods")
-    public ResponseEntity<List<Good>> getAllGoods() {
+    @GetMapping("/orders")
+    public ResponseEntity<List<Order>> getAllOrders() {
         try {
-            List<Good> goodList = new ArrayList<Good>();
-            goodService.readAll().forEach(goodList::add);
-            if (goodList.isEmpty()) {
+            List<Order> orderList = new ArrayList<Order>();
+            orderService.readAll().forEach(orderList::add);
+            if (orderList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
             
-            return new ResponseEntity<>(goodList, HttpStatus.OK);
+            return new ResponseEntity<>(orderList, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @GetMapping("/goods/{id}")
-    public ResponseEntity<Good> getGoodById(@PathVariable("id") int id) {
-        Optional<Good> goodData = goodService.findById(id);
-        if (goodData.isPresent()) {
-            return new ResponseEntity<>(goodData.get(), HttpStatus.OK);
+    @GetMapping("/orders/{id}")
+    public ResponseEntity<Order> getOrderById(@PathVariable("id") int id) {
+        Optional<Order> orderData = orderService.findById(id);
+        if (orderData.isPresent()) {
+            return new ResponseEntity<>(orderData.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

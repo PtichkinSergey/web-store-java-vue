@@ -6,19 +6,14 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.webstore.model.Category;
 import com.example.webstore.service.CategoryServiceImpl;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
 @RequestMapping("/api")
@@ -29,8 +24,8 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping("/category")
-    public ResponseEntity<List<Category>> getAllStatus() {
+    @GetMapping("/categories")
+    public ResponseEntity<List<Category>> getAllCategories() {
         try {
             List<Category> categoryList = new ArrayList<Category>();
             categoryService.readAll().forEach(categoryList::add);
@@ -45,8 +40,8 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/category/{id}")
-    public ResponseEntity<Category> getStatusById(@PathVariable("id") int id) {
+    @GetMapping("/categories/{id}")
+    public ResponseEntity<Category> getCategoryById(@PathVariable("id") int id) {
         Optional<Category> categoryData = categoryService.findById(id);
         if (categoryData.isPresent()) {
             return new ResponseEntity<>(categoryData.get(), HttpStatus.OK);

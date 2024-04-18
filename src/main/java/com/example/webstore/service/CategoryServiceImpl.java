@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.example.webstore.model.Category;
 import com.example.webstore.repository.CategoryRepository;
 
-public class CategoryServiceImpl implements CategoryService{
+@Service
+public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     private final CategoryRepository categoryRepository;
