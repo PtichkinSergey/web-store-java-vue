@@ -1,7 +1,7 @@
 <template>
     <div class="page">
         <Toolbar/>
-        <v-card class="card">
+        <v-card class="card" id="reg_card">
             <h3>Регистрация нового пользователя</h3>
             <v-text-field
                 :rules="rules"
@@ -53,14 +53,10 @@
 .page {
   text-align: center;
 }
-.card {
+#reg_card {
   display: flex;
   flex-direction: column;
-  background-color: white;
   width: 25vw;
-  border-radius: 15px;
-  margin: 20px auto auto auto;
-  padding: 20px;
 }
 .accept_btn {
   margin-top: 10px;

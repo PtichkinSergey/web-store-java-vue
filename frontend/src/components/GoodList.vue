@@ -45,7 +45,15 @@
 
 <script>
 export default {
-    name: "GoodList"
+    name: "GoodList",
+    data: () => ({
+        goods: []
+    }),
+    methods: {
+        fetchGoods() {
+
+        }
+    }
 }
 </script>
 
@@ -59,13 +67,6 @@ export default {
     height: 20vh;
     border-radius: 25px;
 }
-.add_to_basket_btn {
-    background-color: rgb(107, 119, 228);
-    color: white;
-}
-.list {
-    background-color: $main_bcg_color;
-}
 #description {
     width: 15vw
 }
@@ -74,6 +75,6 @@ export default {
 }
 #image {
     width: 10vw;
-    height: 10vh;
+    height: 10vw;
 }
 </style>

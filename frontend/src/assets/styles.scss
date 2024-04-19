@@ -18,4 +18,16 @@
   cursor: pointer;
   text-decoration: none;
 }
-
+.add_to_basket_btn {
+  background-color: rgb(107, 119, 228);
+  color: white;
+}
+.list {
+  background-color: $main_bcg_color;
+}
+.card {
+  background-color: white;
+  border-radius: 15px;
+  margin: 20px auto auto auto;
+  padding: 20px;
+}
