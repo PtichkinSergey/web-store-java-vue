@@ -1,0 +1,41 @@
+.page {
+  text-align: center;
+}
+
+.link {
+    color: $link_color;
+    text-align: right;
+    margin-top: 10px;
+    text-decoration: underline;
+}
+.link:hover {
+    color: $link_hover_color;
+    cursor: pointer;
+    text-decoration: none;
+}
+.header_link {
+  color: $header_link_color;
+  text-decoration: underline;
+}
+.header_link:hover {
+  color: $header_link_hover_color;
+  cursor: pointer;
+  text-decoration: none;
+}
+.add_to_basket_btn {
+  background-color: rgb(107, 119, 228);
+  color: white;
+}
+.list {
+  background-color: $main_bcg_color;
+}
+.card {
+  background-color: white;
+  border-radius: 15px;
+  margin: 20px auto auto auto;
+  padding: 20px;
+}
+
+.page_title {
+  margin: 20px 0px 0px 20px;
+}
