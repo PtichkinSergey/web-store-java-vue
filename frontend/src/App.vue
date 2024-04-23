@@ -1,10 +1,9 @@
 <template>
-  <router-view/>
+  <router-view :key="$route.fullPath"/>
 </template>
 
 <style lang="scss">
 #app {
-  text-align: center;
   background-color: $main_bcg_color;
   height: 100vh;
 }

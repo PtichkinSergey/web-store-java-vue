@@ -1,6 +1,6 @@
 <template>
     <div class="text-center">
-      <v-menu :location="bottom">
+      <v-menu>
         <template v-slot:activator="{ props }">
           <v-btn
             color="primary"
@@ -13,10 +13,11 @@
   
         <v-list>
           <v-list-item
-            v-for="(item, index) in this.items"
-            :key="index"
+            v-for="category in this.categories"
+            :key="category.id"
+            @click="changeCategory(category.id)"
           >
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
+            <v-list-item-title>{{ category.name }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -26,7 +27,18 @@
 <script>
 export default {
     data: () => ({
-        items: [{title: 'apple'}, {title: 'pompom'}]
-    })
+        categories: []
+    }),
+    methods: {
+      fetchCategories() {
+        this.categories = this.$store.state.categories;
+      },
+      changeCategory(id) {
+        this.$router.push(`/catalog/${id}`);
+      }
+    },
+    mounted() {
+      this.fetchCategories();
+    }
 }
 </script>

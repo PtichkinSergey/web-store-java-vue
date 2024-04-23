@@ -3,13 +3,13 @@
         <v-toolbar density="compact">
         <CatalogMenu/>
         <v-spacer></v-spacer>
-        <v-btn
-            @click="this.$router.push('/auth');"
+        <v-btn @click="this.$router.push('/auth');"
         >
             Войти
             <v-icon>mdi-account</v-icon>
         </v-btn>
-        <v-btn>
+        <v-btn @click="this.$router.push('/basket');"
+        >
             Корзина
             <v-icon>mdi-cart</v-icon>
         </v-btn>

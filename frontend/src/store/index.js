@@ -8,7 +8,7 @@ export default createStore({
         name: "smartphone xiaomi 12x",
         cost: 39000,
         count: 15,
-        category_id: 2,
+        category_id: 1,
         description: "It's smart phone. long long long long long long long long long long long long long long long long long long \
         long long long long long long long long long long long long long long long long long long long long long long long long \
         long long long long long long long long long long long long long long long long long long long long long long long long description",
@@ -19,7 +19,7 @@ export default createStore({
         name: "pc",
         cost: 159000,
         count: 2,
-        category_id: 3,
+        category_id: 2,
         description: "It's personal computer. long long long long long long long long long long long long long long long long long long \
         long long long long long long long long long long long long long long long long long long long long long long long long \
         long long long long long long long long long long long long long long long long long long long long long long long long description",
@@ -77,24 +77,27 @@ export default createStore({
       state.categories = state.categories.filter((category) => category.id != id);
     },
     addGoodToBasket(state, good) {
-      state.basket.push(good);
+      if(!state.basket.includes((basket_good) => basket_good.good.id == good.id)) {
+        let basket_good = {good: good, count_in_basket: 1, selected: true};
+        state.basket.push(basket_good);
+      }
     },
     removeGoodFromBasket(state, id) {
       state.basket = state.basket.filter((basket_good) => basket_good.good.id != id);
     },
-    increaseBasketGoodAmount(state, id) {
-      for(basket_good of state.basket){
-        if(basket_good.good.id == good.id) {
-          basket_good.amount ++;
+    increaseBasketGoodCount(state, id) {
+      for(let basket_good of state.basket){
+        if(basket_good.good.id == id) {
+          basket_good.count_in_basket ++;
           return;
         }
       }
     },
-    decreaseBasketGoodAmount(state, id) {
-      for(basket_good of state.basket){
+    decreaseBasketGoodCount(state, id) {
+      for(let basket_good of state.basket){
         if(basket_good.good.id == id) {
-          basket_good.amount --;
-          if(basket_good.amount < 1) {
+          basket_good.count_in_basket --;
+          if(basket_good.count_in_basket < 1) {
             state.basket = state.basket.filter((basket_good) => basket_good.good.id != id);
           }
           return;

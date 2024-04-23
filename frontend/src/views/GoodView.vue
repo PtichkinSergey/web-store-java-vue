@@ -18,7 +18,7 @@
                 <div id="cost">
                     <p>{{ this.good.cost }} руб.</p>
                     <v-btn
-                        @click="addToBasket(good.id)"
+                        @click="this.addToBasket(good)"
                         class="add_to_basket_btn"
                         :disabled="good.count < 1"
                     >
@@ -32,42 +32,47 @@
 </template>
 
 <script>
-  import Toolbar from '@/components/Toolbar.vue'
-  import CommentList from "@/components/CommentList.vue"
-  export default {
-    name: 'GoodView',
-    data: () => ({
-      good: {}
-    }),
-    components: {
-      Toolbar, CommentList
-    },
-    mounted() {
-      this.good = this.$store.state.goods.find((good) => good.id == this.$route.params.id );
+    import Toolbar from '@/components/Toolbar.vue'
+    import CommentList from "@/components/CommentList.vue"
+    export default {
+        name: 'GoodView',
+        data: () => ({
+            good: {}
+        }),
+        components: {
+            Toolbar, CommentList
+        },
+        methods: {
+            addToBasket(good) {
+                this.$store.commit('addGoodToBasket', good);
+            }
+        },
+        mounted() {
+            this.good = this.$store.state.goods.find((good) => good.id == this.$route.params.id );
+        }
     }
-  }
 </script>
 
 <style lang="scss" scoped>
 .page {
-  text-align: center;
+    text-align: center;
 }
 #good_card {
-  display: flex;
-  width: 60vw;
+    display: flex;
+    width: 60vw;
 }
 #image {
-  width: 30vw;
+    width: 30vw;
 }
 #characteristics {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 50%;
 }
 #cost {
-  display: flex;
-  align-self: flex-end;
-  align-items: center;
+    display: flex;
+    align-self: flex-end;
+    align-items: center;
 }
 </style>

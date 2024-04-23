@@ -1,10 +1,10 @@
 <template>
     <v-list 
         class="list"
-        v-if="$store.state.goods.length > 0"
+        v-if="goods.length > 0"
     >
         <v-list-item
-            v-for="good of $store.state.goods"
+            v-for="good of goods"
             :key="good.id"
         >
             <div class="good_list_item">
@@ -30,7 +30,7 @@
                 <div>
                    <p>{{good.cost}} руб.</p>
                     <v-btn
-                        @click="addToBasket(good.id)"
+                        @click="this.addToBasket(good)"
                         class="add_to_basket_btn"
                         :disabled="good.count < 1"
                     >
@@ -51,9 +51,18 @@ export default {
     }),
     methods: {
         fetchGoods() {
-
+            this.goods = this.$store.state.goods.filter((good) => good.category_id == this.$route.params.id);
+            if(this.goods.length == 0) {
+                this.goods = this.$store.state.goods;
+            }
+        },
+        addToBasket(good) {
+            this.$store.commit('addGoodToBasket', good);
         }
-    }
+    },
+    mounted() {
+        this.fetchGoods();
+    },
 }
 </script>
 
