@@ -12,7 +12,6 @@ export default createStore({
         description: "It's smart phone. long long long long long long long long long long long long long long long long long long \
         long long long long long long long long long long long long long long long long long long long long long long long long \
         long long long long long long long long long long long long long long long long long long long long long long long long description",
-        short_description: "short description."
       },
       {
         id: 2,
@@ -23,7 +22,6 @@ export default createStore({
         description: "It's personal computer. long long long long long long long long long long long long long long long long long long \
         long long long long long long long long long long long long long long long long long long long long long long long long \
         long long long long long long long long long long long long long long long long long long long long long long long long description",
-        short_description: "short description."
       }
     ],
     categories: [
@@ -64,6 +62,18 @@ export default createStore({
   getters: {
   },
   mutations: {
+    setGoodsData(state, goodsData) {
+      state.goods = goodsData.map(good => {
+        return {
+          id: good.id,
+          name: good.name,
+          cost: good.cost,
+          count: good.count,
+          category_id: good.category_id,
+          description: good.description,
+        };
+      });
+    },
     addGood(state, good) {
       state.goods.push(good);
     },
@@ -106,6 +116,17 @@ export default createStore({
     }
   },
   actions: {
+      fetchProducts({ commit }) {
+          const baseURL = "http://localhost:5000/api/goods";
+          axios
+          .get(baseURL)
+          .then(response => {
+              commit("setGoodsData", res.data);
+          })
+          .catch(e => {
+              console.log(e); 
+          });
+      }
   },
   modules: {
   }
