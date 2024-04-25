@@ -14,6 +14,9 @@ import com.example.webstore.service.GoodServiceImpl;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 @RequestMapping("/api")
@@ -49,4 +52,11 @@ public class GoodController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @PostMapping("/goods")
+    public String postMethodName(@RequestBody Good good) {
+        goodService.create(good);
+        return "success";
+    }
+    
 }

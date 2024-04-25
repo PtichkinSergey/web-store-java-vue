@@ -12,7 +12,7 @@ import javax.persistence.Id;
 public class Status {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int status_id;
 
     @Column(name = "name")
     private String name;
@@ -26,7 +26,7 @@ public class Status {
     }
 
     public int getId() {
-		return id;
+		return status_id;
 	}
 
     public String getName() {

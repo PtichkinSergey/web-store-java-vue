@@ -1,21 +1,31 @@
 package com.example.webstore.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 
 @Entity
 @Table(name = "categories")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int category_id;
 
     @Column(name = "name")
     private String name;
+
+    @ManyToMany(mappedBy = "categories")
+    private Set<Good> goods = new HashSet<Good>();
 
     public Category(String name) {
         this.name = name;
@@ -25,7 +35,7 @@ public class Category {
     }
 
     public int getId() {
-        return id;
+        return category_id;
     }
 
     public String getName() {
@@ -36,4 +46,11 @@ public class Category {
         this.name = name;
     }
 
+    public Set<Good> getGoods() {
+        return this.goods;
+    }
+
+    public void setGoods() {
+        
+    }
 }

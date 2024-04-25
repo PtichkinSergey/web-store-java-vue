@@ -14,6 +14,8 @@ import com.example.webstore.service.StatusServiceImpl;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api")
@@ -48,5 +50,11 @@ public class StatusController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PostMapping("/status")
+    public String postMethodName(@RequestBody Status status) {
+        statusService.create(status);
+        return "success";
     }
 }

@@ -14,6 +14,8 @@ import com.example.webstore.service.UserServiceImpl;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
@@ -51,4 +53,9 @@ public class UserController {
 		}
 	}
     
+	@PostMapping("/users")
+    public String postMethodName(@RequestBody User user) {
+        userService.create(user);
+        return "success";
+    }
 }

@@ -10,7 +10,7 @@ import javax.persistence.Table;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumns;
+import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
@@ -19,7 +19,7 @@ import javax.persistence.ManyToMany;
 public class Good {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int good_id;
 
     @Column(name = "name")
     private String name;
@@ -30,10 +30,19 @@ public class Good {
     @Column(name = "count")
     private int count;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name="employee_task", joinColumns = JoinColumns(name = "employee_id", referencedColumnName = "id"),
-           inverseJoinColumns= JoinColumns(name = "task_id", referencedColumnName = "id"))
-    private Set<Category> tasks = new HashSet<Category>();
+    @ManyToMany(cascade = {
+        CascadeType.ALL
+    })
+    @JoinTable(
+        name = "good_category",
+        joinColumns = {
+            @JoinColumn(name = "good_id")
+        },
+        inverseJoinColumns = {
+            @JoinColumn(name = "category_id")
+        }
+    )
+    private Set<Category> categories = new HashSet<Category>();
 
     public Good(String name, int cost, int count) {
         this.name = name;
@@ -46,7 +55,7 @@ public class Good {
     }
 
     public int getId() {
-        return id;
+        return good_id;
     }
 
     public String getName() {

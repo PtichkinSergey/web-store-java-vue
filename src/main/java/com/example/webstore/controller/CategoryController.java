@@ -14,6 +14,8 @@ import com.example.webstore.service.CategoryServiceImpl;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api")
@@ -48,5 +50,11 @@ public class CategoryController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PostMapping("/categories")
+    public String postMethodName(@RequestBody Category category) {
+        categoryService.create(category);
+        return "success";
     }
 }
