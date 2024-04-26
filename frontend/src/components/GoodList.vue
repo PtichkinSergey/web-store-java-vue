@@ -51,10 +51,7 @@ export default {
     }),
     methods: {
         fetchGoods() {
-            this.goods = this.$store.state.goods.filter((good) => good.category_id == this.$route.params.id);
-            if(this.goods.length == 0) {
-                this.goods = this.$store.state.goods;
-            }
+            this.goods = this.$store.dispatch('fetchGoods');
         },
         addToBasket(good) {
             this.$store.commit('addGoodToBasket', good);

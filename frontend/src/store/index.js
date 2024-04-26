@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'
+import axios from 'axios'
 
 export default createStore({
   state: {
@@ -118,8 +119,7 @@ export default createStore({
   actions: {
       fetchGoods({ commit }) {
           const baseURL = "http://localhost:5000/api/goods";
-          axios
-          .get(baseURL)
+          axios.get(baseURL, { params: { category: 0 }})
           .then(response => {
               commit("setGoodsData", res.data);
           })
