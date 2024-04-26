@@ -69,7 +69,7 @@ export default createStore({
           name: good.name,
           cost: good.cost,
           count: good.count,
-          category_id: good.category_id,
+          categories: good.categories,
           description: good.description,
         };
       });
@@ -116,7 +116,7 @@ export default createStore({
     }
   },
   actions: {
-      fetchProducts({ commit }) {
+      fetchGoods({ commit }) {
           const baseURL = "http://localhost:5000/api/goods";
           axios
           .get(baseURL)

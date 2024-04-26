@@ -14,10 +14,13 @@ import com.example.webstore.service.GoodServiceImpl;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
 
 
+// Контроллер сущности товара
 @RestController
 @RequestMapping("/api")
 public class GoodController {
@@ -27,11 +30,18 @@ public class GoodController {
         this.goodService = goodService;
     }
 
+    // Получение списка товаров по выбранной категории
     @GetMapping("/goods")
-    public ResponseEntity<List<Good>> getAllGoods() {
+    public ResponseEntity<List<Good>> getAllGoods(@RequestParam("category") Integer ctgId) {
+        System.out.println("Category id: " + ctgId);
         try {
             List<Good> goodList = new ArrayList<Good>();
-            goodService.readAll().forEach(goodList::add);
+            if(ctgId > 0) {
+                goodService.selectByCategory(ctgId).forEach(goodList::add);
+            }
+            else {
+                goodService.readAll().forEach(goodList::add);
+            }
             if (goodList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -43,6 +53,7 @@ public class GoodController {
         }
     }
 
+    // Получение экземпляра конкретного товара
     @GetMapping("/goods/{id}")
     public ResponseEntity<Good> getGoodById(@PathVariable("id") int id) {
         Optional<Good> goodData = goodService.findById(id);
@@ -53,10 +64,15 @@ public class GoodController {
         }
     }
 
+    // Создание нового товара в базе
     @PostMapping("/goods")
     public String postMethodName(@RequestBody Good good) {
         goodService.create(good);
         return "success";
     }
     
+    @PutMapping("/{goodId}/category/{ctgId}")
+    public Good assignGoodToCategory(@PathVariable Integer goodId, @PathVariable Integer ctgId) {
+        return goodService.assignGoodToCategory(goodId, ctgId);
+    }
 }
