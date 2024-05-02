@@ -64,7 +64,7 @@ public class SecurityConfig {
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
         List<String> originsList = new ArrayList<>();
-        originsList.add("https://localhost:5000");
+        originsList.add("*");
         List<String> headersList = new ArrayList<>();
         headersList.add("*");
         List<String> methodList = new ArrayList<>();

@@ -118,10 +118,16 @@ export default createStore({
   },
   actions: {
       fetchGoods({ commit }) {
+          const config = {
+            headers: {
+              'Connection': 'close',
+              'Content-Type': 'text/html'
+            }
+          }
           const baseURL = "http://localhost:5000/api/goods";
           axios.get(baseURL, { params: { category: 0 }})
           .then(response => {
-              commit("setGoodsData", res.data);
+              commit("setGoodsData", response.data);
           })
           .catch(e => {
               console.log(e); 

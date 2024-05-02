@@ -7,6 +7,11 @@ import BasketView from '@/views/BasketView.vue'
 
 const routes = [
   {
+    path: '/',
+    name: 'root',
+    redirect: '/catalog'
+  },
+  {
     path: '/catalog',
     name: 'catalog',
     component: CatalogView,
