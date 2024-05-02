@@ -1,10 +1,10 @@
 <template>
     <v-list 
         class="list"
-        v-if="goods.length > 0"
+        v-if="$store.state.goods.length > 0"
     >
         <v-list-item
-            v-for="good of goods"
+            v-for="good of $store.state.goods"
             :key="good.id"
         >
             <div class="good_list_item">
@@ -47,11 +47,11 @@
 export default {
     name: "GoodList",
     data: () => ({
-        goods: []
+        
     }),
     methods: {
         fetchGoods() {
-            this.goods = this.$store.dispatch('fetchGoods');
+            this.$store.dispatch('fetchGoods');
         },
         addToBasket(good) {
             this.$store.commit('addGoodToBasket', good);

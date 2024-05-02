@@ -25,6 +25,9 @@ public class Category {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "parent_id")
+    private Integer parent_id;
+
     @JsonIgnore
     @ManyToMany(mappedBy = "categories")
     private Set<Good> goods = new HashSet<Good>();
@@ -48,11 +51,19 @@ public class Category {
         this.name = name;
     }
 
-    public Set<Good> getGoods() {
-        return this.goods;
+    public Integer getParent_id() {
+        return parent_id;
     }
 
-    public void setGoods() {
-        
+    public void setParent_id(Integer parent_id) {
+        this.parent_id = parent_id;
+    }
+
+    public Set<Good> getGoods() {
+        return goods;
+    }
+
+    public void setGoods(Set<Good> goods) {
+        this.goods = goods;
     }
 }

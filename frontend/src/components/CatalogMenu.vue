@@ -13,7 +13,7 @@
   
         <v-list>
           <v-list-item
-            v-for="category in this.categories"
+            v-for="category in $store.state.categories"
             :key="category.id"
             @click="changeCategory(category.id)"
           >
@@ -27,14 +27,14 @@
 <script>
 export default {
     data: () => ({
-        categories: []
+        
     }),
     methods: {
       fetchCategories() {
-        this.categories = this.$store.state.categories;
+        this.$store.dispatch('fetchCategories');
       },
       changeCategory(id) {
-        this.$router.push(`/catalog/${id}`);
+        this.$router.push({query: {category: id}});
       }
     },
     mounted() {

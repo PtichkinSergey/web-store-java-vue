@@ -75,6 +75,15 @@ export default createStore({
         };
       });
     },
+    setCategoriesData(state, categoriesData) {
+      state.categories = categoriesData.map(category => {
+        return {
+          id: category.id,
+          name: category.name,
+          parent_id: category.parent_id
+        }
+      })
+    },
     addGood(state, good) {
       state.goods.push(good);
     },
@@ -118,12 +127,6 @@ export default createStore({
   },
   actions: {
       fetchGoods({ commit }) {
-          const config = {
-            headers: {
-              'Connection': 'close',
-              'Content-Type': 'text/html'
-            }
-          }
           const baseURL = "http://localhost:5000/api/goods";
           axios.get(baseURL, { params: { category: 0 }})
           .then(response => {
@@ -132,7 +135,17 @@ export default createStore({
           .catch(e => {
               console.log(e); 
           });
-      }
+      },
+      fetchCategories({ commit }) {
+        const baseURL = "http://localhost:5000/api/categories";
+        axios.get(baseURL)
+        .then(response => {
+            commit("setCategoriesData", response.data);
+        })
+        .catch(e => {
+            console.log(e); 
+        });
+    }
   },
   modules: {
   }
