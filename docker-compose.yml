@@ -1,0 +1,76 @@
+version: '3'
+services:
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    volumes:
+      - ./frontend:/frontend
+    ports: 
+      - "8080:80"
+    networks:
+      - main
+  
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    ports:
+      - "5000:5000"
+    networks:
+      - main
+    depends_on:
+      - postgresqldb
+
+  postgresqldb:
+    image: postgres:16.2
+    environment:
+      POSTGRES_DB: "webstore"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "password"
+    volumes:
+      - .:/docker-entrypoint-initdb.d
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d webstore"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+    networks:
+      - main
+  
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4:8.6
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "sergey.ptichkin@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "bio^razum2001"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+    networks:
+      - main
+
+networks:
+  main:
+
+volumes:
+  db-data:
+  pgadmin-data:

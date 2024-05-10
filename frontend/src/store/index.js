@@ -6,7 +6,7 @@ export default createStore({
     goods: [
       {
         id: 1,
-        name: "smartphone xiaomi 12x",
+        name: "smartphone xiaomi 13x",
         cost: 39000,
         count: 15,
         category_id: 1,
