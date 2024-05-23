@@ -3,61 +3,9 @@ import axios from 'axios'
 
 export default createStore({
   state: {
-    goods: [
-      {
-        id: 1,
-        name: "smartphone xiaomi 13x",
-        cost: 39000,
-        count: 15,
-        category_id: 1,
-        description: "It's smart phone. long long long long long long long long long long long long long long long long long long \
-        long long long long long long long long long long long long long long long long long long long long long long long long \
-        long long long long long long long long long long long long long long long long long long long long long long long long description",
-      },
-      {
-        id: 2,
-        name: "pc",
-        cost: 159000,
-        count: 2,
-        category_id: 2,
-        description: "It's personal computer. long long long long long long long long long long long long long long long long long long \
-        long long long long long long long long long long long long long long long long long long long long long long long long \
-        long long long long long long long long long long long long long long long long long long long long long long long long description",
-      }
-    ],
-    categories: [
-      {
-        id: 1,
-        name: "digital technology",
-        parent: ""
-      },
-      {
-        id: 2,
-        name: "smartphone",
-        parent_id: 1
-      },
-      {
-        id: 3,
-        name: "pc",
-        parent_id: 1
-      }
-    ],
-    comments: [
-      {
-        id: 1,
-        author: "sergey",
-        good_id: 1,
-        text: "abobaabobaaboaba",
-        rating: 10
-      },
-      {
-        id: 2,
-        author: "sergey",
-        good_id: 2,
-        text: "abobaabobaaboaba",
-        rating: 3
-      } 
-    ],
+    goods: [],
+    categories: [],
+    comments: [],
     basket: []
   },
   getters: {

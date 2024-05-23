@@ -20,7 +20,7 @@
                     >
                         {{good.name}}
                     </h2>
-                    <p>{{good.categories}}</p>
+                    <p>{{good.description}}</p>
                 </div>
                 <div id="availability">
                     <p v-if="good.count > 10">В наличии</p>
