@@ -78,7 +78,7 @@ INSERT INTO goods(name, cost, count, manufacturer, description) VALUES
 ('Смартфон Samsung Galaxy A05', 12500, 0, 'Samsung', '64 ГБ зеленый [ядер - 8x(2 ГГц), 4 ГБ, 2 SIM, PLS, 1600x720, камера 50+2 Мп, 4G, GPS, 5000 мА*ч]'),
 ('Смартфон Samsung Galaxy A54 5G', 37000, 17, 'Samsung', '256 ГБ черный [ядер - 8x(2.4 ГГц), 8 ГБ, 2 SIM, Super AMOLED, 2340x1080, камера 50+12+5 Мп, NFC, 5G, GPS, 5000 мА*ч]'),
 ('Смартфон Xiaomi Redmi Note 12', 16000, 12, 'Xiaomi', '128 ГБ черный [ядер - 8x(2.8 ГГц), 6 ГБ, 2 SIM, AMOLED, 2400x1080, камера 50+8+2 Мп, NFC, 4G, GPS, FM, 5000 мА*ч]'),
-('Смартфон Xiaomi 12X', 45000, 5, 'Xiaomi', '128 ГБ голубой [ядер - 8x(3.2 ГГц), 8 ГБ, 2 SIM, AMOLED, 2400x1080, камера 50+13+5 Мп, NFC, 5G, GPS, 4500 мА*ч]')
+('Смартфон Xiaomi 12X', 45000, 5, 'Xiaomi', '128 ГБ голубой [ядер - 8x(3.2 ГГц), 8 ГБ, 2 SIM, AMOLED, 2400x1080, камера 50+13+5 Мп, NFC, 5G, GPS, 4500 мА*ч]'),
 ('Планшет Apple iPad (9th Gen) Wi-Fi', 33000, 30, 'Apple', '64 ГБ серый [2160x1620, IPS, 6x2.66 ГГц, 3 ГБ, 8686 мА*ч, iPadOS 15]'),
 ('Планшет Apple iPad (10th Gen) Wi-Fi', 68000, 11, 'Apple', '256 ГБ голубой [2360x1640, IPS, 6x3.1 ГГц, 4 ГБ, 7606 мА*ч, iPadOS 16]'),
 ('Планшет Samsung Galaxy Tab A7 Lite LTE', 12000, 20, 'Samsung', '32 ГБ серый [1340x800, PLS, 8x2.3 ГГц, 3 ГБ, 5100 мА*ч, Android 11.x]'),
@@ -108,11 +108,11 @@ INSERT INTO goods(name, cost, count, manufacturer, description) VALUES
 ('Монитор MSI Optix G274QPX', 43000, 8, 'MSI', '27" черный [2560x1440@240 Гц, IPS, LED, 1000:1, 400 Кд/м², 178°/178°, DisplayPort 1.4a, HDMI 2.0b x2, USB Type-C, NVIDIA G-SYNC Compatible]'),
 ('Монитор ARDOR GAMING LINK AF24H1UE', 14500, 3, 'ARDOR', '23.8" черный [1920x1080 (FullHD)@180 Гц, IPS, LED, 1000:1, 350 Кд/м², 178°/178°, DisplayPort 1.4, HDMI 2.1 x2, USB х3 шт, AMD FreeSync Compatible, NVIDIA G-SYNC Compatible]'),
 ('Монитор Xiaomi Mi 2K Gaming Monitor', 32400, 0, 'Xiaomi', '27" черный [2560x1440@165 Гц, IPS, LED, 1000:1, 400 Кд/м², 178°/178°, DisplayPort, HDMI x2, USB х2 шт, Adaptive-Sync]'),
-('Клавиатура проводная ARDOR GAMING Blade', 4600, 13, 'ARDOR', '[механическая Kailh Red, клавиш - 104, USB, черная]'),
-('Клавиатура проводная ARDOR GAMING Blade PRO', 4200, 0, 'ARDOR', '[механическая Kailh Red, клавиш - 87, USB, черная]'),
-('Мышь проводная ARDOR GAMING Fury', 1700, 99, 'ARDOR', 'черный [12400 dpi, светодиодный, USB Type-A, кнопки - 7]'),
-('Мышь проводная Logitech M90', 800, 50, 'Logitech', 'черный [1000 dpi, светодиодный, USB Type-A, кнопки - 3]'),
-('Мышь беспроводная/проводная ARDOR GAMING Phantom PRO V2', 4900, 0, 'ARDOR', 'черный [26000 dpi, светодиодный, USB Type-A, радиоканал, кнопки - 6]'),
+('Клавиатура ARDOR GAMING Blade', 4600, 13, 'ARDOR', 'проводная [механическая Kailh Red, клавиш - 104, USB, черная]'),
+('Клавиатура ARDOR GAMING Blade PRO', 4200, 0, 'ARDOR', 'проводная [механическая Kailh Red, клавиш - 87, USB, черная]'),
+('Мышь ARDOR GAMING Fury', 1700, 99, 'ARDOR', 'проводная черный [12400 dpi, светодиодный, USB Type-A, кнопки - 7]'),
+('Мышь Logitech M90', 800, 50, 'Logitech', 'проводная черный [1000 dpi, светодиодный, USB Type-A, кнопки - 3]'),
+('Мышь ARDOR GAMING Phantom PRO V2', 4900, 0, 'ARDOR', 'беспроводная черный [26000 dpi, светодиодный, USB Type-A, радиоканал, кнопки - 6]');
 
 
 

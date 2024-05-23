@@ -53,7 +53,7 @@ services:
     image: dpage/pgadmin4:8.6
     environment:
       PGADMIN_DEFAULT_EMAIL: "sergey.ptichkin@gmail.com"
-      PGADMIN_DEFAULT_PASSWORD: "bio^razum2001"
+      PGADMIN_DEFAULT_PASSWORD: "password"
       PGADMIN_CONFIG_SERVER_MODE: "False"
     volumes:
       - pgadmin-data:/var/lib/pgadmin
