@@ -126,9 +126,9 @@ export default createStore({
     }
   },
   actions: {
-      fetchGoods({ commit }) {
+      fetchGoods({ commit }, category) {
           const baseURL = "http://localhost:5000/api/goods";
-          axios.get(baseURL, { params: { category: 0 }})
+          axios.get(baseURL, { params: { category: category }})
           .then(response => {
               commit("setGoodsData", response.data);
           })

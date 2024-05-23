@@ -35,6 +35,7 @@ export default {
       },
       changeCategory(id) {
         this.$router.push({query: {category: id}});
+        this.$router.go();
       }
     },
     mounted() {

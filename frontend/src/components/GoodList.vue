@@ -41,6 +41,9 @@
             </div>
         </v-list-item>
     </v-list>
+    <div v-else>
+        <h3>Товары отсутствуют...</h3>
+    </div>
 </template>
 
 <script>
@@ -51,7 +54,11 @@ export default {
     }),
     methods: {
         fetchGoods() {
-            this.$store.dispatch('fetchGoods');
+            let category = 0;
+            if(this.$route.params.category) {
+                category = this.$route.params.category;
+            }
+            this.$store.dispatch('fetchGoods', category);
         },
         addToBasket(good) {
             this.$store.commit('addGoodToBasket', good);
