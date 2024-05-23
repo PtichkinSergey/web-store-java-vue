@@ -53,10 +53,10 @@ export default {
         
     }),
     methods: {
-        fetchGoods() {
+        async fetchGoods() {
             let category = 0;
-            if(this.$route.params.category) {
-                category = this.$route.params.category;
+            if(this.$route.query.category) {
+                category = this.$route.query.category;
             }
             this.$store.dispatch('fetchGoods', category);
         },
@@ -67,6 +67,16 @@ export default {
     mounted() {
         this.fetchGoods();
     },
+    // watch: { 
+    //     '$route.query.category': {
+    //         handler: function(category) {
+    //             console.log("ABOBA: ", category)
+    //         },
+    //         deep: true,
+    //         immediate: true
+    //     }
+    // }
+
 }
 </script>
 

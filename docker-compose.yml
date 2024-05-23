@@ -1,14 +1,14 @@
 version: '3'
 services:
-  frontend:
-    build: ./frontend
-    container_name: frontend
-    volumes:
-      - ./frontend:/frontend
-    ports: 
-      - "8080:80"
-    networks:
-      - main
+  # frontend:
+  #   build: ./frontend
+  #   container_name: frontend
+  #   volumes:
+  #     - ./frontend:/frontend
+  #   ports: 
+  #     - "8080:80"
+  #   networks:
+  #     - main
   
   backend:
     build: 

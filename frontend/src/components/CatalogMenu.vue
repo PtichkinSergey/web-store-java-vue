@@ -30,12 +30,11 @@ export default {
         
     }),
     methods: {
-      fetchCategories() {
+      async fetchCategories() {
         this.$store.dispatch('fetchCategories');
       },
       changeCategory(id) {
         this.$router.push({query: {category: id}});
-        this.$router.go();
       }
     },
     mounted() {
