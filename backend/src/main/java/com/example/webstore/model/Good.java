@@ -31,6 +31,9 @@ public class Good {
     @Column(name = "count")
     private int count;
 
+    @Column
+    private String description;
+
     @ManyToMany(cascade = {
         CascadeType.ALL
     })
@@ -45,10 +48,11 @@ public class Good {
     )
     private Set<Category> categories = new HashSet<Category>();
 
-    public Good(String name, int cost, int count) {
+    public Good(String name, int cost, int count, String description) {
         this.name = name;
         this.cost = cost;
         this.count = count;
+        this.description = description;
     }
 
     public Good() {
@@ -81,6 +85,14 @@ public class Good {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Set<Category> getCategories() {
