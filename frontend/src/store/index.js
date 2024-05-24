@@ -15,6 +15,21 @@ export default createStore({
         totalCount += basket_good.count_in_basket;
       }
       return totalCount;
+    },
+    getCategoriesJSON(state) {
+      let categoryList = [];
+      for(let category of state.categories){
+        if(category.parent_id != null)
+          continue;
+        else{
+          let categoryObj = {id: category.id, name: category.name, childs: []};
+          for(let ctg of state.categories){
+            if(ctg.parent_id == category.id){
+              categoryObj.childs.push()
+            }
+          }
+        }
+      }
     }
   },
   mutations: {

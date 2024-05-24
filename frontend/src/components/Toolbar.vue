@@ -1,7 +1,7 @@
 <template>
     <v-card>
         <v-toolbar density="compact">
-        <CatalogMenu/>
+        <CategoryMenu/>
         <v-spacer></v-spacer>
         <v-btn @click="this.$router.push('/auth');"
         >
@@ -18,12 +18,12 @@
 </template>
 
 <script>
-import CatalogMenu from '@/components/CatalogMenu.vue';
+import CategoryMenu from '@/components/CategoryMenu.vue';
 
 export default {
   name: 'ToolbarView',
   components: {
-    CatalogMenu
+    CategoryMenu
   }
 }
 </script>
