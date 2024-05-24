@@ -49,7 +49,7 @@
             </v-list>
             <div class="card" id="summary">
                 <h3>Ваш заказ:</h3>
-                <p>Всего товаров: {{ basket.filter((good) => good.selected).length }}</p>
+                <p>Всего товаров: {{ this.$store.getters.getGoodsTotalCount }}</p>
                 <p>Итого: {{ orderSum(basket.filter((good) => good.selected)) }} руб.</p>
                 <v-btn>Оформить заказ</v-btn>
             </div>

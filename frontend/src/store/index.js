@@ -9,6 +9,13 @@ export default createStore({
     basket: []
   },
   getters: {
+    getGoodsTotalCount(state) {
+      let totalCount = 0;
+      for(let basket_good of state.basket){
+        totalCount += basket_good.count_in_basket;
+      }
+      return totalCount;
+    }
   },
   mutations: {
     setGoodsData(state, goodsData) {
