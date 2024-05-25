@@ -17,19 +17,30 @@ export default createStore({
       return totalCount;
     },
     getCategoriesJSON(state) {
-      let categoryList = [];
-      for(let category of state.categories){
-        if(category.parent_id != null)
-          continue;
-        else{
-          let categoryObj = {id: category.id, name: category.name, childs: []};
-          for(let ctg of state.categories){
-            if(ctg.parent_id == category.id){
-              categoryObj.childs.push()
-            }
+      let parser = function(list, category) {
+        if(category.parent_id == null){
+          list.push({id: category.id, name: category.name, childs: []});
+          return;
+        }
+        // parent search
+        for(let item of list){
+          if(item.id == category.parent_id){
+            item.childs.push({id: category.id, name: category.name, childs: []});
+            return;
+          }
+          if(item.childs && item.childs.length != 0){
+            // recursive call for childs
+            parser(item.childs, category);
           }
         }
       }
+      let categoryList = [];
+      let stateCategories = state.categories;
+      for(let category of stateCategories){ 
+        parser(categoryList, category);
+      }
+      console.log(categoryList);
+      return categoryList;
     }
   },
   mutations: {
@@ -98,7 +109,6 @@ export default createStore({
   actions: {
       fetchGoods({ commit }, category) {
           const baseURL = "http://localhost:5000/api/goods";
-          console.log("Storage: category id = ", category)
           axios.get(baseURL, { params: { category: category }})
           .then(response => {
               commit("setGoodsData", response.data);
