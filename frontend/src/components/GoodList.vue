@@ -67,16 +67,6 @@ export default {
     mounted() {
         this.fetchGoods();
     },
-    // watch: { 
-    //     '$route.query.category': {
-    //         handler: function(category) {
-    //             console.log("ABOBA: ", category)
-    //         },
-    //         deep: true,
-    //         immediate: true
-    //     }
-    // }
-
 }
 </script>
 

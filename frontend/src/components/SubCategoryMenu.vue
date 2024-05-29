@@ -4,7 +4,7 @@
           <v-list-item
             v-bind="mergeProps(menu)"
           >
-            {{ menuList.name }}
+            {{ menuList.name + " >"}}
           </v-list-item>
       </template>
       <v-list>
