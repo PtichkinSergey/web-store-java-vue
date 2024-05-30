@@ -53,6 +53,7 @@ export default createStore({
           count: good.count,
           categories: good.categories,
           description: good.description,
+          image_path: good.image_path
         };
       });
     },

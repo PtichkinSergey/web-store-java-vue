@@ -10,7 +10,7 @@
             <div class="good_list_item">
                 <div id="image">
                     <v-img 
-                        src="https://www.ulfven.no/files/sculptor30/library/images/default-product-image.png"
+                        :src="getImgUrl(good.image_path)"
                     />
                 </div>
                 <div id="description">
@@ -62,6 +62,12 @@ export default {
         },
         addToBasket(good) {
             this.$store.commit('addGoodToBasket', good);
+        },
+        getImgUrl(img) { 
+            if(img){
+                return require('@/assets/images/' + img);
+            }
+            return null;
         }
     },
     mounted() {
@@ -81,7 +87,7 @@ export default {
     border-radius: 25px;
 }
 #description {
-    width: 15vw
+    width: 25vw
 }
 #availability {
     width: 5vw;

@@ -34,6 +34,9 @@ public class Good {
     @Column
     private String description;
 
+    @Column
+    private String image_path;
+
     @ManyToMany(cascade = {
         CascadeType.ALL
     })
@@ -48,11 +51,12 @@ public class Good {
     )
     private Set<Category> categories = new HashSet<Category>();
 
-    public Good(String name, int cost, int count, String description) {
+    public Good(String name, int cost, int count, String description, String image_path) {
         this.name = name;
         this.cost = cost;
         this.count = count;
         this.description = description;
+        this.image_path = image_path;
     }
 
     public Good() {
@@ -93,6 +97,14 @@ public class Good {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImage_path() {
+        return image_path;
+    }
+
+    public void setImage_path(String image_path) {
+        this.image_path = image_path;
     }
 
     public Set<Category> getCategories() {
