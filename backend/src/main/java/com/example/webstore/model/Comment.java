@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int comment_id;
+    private int commentId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -30,9 +30,7 @@ public class Comment {
     @Column(name = "rating")
     private int rating;
 
-    public Comment(User user, Good good, String text, int rating) {
-        this.user = user;
-        this.good = good;
+    public Comment(String text, int rating) {
         this.text = text;
         this.rating = rating;
     }
@@ -41,7 +39,7 @@ public class Comment {
     }
 
     public int getId() {
-        return comment_id;
+        return commentId;
     }
 
     public User getUser() {

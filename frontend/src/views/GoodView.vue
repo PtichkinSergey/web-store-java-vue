@@ -39,7 +39,9 @@
                 </div>
             </div>
         </v-card>
-        <CommentList/>
+        <CommentList
+            :good_id="good.id"
+        />
         </div>
         <div v-else>
             <h3>Загрузка...</h3>

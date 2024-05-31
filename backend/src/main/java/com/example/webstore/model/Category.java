@@ -19,13 +19,13 @@ import javax.persistence.ManyToMany;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int category_id;
+    private int categoryId;
 
     @Column(name = "name")
     private String name;
 
     @Column(name = "parent_id")
-    private Integer parent_id;
+    private Integer parentId;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "categories")
@@ -39,7 +39,7 @@ public class Category {
     }
 
     public int getId() {
-        return category_id;
+        return categoryId;
     }
 
     public String getName() {
@@ -50,12 +50,12 @@ public class Category {
         this.name = name;
     }
 
-    public Integer getParent_id() {
-        return parent_id;
+    public Integer getParentId() {
+        return parentId;
     }
 
-    public void setParent_id(Integer parent_id) {
-        this.parent_id = parent_id;
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
     }
 
     public Set<Good> getGoods() {

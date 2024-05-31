@@ -54,7 +54,17 @@ export default createStore({
           manufacturer: good.manufacturer,
           categories: good.categories,
           description: good.description,
-          image_path: good.image_path
+          image_path: good.imagePath
+        };
+      });
+    },
+    setCommentsData(state, commentsData) {
+      state.comments = commentsData.map(comment => {
+        return {
+          id: comment.id,
+          text: comment.text,
+          rating: comment.rating,
+          image_path: comment.imagePath
         };
       });
     },
@@ -125,6 +135,16 @@ export default createStore({
               console.log(e); 
           });
       },
+      fetchComments({ commit }, good_id) {
+        const baseURL = "http://localhost:5000/api/comments";
+        axios.get(baseURL, { params: { good_id: good_id }})
+        .then(response => {
+            commit("setCommentsData", response.data);
+        })
+        .catch(e => {
+            console.log(e); 
+        });
+    },
       fetchCategories({ commit }) {
         const baseURL = "http://localhost:5000/api/categories";
         axios.get(baseURL)

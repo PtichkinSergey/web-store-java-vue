@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int order_id;
+    private int orderId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -33,7 +33,7 @@ public class Order {
     }
 
     public int getId() {
-        return order_id;
+        return orderId;
     }
 
     public User getUser() {

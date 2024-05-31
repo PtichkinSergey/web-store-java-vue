@@ -28,10 +28,12 @@
         data: () => ({
             comments: []
         }),
+        props: () => ({
+            good_id: 0
+        }),
         methods: {
-            fetchComments() {
-                console.log("mount")
-                this.comments = this.$store.state.comments.filter((comment) => comment.good_id == this.$route.params.id);
+            async fetchComments() {
+                this.$store.dispatch('fetchComments', good_id);
             }
         },
         mounted() {
