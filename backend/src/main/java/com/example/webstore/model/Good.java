@@ -31,6 +31,9 @@ public class Good {
     @Column(name = "count")
     private int count;
 
+    @Column(name = "manufacturer")
+    private String manufacturer;
+
     @Column
     private String description;
 
@@ -51,10 +54,11 @@ public class Good {
     )
     private Set<Category> categories = new HashSet<Category>();
 
-    public Good(String name, int cost, int count, String description, String image_path) {
+    public Good(String name, int cost, int count, String manufacturer, String description, String image_path) {
         this.name = name;
         this.cost = cost;
         this.count = count;
+        this.manufacturer = manufacturer;
         this.description = description;
         this.image_path = image_path;
     }
@@ -77,6 +81,14 @@ public class Good {
 
     public int getCount() {
         return count;
+    }
+
+    public String getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
     }
 
     public void setName(String name) {

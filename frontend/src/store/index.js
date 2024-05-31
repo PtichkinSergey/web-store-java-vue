@@ -51,6 +51,7 @@ export default createStore({
           name: good.name,
           cost: good.cost,
           count: good.count,
+          manufacturer: good.manufacturer,
           categories: good.categories,
           description: good.description,
           image_path: good.image_path
@@ -58,13 +59,19 @@ export default createStore({
       });
     },
     setCategoriesData(state, categoriesData) {
-      state.categories = categoriesData.map(category => {
+      let mappedList = [{
+        id: 0,
+        name: 'Все товары',
+        parent_id: null
+      }];
+      mappedList.push.apply(mappedList, categoriesData.map(category => {
         return {
           id: category.id,
           name: category.name,
           parent_id: category.parent_id
         }
-      })
+      }));
+      state.categories = mappedList;
     },
     addGood(state, good) {
       state.goods.push(good);

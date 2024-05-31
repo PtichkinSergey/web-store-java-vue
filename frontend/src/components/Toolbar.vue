@@ -1,7 +1,15 @@
 <template>
     <v-card>
         <v-toolbar density="compact">
-        <CategoryMenu/>
+        <CategoryMenu v-if="this.$route.name == `catalog`" />
+        <v-btn 
+          v-else
+          @click="this.$router.push('/catalog')"
+          color="primary"
+          dark
+        >
+          Каталог
+        </v-btn>
         <v-spacer></v-spacer>
         <v-btn @click="this.$router.push('/auth');"
         >
