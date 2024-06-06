@@ -28,12 +28,15 @@
         data: () => ({
             comments: []
         }),
-        props: () => ({
-            good_id: 0
-        }),
+        props: {
+            good_id: {
+                type: Number,
+                required: true
+            }
+        },
         methods: {
             async fetchComments() {
-                this.$store.dispatch('fetchComments', good_id);
+                this.$store.dispatch('fetchComments', this.good_id);
             }
         },
         mounted() {

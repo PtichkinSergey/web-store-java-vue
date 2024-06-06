@@ -55,9 +55,9 @@ public class Good {
     )
     private Set<Category> categories = new HashSet<Category>();
 
-    @OneToMany
-    @JoinColumn(name = "good_id")
-    private Set<Comment> comments = new HashSet<Comment>();
+    // @OneToMany
+    // @JoinColumn(name = "good_id")
+    // private Set<Comment> comments = new HashSet<Comment>();
 
     public Good(String name, int cost, int count, String manufacturer, String description, String imagePath) {
         this.name = name;
@@ -132,12 +132,12 @@ public class Good {
         return this.categories = categories;
     }
 
-    public Set<Comment> getComments() {
-        return this.comments;
-    }
+    // public Set<Comment> getComments() {
+    //     return this.comments;
+    // }
 
-    public void setComments(Set<Comment> comments) {
-        this.comments = comments;
-    }
+    // public void setComments(Set<Comment> comments) {
+    //     this.comments = comments;
+    // }
     
 }

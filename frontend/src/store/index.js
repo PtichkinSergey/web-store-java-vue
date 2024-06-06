@@ -137,6 +137,7 @@ export default createStore({
       },
       fetchComments({ commit }, good_id) {
         const baseURL = "http://localhost:5000/api/comments";
+        console.log("Good id: ", good_id)
         axios.get(baseURL, { params: { good_id: good_id }})
         .then(response => {
             commit("setCommentsData", response.data);

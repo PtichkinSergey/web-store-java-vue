@@ -28,7 +28,7 @@ public class CommentController {
     }
 
     @GetMapping("/comments")
-    public ResponseEntity<List<Comment>> getAllComments(@RequestParam("good_id)") Integer goodId) {
+    public ResponseEntity<List<Comment>> getAllComments(@RequestParam("good_id") Integer goodId) {
         try {
             List<Comment> commentList = new ArrayList<Comment>();
             commentService.selectByGoodId(goodId).forEach(commentList::add);
