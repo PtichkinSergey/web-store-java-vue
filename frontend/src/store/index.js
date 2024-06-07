@@ -59,9 +59,11 @@ export default createStore({
       });
     },
     setCommentsData(state, commentsData) {
+      console.log("data: ", commentsData)
       state.comments = commentsData.map(comment => {
         return {
           id: comment.id,
+          author: `${comment.user.secondName} ${comment.user.firstName}`,
           text: comment.text,
           rating: comment.rating,
           image_path: comment.imagePath
@@ -88,6 +90,9 @@ export default createStore({
     },
     addCategory(state, category) {
       state.categories.push(category);
+    },
+    addComment(state, comment) {
+      state.comments.push(comment);
     },
     removeGood(state, id) {
       state.goods = state.goods.filter((good) => good.id != id);
@@ -145,7 +150,17 @@ export default createStore({
         .catch(e => {
             console.log(e); 
         });
-    },
+      },
+      sendComment({ commit }, comment) {
+        const baseURL = "http://localhost:5000/api/comments";
+        axios.post(baseURL)
+        .then(response => {
+            
+        })
+        .catch(e => {
+            console.log(e); 
+        });
+      }, 
       fetchCategories({ commit }) {
         const baseURL = "http://localhost:5000/api/categories";
         axios.get(baseURL)

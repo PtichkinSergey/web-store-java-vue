@@ -1,6 +1,6 @@
 <template>
     <v-list 
-        class="list"
+        id="good_list"
         v-if="$store.state.goods.length > 0"
     >
         <v-list-item
@@ -77,6 +77,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#good_list {
+    background-color: $main_bcg_color;
+}
 .good_list_item {
     display: flex;
     align-items: center;
