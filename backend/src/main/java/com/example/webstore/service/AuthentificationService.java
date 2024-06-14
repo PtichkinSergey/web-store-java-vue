@@ -1,13 +1,24 @@
 package com.example.webstore.service;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.example.webstore.web.JwtAuthentificationResponse;
+import com.example.webstore.web.SignUpRequest;
 
+import lombok.AllArgsConstructor;
+
+import com.example.webstore.web.SignInRequest;
+import com.example.webstore.model.User;
+
+@AllArgsConstructor
 @Service
 public class AuthentificationService {
-    private final UserService userService;
-    private final JwtService jwtService;
+    private final UserServiceImpl userService;
+    private final JWTService jwtService;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
+    private final AuthenticationManager authentificationManager;
 
     /**
      * Регистрация пользователя
@@ -15,19 +26,12 @@ public class AuthentificationService {
      * @param request данные пользователя
      * @return токен
      */
-    public JwtAuthenticationResponse signUp(SignUpRequest request) {
-
-        var user = User.builder()
-                .username(request.getUsername())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.ROLE_USER)
-                .build();
-
+    public JwtAuthentificationResponse signUp(SignUpRequest request) {
+        User user = new User(request.getFirstName(), request.getSecondName(), request.getEmail(), passwordEncoder.encode(request.getPassword()) , false);
         userService.create(user);
 
-        var jwt = jwtService.generateToken(user);
-        return new JwtAuthenticationResponse(jwt);
+        String jwt = jwtService.generateToken(user);
+        return new JwtAuthentificationResponse(jwt);
     }
 
     /**
@@ -36,17 +40,15 @@ public class AuthentificationService {
      * @param request данные пользователя
      * @return токен
      */
-    public JwtAuthenticationResponse signIn(SignInRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                request.getUsername(),
+    public JwtAuthentificationResponse signIn(SignInRequest request) {
+        authentificationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                request.getEmail(),
                 request.getPassword()
         ));
 
-        var user = userService
-                .userDetailsService()
-                .loadUserByUsername(request.getUsername());
+        User user = userService.getByEmail(request.getEmail());
 
-        var jwt = jwtService.generateToken(user);
-        return new JwtAuthenticationResponse(jwt);
+        String jwt = jwtService.generateToken(user);
+        return new JwtAuthentificationResponse(jwt);
     }
 }

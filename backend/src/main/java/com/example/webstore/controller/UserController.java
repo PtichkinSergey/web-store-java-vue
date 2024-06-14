@@ -42,20 +42,4 @@ public class UserController {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
-
-    @GetMapping("/users/{id}")
-	public ResponseEntity<User> getUserById(@PathVariable("id") int id) {
-		Optional<User> userData = userService.findById(id);
-		if (userData.isPresent()) {
-			return new ResponseEntity<>(userData.get(), HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-	}
-    
-	@PostMapping("/users")
-    public String postMethodName(@RequestBody User user) {
-        userService.create(user);
-        return "success";
-    }
 }

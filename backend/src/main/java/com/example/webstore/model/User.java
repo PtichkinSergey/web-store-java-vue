@@ -23,13 +23,17 @@ public class User {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "password")
+    private String password;
+
     @Column(name = "is_admin")
     private boolean isAdmin;
 
-    public User(String firstName, String secondName, String email, boolean isAdmin) {
+    public User(String firstName, String secondName, String email, String password, boolean isAdmin) {
         this.firstName = firstName;
         this.secondName = secondName;
         this.email = email;
+        this.password = password;
         this.isAdmin = isAdmin;
     }
 
@@ -53,6 +57,14 @@ public class User {
         return email;
     }
     
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public boolean isAdmin() {
         return isAdmin;
     }
