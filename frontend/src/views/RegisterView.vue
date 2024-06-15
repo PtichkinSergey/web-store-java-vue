@@ -25,7 +25,7 @@
             />
             <v-btn
                 class="accept_btn"
-                @click="auth"
+                @click="register"
             >
               Зарегистрироваться
             </v-btn>
@@ -45,6 +45,12 @@
     name: 'RegisterView',
     components: {
       Toolbar
+    },
+    methods: {
+      register() {
+
+        localStorage.setItem('todo_items', JSON.stringify(this.todo_items));
+      }
     }
   }
 </script>
