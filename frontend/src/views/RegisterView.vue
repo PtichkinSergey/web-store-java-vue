@@ -4,28 +4,30 @@
         <v-card class="card" id="reg_card">
             <h3>Регистрация нового пользователя</h3>
             <v-text-field
-                :rules="rules"
                 hide-details="auto"
                 label="Имя"
+                v-model="firstName"
             />
             <v-text-field
-                :rules="rules"
                 hide-details="auto"
                 label="Фамилия"
+                v-model="secondName"
             />
             <v-text-field
-                :rules="rules"
+                :rules="emailRules"
                 hide-details="auto"
                 label="Email"
+                v-model="email"
             />
             <v-text-field
-                :rules="rules"
                 hide-details="auto"
+                type="password"
                 label="Password"
+                v-model="password"
             />
             <v-btn
                 class="accept_btn"
-                @click="auth"
+                @click="register"
             >
               Зарегистрироваться
             </v-btn>
@@ -41,10 +43,31 @@
 
 <script>
   import Toolbar from '@/components/Toolbar.vue'
+  import axios from 'axios'
   export default {
     name: 'RegisterView',
+    data: () => ({
+      firstName: '',
+      secondName: '',
+      email: '',
+      password: '',
+      emailRules: [ 
+        v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
+      ]
+    }),
     components: {
       Toolbar
+    },
+    methods: {
+      register() {
+        const baseURL = "http://localhost:5000/api/sign-up";
+        axios.post(baseURL, {firstName: this.firstName, secondName: this.secondName, email: this.email, password: this.password})
+          .then(response => {
+            localStorage.jwt = response.data.jwt
+            this.$store.commit('saveJwt', response.data.jwt)
+            console.log("TOKEN: ", response.data.jwt)
+          })
+      }
     }
   }
 </script>

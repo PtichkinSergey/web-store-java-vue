@@ -3,6 +3,8 @@ import axios from 'axios'
 
 export default createStore({
   state: {
+    authorized: true,
+    jwt: '',
     goods: [],
     categories: [],
     comments: [],
@@ -112,12 +114,17 @@ export default createStore({
           return;
         }
       }
+    },
+    saveJwt(state, jwt) {
+      state.jwt = jwt;
+      state.authorized = true;
     }
   },
   actions: {
       fetchGoods({ commit }, category) {
           const baseURL = "http://localhost:5000/api/goods";
-          axios.get(baseURL, { params: { category: category }})
+          let headers = {Authorization: `Bearer ${this.state.jwt}`}
+          axios.get(baseURL, { params: { category: category }, headers: headers})
           .then(response => {
               commit("setGoodsData", response.data);
           })
@@ -126,15 +133,16 @@ export default createStore({
           });
       },
       fetchCategories({ commit }) {
-        const baseURL = "http://localhost:5000/api/categories";
-        axios.get(baseURL)
-        .then(response => {
-            commit("setCategoriesData", response.data);
-        })
-        .catch(e => {
-            console.log(e); 
-        });
-    }
+          const baseURL = "http://localhost:5000/api/categories";
+          let headers = {Authorization: `Bearer ${this.state.jwt}`}
+          axios.get(baseURL , {headers: headers })
+          .then(response => {
+              commit("setCategoriesData", response.data);
+          })
+          .catch(e => {
+              console.log(e); 
+          });
+      },
   },
   modules: {
   }

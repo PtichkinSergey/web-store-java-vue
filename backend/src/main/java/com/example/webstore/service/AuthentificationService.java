@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 
 import com.example.webstore.web.SignInRequest;
 import com.example.webstore.model.User;
+import com.example.webstore.model.Role;
 
 @AllArgsConstructor
 @Service
@@ -27,9 +28,9 @@ public class AuthentificationService {
      * @return токен
      */
     public JwtAuthentificationResponse signUp(SignUpRequest request) {
-        User user = new User(request.getFirstName(), request.getSecondName(), request.getEmail(), passwordEncoder.encode(request.getPassword()) , false);
+        User user = new User(request.getFirstName(), request.getSecondName(), request.getEmail(), passwordEncoder.encode(request.getPassword()), Role.USER);
         userService.create(user);
-
+        System.out.println("Create !!!!!!!!!!!!!!!!!!");
         String jwt = jwtService.generateToken(user);
         return new JwtAuthentificationResponse(jwt);
     }

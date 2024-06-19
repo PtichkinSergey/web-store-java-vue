@@ -3,6 +3,7 @@ package com.example.webstore.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -30,12 +31,23 @@ public class UserServiceImpl implements UserService{
     }
 
     /**
-     * Получение пользователя по имени пользователя
+     * Получение пользователя по email пользователя
      *
      * @return пользователь
      */
     public User getByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+    }
+
+    /**
+     * Получение пользователя по имени пользователя
+     * <p>
+     * Нужен для Spring Security
+     *
+     * @return пользователь
+     */
+    public UserDetailsService userDetailsService() {
+        return this::getByEmail;
     }
 
     @Override

@@ -38,7 +38,6 @@
     data: () => ({
       email: '',
       password: '',
-      username: '',
       emailRules: [ 
         v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
       ]
@@ -48,10 +47,12 @@
     },
     methods: {
       login() {
-        axios.post('/api/login', {username: this.username, email: this.email, password: this.password})
+        const baseURL = "http://localhost:5000/api/sign-in";
+        axios.post(baseURL, {email: this.email, password: this.password})
           .then(response => {
-            localStorage.token = response.data.token
-            console.log("TOKEN: ", response.data.token)
+            localStorage.jwt = response.data.jwt
+            this.$store.commit('saveJwt', response.data.jwt)
+            console.log("TOKEN: ", response.data.jwt)
           })
       }
     }
