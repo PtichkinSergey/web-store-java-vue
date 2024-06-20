@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.Lazy;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +20,6 @@ import com.example.webstore.model.User;
 import com.example.webstore.service.JWTService;
 import com.example.webstore.service.UserServiceImpl;
 
-import lombok.NonNull;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -42,15 +42,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // Получаем токен из заголовка
         String authHeader = request.getHeader(HEADER_NAME);
-        if(authHeader != null){
-            if (authHeader.isEmpty() || !authHeader.startsWith(BEARER_PREFIX)) {
-                return;
-            }
-        }
-        else {
+        if (authHeader.isEmpty() || !authHeader.startsWith(BEARER_PREFIX)) {
+            filterChain.doFilter(request, response);
             return;
         }
-        System.out.println("DON'T ");
         // Обрезаем префикс и получаем имя пользователя из токена
         String jwt = authHeader.substring(BEARER_PREFIX.length());
         String email = jwtService.extractEmail(jwt);

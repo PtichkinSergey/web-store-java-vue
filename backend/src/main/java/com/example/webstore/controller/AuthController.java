@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.webstore.service.AuthentificationService;
-import com.example.webstore.web.JwtAuthentificationResponse;
+import com.example.webstore.service.AuthenticationService;
+import com.example.webstore.web.JwtAuthenticationResponse;
 import com.example.webstore.web.SignInRequest;
 import com.example.webstore.web.SignUpRequest;
 
@@ -16,22 +16,22 @@ import com.example.webstore.web.SignUpRequest;
 @RequestMapping("/api")
 public class AuthController {
 
-    private final AuthentificationService authentificationService;
+    private final AuthenticationService authenticationService;
 
-    public AuthController(AuthentificationService authentificationService) {
-        this.authentificationService = authentificationService;
+    public AuthController(AuthenticationService authentificationService) {
+        this.authenticationService = authentificationService;
     }
 
     @PostMapping("/sign-up")
-    public JwtAuthentificationResponse signUp(@RequestBody @Valid SignUpRequest request) {
+    public JwtAuthenticationResponse signUp(@RequestBody @Valid SignUpRequest request) {
         System.out.println(request.getFirstName() + " " + request.getSecondName() + " " + request.getEmail());
-        return authentificationService.signUp(request);
+        return authenticationService.signUp(request);
     }
 
     @PostMapping("/sign-in")
-    public JwtAuthentificationResponse signIn(@RequestBody @Valid SignInRequest request) {
-        System.out.println(request.getEmail());
-        return authentificationService.signIn(request);
+    public JwtAuthenticationResponse signIn(@RequestBody @Valid SignInRequest request) {
+        System.out.println("AUTH:" + request.getEmail());
+        return authenticationService.signIn(request);
     }
 
 }

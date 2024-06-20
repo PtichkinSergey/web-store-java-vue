@@ -123,7 +123,10 @@ export default createStore({
   actions: {
       fetchGoods({ commit }, category) {
           const baseURL = "http://localhost:5000/api/goods";
-          let headers = {Authorization: `Bearer ${this.state.jwt}`}
+          let headers = {Authorization: ''};
+          if(this.state.jwt != '') {
+            headers.Authorization = 'Bearer ' + this.state.jwt;
+          }
           axios.get(baseURL, { params: { category: category }, headers: headers})
           .then(response => {
               commit("setGoodsData", response.data);
@@ -134,7 +137,10 @@ export default createStore({
       },
       fetchCategories({ commit }) {
           const baseURL = "http://localhost:5000/api/categories";
-          let headers = {Authorization: `Bearer ${this.state.jwt}`}
+          let headers = {Authorization: ''};
+          if(this.state.jwt != '') {
+            headers.Authorization = 'Bearer ' + this.state.jwt;
+          }
           axios.get(baseURL , {headers: headers })
           .then(response => {
               commit("setCategoriesData", response.data);

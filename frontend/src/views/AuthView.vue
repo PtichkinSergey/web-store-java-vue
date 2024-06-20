@@ -48,11 +48,15 @@
     methods: {
       login() {
         const baseURL = "http://localhost:5000/api/sign-in";
-        axios.post(baseURL, {email: this.email, password: this.password})
+        let headers = {Authorization: ''};
+          if(this.$store.state.jwt != '') {
+            headers.Authorization = 'Bearer ' + this.state.jwt;
+          }
+        axios.post(baseURL, {email: this.email, password: this.password}, {headers: headers})
           .then(response => {
             localStorage.jwt = response.data.jwt
             this.$store.commit('saveJwt', response.data.jwt)
-            console.log("TOKEN: ", response.data.jwt)
+            this.$router.push('/catalog');
           })
       }
     }

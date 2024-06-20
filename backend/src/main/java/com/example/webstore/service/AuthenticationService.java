@@ -4,7 +4,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.example.webstore.web.JwtAuthentificationResponse;
+import com.example.webstore.web.JwtAuthenticationResponse;
 import com.example.webstore.web.SignUpRequest;
 
 import lombok.AllArgsConstructor;
@@ -15,11 +15,11 @@ import com.example.webstore.model.Role;
 
 @AllArgsConstructor
 @Service
-public class AuthentificationService {
+public class AuthenticationService {
     private final UserServiceImpl userService;
     private final JWTService jwtService;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authentificationManager;
+    private final AuthenticationManager authenticationManager;
 
     /**
      * Регистрация пользователя
@@ -27,12 +27,11 @@ public class AuthentificationService {
      * @param request данные пользователя
      * @return токен
      */
-    public JwtAuthentificationResponse signUp(SignUpRequest request) {
+    public JwtAuthenticationResponse signUp(SignUpRequest request) {
         User user = new User(request.getFirstName(), request.getSecondName(), request.getEmail(), passwordEncoder.encode(request.getPassword()), Role.USER);
         userService.create(user);
-        System.out.println("Create !!!!!!!!!!!!!!!!!!");
         String jwt = jwtService.generateToken(user);
-        return new JwtAuthentificationResponse(jwt);
+        return new JwtAuthenticationResponse(jwt);
     }
 
     /**
@@ -41,8 +40,8 @@ public class AuthentificationService {
      * @param request данные пользователя
      * @return токен
      */
-    public JwtAuthentificationResponse signIn(SignInRequest request) {
-        authentificationManager.authenticate(new UsernamePasswordAuthenticationToken(
+    public JwtAuthenticationResponse signIn(SignInRequest request) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 request.getEmail(),
                 request.getPassword()
         ));
@@ -50,6 +49,6 @@ public class AuthentificationService {
         User user = userService.getByEmail(request.getEmail());
 
         String jwt = jwtService.generateToken(user);
-        return new JwtAuthentificationResponse(jwt);
+        return new JwtAuthenticationResponse(jwt);
     }
 }
