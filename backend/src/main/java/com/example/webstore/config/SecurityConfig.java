@@ -69,7 +69,7 @@ public class SecurityConfig {
                 return corsConfiguration;
             }))
             .authorizeRequests( auth -> auth
-                    .antMatchers("/api/sign-up", "/api/sign-in").permitAll()
+                    .antMatchers("/api/fetch-user-data").authenticated()
                     .anyRequest().permitAll()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
@@ -109,24 +109,6 @@ public class SecurityConfig {
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
-
-    // @Bean
-	// CorsConfigurationSource corsConfigurationSource() {
-	// 	CorsConfiguration configuration = new CorsConfiguration();
-        // List<String> originsList = new ArrayList<>();
-        // originsList.add("*");
-        // List<String> headersList = new ArrayList<>();
-        // headersList.add("*");
-        // List<String> methodList = new ArrayList<>();
-        // methodList.add("GET");
-        
-	// 	configuration.setAllowedOrigins(originsList);
-	// 	configuration.setAllowedHeaders(headersList);
-	// 	configuration.setAllowedMethods(methodList);
-	// 	UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-	// 	source.registerCorsConfiguration("/**", configuration);
-	// 	return source;
-	// }
 }
 
 

@@ -11,7 +11,7 @@
           Каталог
         </v-btn>
         <v-spacer></v-spacer>
-        <div v-if="$store.state.jwt">
+        <div v-if="$store.state.auth_user_name">
           {{$store.state.auth_user_name}}
           <v-btn @click="logout">
             Выйти
@@ -24,7 +24,6 @@
           </v-btn>
         </div>
         
-
         <v-btn @click="this.$router.push('/basket');"
         >
             Корзина

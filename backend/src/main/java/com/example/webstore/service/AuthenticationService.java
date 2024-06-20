@@ -5,6 +5,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.example.webstore.web.FetchUserDataRequest;
 import com.example.webstore.web.JwtAuthenticationResponse;
 import com.example.webstore.web.SignUpRequest;
 
@@ -57,5 +59,9 @@ public class AuthenticationService {
         User user = userService.getByEmail(request.getEmail());
         String jwt = jwtService.generateToken(user);
         return new JwtAuthenticationResponse(jwt, user.getUsername(), null);
+    }
+
+    public JwtAuthenticationResponse fetchUserData(FetchUserDataRequest request) {
+        String email = jwtService.extractEmail(request.getJwt());
     }
 }
