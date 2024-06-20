@@ -3,8 +3,9 @@ import axios from 'axios'
 
 export default createStore({
   state: {
-    authorized: true,
-    jwt: '',
+    jwt: null,
+    auth_user_name: null,
+    auth_email: null,
     goods: [],
     categories: [],
     comments: [],
@@ -115,16 +116,23 @@ export default createStore({
         }
       }
     },
-    saveJwt(state, jwt) {
-      state.jwt = jwt;
-      state.authorized = true;
+    saveAuthData(state, data) {
+      state.jwt = data.jwt;
+      state.auth_email = data.auth_email;
+      state.auth_user_name = data.auth_user_name;
+    },
+    logout(state){
+      state.jwt = null;
+      state.auth_user_name = null;
+      state.auth_email = null;
+      localStorage.removeItem('jwt')
     }
   },
   actions: {
       fetchGoods({ commit }, category) {
           const baseURL = "http://localhost:5000/api/goods";
           let headers = {Authorization: ''};
-          if(this.state.jwt != '') {
+          if(this.state.jwt) {
             headers.Authorization = 'Bearer ' + this.state.jwt;
           }
           axios.get(baseURL, { params: { category: category }, headers: headers})
@@ -138,7 +146,7 @@ export default createStore({
       fetchCategories({ commit }) {
           const baseURL = "http://localhost:5000/api/categories";
           let headers = {Authorization: ''};
-          if(this.state.jwt != '') {
+          if(this.state.jwt) {
             headers.Authorization = 'Bearer ' + this.state.jwt;
           }
           axios.get(baseURL , {headers: headers })

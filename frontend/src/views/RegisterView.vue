@@ -62,13 +62,24 @@
       register() {
         const baseURL = "http://localhost:5000/api/sign-up";
         let headers = {Authorization: ''};
-          if(this.$store.state.jwt != '') {
+          if(this.$store.state.jwt) {
             headers.Authorization = 'Bearer ' + this.state.jwt;
           }
-        axios.post(baseURL, {firstName: this.firstName, secondName: this.secondName, email: this.email, password: this.password}, {headers: headers})
+        const user_email = this.email;
+        const user_name = this.firstName + ' ' + this.secondName;
+        axios.post(baseURL, {firstName: this.firstName, secondName: this.secondName, email: user_email, password: this.password}, {headers: headers})
           .then(response => {
+            if(response.data.errorText) {
+              alert(response.data.errorText);
+              return;
+            }
             localStorage.jwt = response.data.jwt
-            this.$store.commit('saveJwt', response.data.jwt)
+            const auth_data = {
+              jwt: response.data.jwt,
+              auth_email: user_email,
+              auth_user_name: user_name
+            }
+            this.$store.commit('saveAuthData', auth_data)
             this.$router.push('/catalog');
           })
       }

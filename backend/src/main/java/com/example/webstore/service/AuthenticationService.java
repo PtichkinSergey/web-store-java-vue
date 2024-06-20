@@ -29,9 +29,12 @@ public class AuthenticationService {
      */
     public JwtAuthenticationResponse signUp(SignUpRequest request) {
         User user = new User(request.getFirstName(), request.getSecondName(), request.getEmail(), passwordEncoder.encode(request.getPassword()), Role.USER);
+        if(userService.getByEmail(request.getEmail()) != null){
+            return new JwtAuthenticationResponse(null, null, "Пользователь с таким адресом уже существует!");
+        }
         userService.create(user);
         String jwt = jwtService.generateToken(user);
-        return new JwtAuthenticationResponse(jwt);
+        return new JwtAuthenticationResponse(jwt, user.getUsername(), null);
     }
 
     /**
@@ -41,14 +44,14 @@ public class AuthenticationService {
      * @return токен
      */
     public JwtAuthenticationResponse signIn(SignInRequest request) {
+        System.out.println("Auth start: ");
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 request.getEmail(),
                 request.getPassword()
         ));
-
+        System.out.println("Auth complete!");
         User user = userService.getByEmail(request.getEmail());
-
         String jwt = jwtService.generateToken(user);
-        return new JwtAuthenticationResponse(jwt);
+        return new JwtAuthenticationResponse(jwt, user.getUsername(), null);
     }
 }

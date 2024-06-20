@@ -7,4 +7,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class JwtAuthenticationResponse {
     private String jwt;
+    private String username;
+    private String errorText;
 }

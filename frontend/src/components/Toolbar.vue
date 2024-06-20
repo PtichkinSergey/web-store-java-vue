@@ -11,11 +11,20 @@
           Каталог
         </v-btn>
         <v-spacer></v-spacer>
-        <v-btn @click="this.$router.push('/auth');"
-        >
+        <div v-if="$store.state.jwt">
+          {{$store.state.auth_user_name}}
+          <v-btn @click="logout">
+            Выйти
+          </v-btn>
+        </div>
+        <div v-else>
+          <v-btn @click="this.$router.push('/auth');">
             Войти
             <v-icon>mdi-account</v-icon>
-        </v-btn>
+          </v-btn>
+        </div>
+        
+
         <v-btn @click="this.$router.push('/basket');"
         >
             Корзина
@@ -32,6 +41,11 @@ export default {
   name: 'ToolbarView',
   components: {
     CategoryMenu
+  },
+  methods: {
+    logout() {
+      this.$store.commit('logout');
+    }
   }
 }
 </script>

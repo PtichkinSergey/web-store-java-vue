@@ -12,6 +12,7 @@
             <v-text-field
                 hide-details="auto"
                 label="Password"
+                type="password"
                 v-model="password"
             />
             <v-btn
@@ -49,13 +50,23 @@
       login() {
         const baseURL = "http://localhost:5000/api/sign-in";
         let headers = {Authorization: ''};
-          if(this.$store.state.jwt != '') {
+          if(this.$store.state.jwt) {
             headers.Authorization = 'Bearer ' + this.state.jwt;
           }
+        const user_email = this.email;
         axios.post(baseURL, {email: this.email, password: this.password}, {headers: headers})
           .then(response => {
+            if(response.data.errorText) {
+              alert(response.data.errorText);
+              return;
+            }
             localStorage.jwt = response.data.jwt
-            this.$store.commit('saveJwt', response.data.jwt)
+             const auth_data = {
+              jwt: response.data.jwt,
+              auth_email: user_email,
+              auth_user_name: response.data.username
+            }
+            this.$store.commit('saveAuthData', auth_data)
             this.$router.push('/catalog');
           })
       }
