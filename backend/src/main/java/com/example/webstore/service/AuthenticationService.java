@@ -2,6 +2,7 @@ package com.example.webstore.service;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.webstore.web.JwtAuthenticationResponse;
@@ -44,12 +45,15 @@ public class AuthenticationService {
      * @return токен
      */
     public JwtAuthenticationResponse signIn(SignInRequest request) {
-        System.out.println("Auth start: ");
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 request.getEmail(),
                 request.getPassword()
-        ));
-        System.out.println("Auth complete!");
+            ));
+        } catch (Exception e) {
+            return new JwtAuthenticationResponse(null, null, "Неверный логин или пароль!");
+        }
+        
         User user = userService.getByEmail(request.getEmail());
         String jwt = jwtService.generateToken(user);
         return new JwtAuthenticationResponse(jwt, user.getUsername(), null);
