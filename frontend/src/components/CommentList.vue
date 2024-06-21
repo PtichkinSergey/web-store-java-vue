@@ -1,33 +1,16 @@
 <template>
     <div class="card" id="comments_card">
     <h3 id="comments_header">Комментарии</h3>
+    <div v-if="$store.state.jwt">
+        <CommentForm/>
+    </div>
+    <div v-else>
+        <i>Чтобы оставить комментарий к товару необходимо авторизоваться!</i>
+    </div>
     <v-list 
         id="comments_list"
         v-if="$store.state.comments.length > 0"
     >
-        <div> 
-            <!-- Перенести в отдельный компонент модального окна -->
-            <div id="comment_text_area">
-                <v-textarea
-                    label="Добавить комментарий"
-                    variant="outlined"
-                >
-                </v-textarea>
-            </div>
-            <div id="rating">
-                <h3>Оценка: </h3>
-
-            </div>
-            <div>
-                <v-img :src="preview_image" class="uploading_image" />
-                <input type="file" accept="image/jpeg" @change=uploadImage>
-            </div>
-            <v-btn 
-                @click="sendComment"
-            >
-                Отправить
-            </v-btn>
-        </div>
         <v-list-item
             v-for="comment of $store.state.comments"
             :key="comment.id"
@@ -52,12 +35,15 @@
 </template>
 
 <script>
+    import CommentForm from './CommentForm.vue';
     export default {
         name: "CommentList",
         data: () => ({
-            comment: {},
-            preview_image: null
+            
         }),
+        components: {
+            CommentForm
+        },
         props: {
             good_id: {
                 type: Number,
@@ -68,18 +54,6 @@
             async fetchComments() {
                 this.$store.dispatch('fetchComments', this.good_id);
             },
-            sendComment() {
-                this.$store.commit('addComment', this.comment)
-                this.$store.dispatch('sendComment', this.comment)
-            },
-            uploadImage(e) {
-                const image = e.target.files[0];
-                const reader = new FileReader();
-                reader.readAsDataURL(image);
-                reader.onload = e =>{
-                    this.preview_image = e.target.result;
-                };
-            }
         },
         mounted() {
             this.fetchComments();

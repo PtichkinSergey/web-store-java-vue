@@ -80,7 +80,7 @@
               auth_user_name: user_name
             }
             this.$store.commit('setAuthData', auth_data)
-            this.$router.push('/catalog');
+            this.$router.go(-1);
           })
       }
     }

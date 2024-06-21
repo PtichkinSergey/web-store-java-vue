@@ -67,7 +67,7 @@
               auth_user_name: response.data.username
             }
             this.$store.commit('setAuthData', auth_data)
-            this.$router.push('/catalog');
+            this.$router.go(-1);
           })
       }
     }
