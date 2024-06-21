@@ -2,30 +2,36 @@ package com.example.webstore.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.webstore.model.User;
+import com.example.webstore.service.JWTService;
 import com.example.webstore.service.UserServiceImpl;
+import com.example.webstore.web.FetchUserDataResponse;
+
+import lombok.AllArgsConstructor;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @RestController
 @RequestMapping("/api")
+@AllArgsConstructor
 public class UserController {
     private final UserServiceImpl userService;
-
-    public UserController(UserServiceImpl userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
@@ -43,19 +49,15 @@ public class UserController {
 		}
     }
 
-    @GetMapping("/users/{id}")
-	public ResponseEntity<User> getUserById(@PathVariable("id") int id) {
-		Optional<User> userData = userService.findById(id);
-		if (userData.isPresent()) {
-			return new ResponseEntity<>(userData.get(), HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	@PreAuthorize("hasRole('USER')")
+	@GetMapping("/auth_user")
+	public FetchUserDataResponse getAuthenticatedUser() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if(authentication != null) {
+			User user = userService.getByEmail(authentication.getName());
+			return new FetchUserDataResponse(user.getUsername(), user.getEmail());
 		}
+		return new FetchUserDataResponse(null, null);
 	}
-    
-	@PostMapping("/users")
-    public String postMethodName(@RequestBody User user) {
-        userService.create(user);
-        return "success";
-    }
+	
 }

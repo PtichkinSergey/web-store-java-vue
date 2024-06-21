@@ -3,6 +3,9 @@ import axios from 'axios'
 
 export default createStore({
   state: {
+    jwt: null,
+    auth_user_name: null,
+    auth_email: null,
     goods: [],
     categories: [],
     comments: [],
@@ -127,12 +130,27 @@ export default createStore({
           return;
         }
       }
+    },
+    setAuthData(state, data) {
+      state.jwt = data.jwt;
+      state.auth_email = data.auth_email;
+      state.auth_user_name = data.auth_user_name;
+    },
+    logout(state){
+      state.jwt = null;
+      state.auth_user_name = null;
+      state.auth_email = null;
+      localStorage.removeItem('jwt')
     }
   },
   actions: {
       fetchGoods({ commit }, category) {
           const baseURL = "http://localhost:5000/api/goods";
-          axios.get(baseURL, { params: { category: category }})
+          let headers = {Authorization: ''};
+          if(this.state.jwt) {
+            headers.Authorization = 'Bearer ' + this.state.jwt;
+          }
+          axios.get(baseURL, { params: { category: category }, headers: headers})
           .then(response => {
               commit("setGoodsData", response.data);
           })
@@ -162,15 +180,38 @@ export default createStore({
         });
       }, 
       fetchCategories({ commit }) {
-        const baseURL = "http://localhost:5000/api/categories";
-        axios.get(baseURL)
-        .then(response => {
-            commit("setCategoriesData", response.data);
-        })
-        .catch(e => {
-            console.log(e); 
-        });
-    }
+          const baseURL = "http://localhost:5000/api/categories";
+          let headers = {Authorization: ''};
+          if(this.state.jwt) {
+            headers.Authorization = 'Bearer ' + this.state.jwt;
+          }
+          axios.get(baseURL , {headers: headers })
+          .then(response => {
+              commit("setCategoriesData", response.data);
+          })
+          .catch(e => {
+              console.log(e); 
+          });
+      },
+      fetchAuthenticateUser({ commit }) {
+        const baseURL = "http://localhost:5000/api/auth_user";
+          let headers = {Authorization: ''};
+          if(localStorage.getItem('jwt')) {
+            headers.Authorization = 'Bearer ' + localStorage.getItem('jwt');
+          }
+          axios.get(baseURL , {headers: headers })
+          .then(response => {
+              const data = {
+                jwt: localStorage.getItem('jwt'),
+                auth_email: response.data.email,
+                auth_user_name: response.data.username
+              }
+              commit("setAuthData", data);
+          })
+          .catch(e => {
+              console.log(e); 
+          });
+      }
   },
   modules: {
   }

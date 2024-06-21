@@ -12,7 +12,7 @@ CREATE TABLE users (
 	first_name varchar(255),
 	second_name varchar(255),
 	email varchar(255),
-	is_admin boolean
+	role varchar(10)
 );
 
 CREATE TABLE goods (
@@ -70,8 +70,8 @@ CREATE TABLE good_order (
 	FOREIGN KEY(order_id) REFERENCES orders(order_id)
 );
 
-INSERT INTO users(first_name, second_name, email, is_admin)
-VALUES('Сергей', 'Птичкин', 'sergey.ptichkin@gmail.com', true);
+INSERT INTO users(first_name, second_name, email, role)
+VALUES('Сергей', 'Птичкин', 'sergey.ptichkin@gmail.com', 'ADMIN');
 -- ('', 1, 5, '', ''),
 INSERT INTO goods(name, cost, count, manufacturer, description, image_path) VALUES
 ('Смартфон iPhone 15', 86000, 15, 'Apple', '128 ГБ черный [ядер - 6x(3.46 ГГц), 6 ГБ, 2 SIM, Super Retina XDR, 2556x1179, камера 48+12 Мп, NFC, 5G, GPS, 3349 мА*ч]', 'kotyata.jpg'),

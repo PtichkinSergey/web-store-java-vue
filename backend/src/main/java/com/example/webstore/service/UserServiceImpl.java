@@ -1,9 +1,10 @@
 package com.example.webstore.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.example.webstore.repository.UserRepository;
@@ -29,9 +30,24 @@ public class UserServiceImpl implements UserService{
         return userRepository.findAll();
     }
 
-    @Override
-    public Optional<User> findById(int id) {
-        return userRepository.findById(id);
+    /**
+     * Получение пользователя по email пользователя
+     *
+     * @return пользователь
+     */
+    public User getByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+    }
+
+    /**
+     * Получение пользователя по имени пользователя
+     * <p>
+     * Нужен для Spring Security
+     *
+     * @return пользователь
+     */
+    public UserDetailsService userDetailsService() {
+        return this::getByEmail;
     }
 
     @Override

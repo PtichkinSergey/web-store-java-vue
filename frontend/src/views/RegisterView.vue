@@ -4,28 +4,30 @@
         <v-card class="card" id="reg_card">
             <h3>Регистрация нового пользователя</h3>
             <v-text-field
-                :rules="rules"
                 hide-details="auto"
                 label="Имя"
+                v-model="firstName"
             />
             <v-text-field
-                :rules="rules"
                 hide-details="auto"
                 label="Фамилия"
+                v-model="secondName"
             />
             <v-text-field
-                :rules="rules"
+                :rules="emailRules"
                 hide-details="auto"
                 label="Email"
+                v-model="email"
             />
             <v-text-field
-                :rules="rules"
                 hide-details="auto"
+                type="password"
                 label="Password"
+                v-model="password"
             />
             <v-btn
                 class="accept_btn"
-                @click="auth"
+                @click="register"
             >
               Зарегистрироваться
             </v-btn>
@@ -41,10 +43,46 @@
 
 <script>
   import Toolbar from '@/components/Toolbar.vue'
+  import axios from 'axios'
   export default {
     name: 'RegisterView',
+    data: () => ({
+      firstName: '',
+      secondName: '',
+      email: '',
+      password: '',
+      emailRules: [ 
+        v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
+      ]
+    }),
     components: {
       Toolbar
+    },
+    methods: {
+      register() {
+        const baseURL = "http://localhost:5000/api/sign-up";
+        let headers = {Authorization: ''};
+          if(this.$store.state.jwt) {
+            headers.Authorization = 'Bearer ' + this.state.jwt;
+          }
+        const user_email = this.email;
+        const user_name = this.firstName + ' ' + this.secondName;
+        axios.post(baseURL, {firstName: this.firstName, secondName: this.secondName, email: user_email, password: this.password}, {headers: headers})
+          .then(response => {
+            if(response.data.errorText) {
+              alert(response.data.errorText);
+              return;
+            }
+            localStorage.jwt = response.data.jwt
+            const auth_data = {
+              jwt: response.data.jwt,
+              auth_email: user_email,
+              auth_user_name: user_name
+            }
+            this.$store.commit('setAuthData', auth_data)
+            this.$router.push('/catalog');
+          })
+      }
     }
   }
 </script>

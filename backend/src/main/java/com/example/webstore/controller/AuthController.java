@@ -1,30 +1,35 @@
 package com.example.webstore.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
+import javax.validation.Valid;
+
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.webstore.service.TokenService;
+import com.example.webstore.service.AuthenticationService;
+import com.example.webstore.web.JwtAuthenticationResponse;
+import com.example.webstore.web.SignInRequest;
+import com.example.webstore.web.SignUpRequest;
 
 @RestController
+@RequestMapping("/api")
 public class AuthController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AuthController.class);
+    private final AuthenticationService authenticationService;
 
-    private final TokenService tokenService;
-
-    public AuthController(TokenService tokenService) {
-        this.tokenService = tokenService;
+    public AuthController(AuthenticationService authentificationService) {
+        this.authenticationService = authentificationService;
     }
 
-    @PostMapping("/token")
-    public String token(Authentication authentication) {
-        LOG.debug("Token requested for user: '{}'", authentication.getName());
-        String token = tokenService.generateToken(authentication);
-        LOG.debug("Token granted: {}", token);
-        return token;
+    @PostMapping("/sign-up")
+    public JwtAuthenticationResponse signUp(@RequestBody @Valid SignUpRequest request) {
+        return authenticationService.signUp(request);
+    }
+
+    @PostMapping("/sign-in")
+    public JwtAuthenticationResponse signIn(@RequestBody @Valid SignInRequest request) {
+        return authenticationService.signIn(request);
     }
 
 }
