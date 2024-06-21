@@ -69,7 +69,7 @@ public class SecurityConfig {
                 return corsConfiguration;
             }))
             .authorizeRequests( auth -> auth
-                    .antMatchers("/api/sign-up", "/api/sign-in").permitAll()
+                    .antMatchers("/api/auth_user").authenticated()
                     .anyRequest().permitAll()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

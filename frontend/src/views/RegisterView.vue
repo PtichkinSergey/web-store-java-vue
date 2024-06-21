@@ -79,7 +79,7 @@
               auth_email: user_email,
               auth_user_name: user_name
             }
-            this.$store.commit('saveAuthData', auth_data)
+            this.$store.commit('setAuthData', auth_data)
             this.$router.push('/catalog');
           })
       }

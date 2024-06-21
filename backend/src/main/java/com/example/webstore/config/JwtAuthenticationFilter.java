@@ -49,7 +49,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // Обрезаем префикс и получаем имя пользователя из токена
         String jwt = authHeader.substring(BEARER_PREFIX.length());
         String email = jwtService.extractEmail(jwt);
-
         if (email.length() > 0 && SecurityContextHolder.getContext().getAuthentication() == null) {
             User user = userService.getByEmail(email);
 
@@ -62,7 +61,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         null,
                         user.getAuthorities()
                 );
-
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 context.setAuthentication(authToken);
                 SecurityContextHolder.setContext(context);

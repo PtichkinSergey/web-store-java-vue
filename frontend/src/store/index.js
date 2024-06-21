@@ -116,7 +116,7 @@ export default createStore({
         }
       }
     },
-    saveAuthData(state, data) {
+    setAuthData(state, data) {
       state.jwt = data.jwt;
       state.auth_email = data.auth_email;
       state.auth_user_name = data.auth_user_name;
@@ -157,6 +157,25 @@ export default createStore({
               console.log(e); 
           });
       },
+      fetchAuthenticateUser({ commit }) {
+        const baseURL = "http://localhost:5000/api/auth_user";
+          let headers = {Authorization: ''};
+          if(localStorage.getItem('jwt')) {
+            headers.Authorization = 'Bearer ' + localStorage.getItem('jwt');
+          }
+          axios.get(baseURL , {headers: headers })
+          .then(response => {
+              const data = {
+                jwt: localStorage.getItem('jwt'),
+                auth_email: response.data.email,
+                auth_user_name: response.data.username
+              }
+              commit("setAuthData", data);
+          })
+          .catch(e => {
+              console.log(e); 
+          });
+      }
   },
   modules: {
   }

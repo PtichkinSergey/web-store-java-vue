@@ -25,7 +25,6 @@ public class JWTService {
 
 
     public String generateToken(User user) {
-        System.out.println("Generation: ");
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
@@ -36,7 +35,6 @@ public class JWTService {
                 .claim("name", user.getFirstName() + " " + user.getSecondName())
                 .claim("role", user.getRole())
                 .build();
-        System.out.println("JWT: " + this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue());
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 

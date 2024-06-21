@@ -33,7 +33,6 @@ public class GoodController {
     // Получение списка товаров по выбранной категории
     @GetMapping("/goods")
     public ResponseEntity<List<Good>> getAllGoods(@RequestParam("category") Integer ctgId) {
-        System.out.println("Category id: " + ctgId);
         try {
             List<Good> goodList = new ArrayList<Good>();
             if(ctgId > 0) {
