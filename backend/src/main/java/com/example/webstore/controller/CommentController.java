@@ -32,7 +32,6 @@ public class CommentController {
         try {
             List<Comment> commentList = new ArrayList<Comment>();
             commentService.selectByGoodId(goodId).forEach(commentList::add);
-            System.out.println("GoodId: " + goodId);
             if (commentList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }

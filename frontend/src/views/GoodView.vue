@@ -1,7 +1,7 @@
 <template>
     <div class="page">
         <Toolbar/>
-        <div v-if="dataFetched">
+        <div v-if="good">
             <v-card class="card" id="good_card">
                 <div id="card_left">
                     <h3
@@ -52,11 +52,11 @@
 <script>
     import Toolbar from '@/components/Toolbar.vue'
     import CommentList from "@/components/CommentList.vue"
+    import axios from 'axios'
     export default {
         name: 'GoodView',
         data: () => ({
-            good: {},
-            dataFetched: false
+            good: null,
         }),
         components: {
             Toolbar, CommentList
@@ -80,11 +80,31 @@
         }
         },
         mounted() {
-            if(this.$store.state.goods.length < 1){
-                this.fetchGoods()
+            if(this.$store.state.goods.length > 0){
+                this.good = this.$store.state.goods.find((good) => good.id == this.$route.params.id );
+                return;
             }
-            this.good = this.$store.state.goods.find((good) => good.id == this.$route.params.id );
-            this.dataFetched = true;
+            const baseURL = "http://localhost:5000/api/goods/" + this.$route.params.id;
+            let headers = {Authorization: ''};
+            if(this.$store.state.jwt) {
+                headers.Authorization = 'Bearer ' + this.$store.state.jwt;
+            }
+            axios.get(baseURL, { headers: headers})
+            .then(response => {
+                this.good = {
+                    id: response.data.id,
+                    name: response.data.name,
+                    cost: response.data.cost,
+                    count: response.data.count,
+                    manufacturer: response.data.manufacturer,
+                    categories: response.data.categories,
+                    description: response.data.description,
+                    image_path: response.data.imagePath
+                }
+            })
+            .catch(e => {
+                console.log(e); 
+            });
         }
     }
 </script>

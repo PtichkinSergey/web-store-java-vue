@@ -24,8 +24,6 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.example.webstore.service.UserServiceImpl;
 import com.nimbusds.jose.jwk.JWK;
@@ -109,24 +107,6 @@ public class SecurityConfig {
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
-
-    // @Bean
-	// CorsConfigurationSource corsConfigurationSource() {
-	// 	CorsConfiguration configuration = new CorsConfiguration();
-        // List<String> originsList = new ArrayList<>();
-        // originsList.add("*");
-        // List<String> headersList = new ArrayList<>();
-        // headersList.add("*");
-        // List<String> methodList = new ArrayList<>();
-        // methodList.add("GET");
-        
-	// 	configuration.setAllowedOrigins(originsList);
-	// 	configuration.setAllowedHeaders(headersList);
-	// 	configuration.setAllowedMethods(methodList);
-	// 	UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-	// 	source.registerCorsConfiguration("/**", configuration);
-	// 	return source;
-	// }
 }
 
 
