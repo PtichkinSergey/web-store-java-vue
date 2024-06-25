@@ -23,14 +23,14 @@
                     <p>{{good.description}}</p>
                 </div>
                 <div id="availability">
-                    <p v-if="good.count > 10">В наличии</p>
+                    <p v-if="good.count > 5">В наличии</p>
                     <p v-else-if="good.count == 0">Нет в наличии</p>
                     <p v-else>Мало</p>
                 </div>
                 <div>
                    <p>{{good.cost}} руб.</p>
                     <v-btn
-                        @click="this.addToBasket(good)"
+                        @click="addToBasket(good)"
                         class="add_to_basket_btn"
                         :disabled="good.count < 1"
                     >

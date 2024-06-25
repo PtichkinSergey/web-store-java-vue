@@ -51,7 +51,7 @@
         const baseURL = "http://localhost:5000/api/sign-in";
         let headers = {Authorization: ''};
           if(this.$store.state.jwt) {
-            headers.Authorization = 'Bearer ' + this.state.jwt;
+            headers.Authorization = 'Bearer ' + this.$store.state.jwt;
           }
         const user_email = this.email;
         axios.post(baseURL, {email: this.email, password: this.password}, {headers: headers})

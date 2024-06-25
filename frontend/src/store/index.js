@@ -81,7 +81,7 @@ export default createStore({
         return {
           id: category.id,
           name: category.name,
-          parent_id: category.parent_id
+          parent_id: category.parentId
         }
       }));
       state.categories = mappedList;

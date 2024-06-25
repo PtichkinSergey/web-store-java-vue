@@ -1,15 +1,17 @@
 <template>
-    <div>
+    <div class="page">
         <Toolbar/>
         <div v-if="basket.length > 0">
             <h3 class="page_title">Корзина</h3>
+        </div>
+        <div v-else>
+            <h2 class="empty_page_header">Корзина пустая!</h2>
         </div>
         <div 
             v-if="basket.length > 0"
             id="basket"
         >
             <v-list 
-                class="list"
                 id="basket_list"
             >
                 <v-list-item
@@ -24,20 +26,21 @@
                                 v-model="basket_good.selected"
                             ></v-checkbox>
                         </div>
-                        <div id="image">
+                        <div>
                             <v-img 
-                                src="https://www.ulfven.no/files/sculptor30/library/images/default-product-image.png"
+                                id="image"
+                                :src="getImgUrl(basket_good.image_path)"
                             />
                         </div>
                         <div id="good_name">
                             <h3>{{ basket_good.good.name }}</h3>
                         </div>
                         <div id="amount_chooser">
-                            <v-btn @click="this.decreaseGoodCount(basket_good.good.id)">
+                            <v-btn @click="decreaseGoodCount(basket_good.good.id)">
                                 <v-icon>mdi-minus</v-icon>
                             </v-btn>
                             <p>{{ basket_good.count_in_basket }}</p>
-                            <v-btn @click="this.increaseGoodCount(basket_good.good.id)">
+                            <v-btn @click="increaseGoodCount(basket_good.good.id)">
                                 <v-icon>mdi-plus</v-icon>
                             </v-btn>
                         </div>
@@ -53,10 +56,6 @@
                 <p>Итого: {{ orderSum(basket.filter((good) => good.selected)) }} руб.</p>
                 <v-btn>Оформить заказ</v-btn>
             </div>
-        </div>
-        
-        <div v-else>
-            <h3>Корзина пустая!</h3>
         </div>
     </div>
 </template>
@@ -87,7 +86,16 @@
                     sum += basket_good.good.cost * basket_good.count_in_basket;
                 }
                 return sum;
+            },
+            getImgUrl(img) { 
+            if(img){
+                return require('@/assets/images/' + img);
             }
+            return null;
+        }
+        },
+        watch: {
+
         },
         mounted() {
             this.fetchBasket();
@@ -101,6 +109,12 @@
     align-items: center;
     justify-content: space-between;
 }
+
+#basket_list {
+    width: 70vw;
+    background-color: $main_bcg_color;
+}
+
 #amount_chooser {
     display: flex;
     align-items: center;
@@ -122,11 +136,9 @@
     display: flex;
     flex-direction: column;
     text-align: left;
-    width: 10vw;
+    width: 15vw;
 }
-#basket_list {
-    width: 80vw;
-}
+
 #cost {
     width: 5vw;
 }
