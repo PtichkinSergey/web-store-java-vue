@@ -16,6 +16,41 @@ export default createStore({
       }
       return totalCount;
     },
+    getCategoryById: (state) => (id) => {
+      if(state.categories.length < 1){
+        return null;
+      }
+      if(!id) {
+        return 'Все товары';
+      }
+      return state.categories.filter((category) => category.id == id)[0].name;
+    },
+    getGoodsCountByCategory: (state) => (id) => {
+      if(state.goods.length < 1) {
+        return 0;
+      }
+      if(!id || id == 0) {
+        return state.goods.length;
+      }
+      return state.goods.filter((good) => good.categories.filter((ctg) => ctg.id == id).length > 0).length;
+    },
+    getPathToCategory: (state) => (id) => {
+      if(state.categories.length == 0) {
+        return null;
+      }
+      if(!id || id == 0) {
+        return null;
+      }
+      let category = state.categories.find((ctg) => ctg.id == id);
+      let path_to_category = [];
+      path_to_category.push(category)
+      while(category.parent_id != null) {
+        category = state.categories.find((ctg) => ctg.id == category.parent_id)
+        path_to_category.unshift(category)
+      }
+      return path_to_category
+    },
+
     getCategoriesJSON(state) {
       let parser = function(list, category) {
         if(category.parent_id == null){
@@ -39,7 +74,6 @@ export default createStore({
       for(let category of stateCategories){ 
         parser(categoryList, category);
       }
-      console.log(categoryList);
       return categoryList;
     }
   },

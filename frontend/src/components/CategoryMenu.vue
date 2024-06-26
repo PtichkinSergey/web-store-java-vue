@@ -11,22 +11,22 @@
           </v-btn>
       </template>
       <v-list>
-        <template
-          v-for="(category, index) in $store.getters.getCategoriesJSON"
-        >
-          <SubCategoryMenu
-            v-if="category.childs && category.childs.length != 0"
-            :key="category.id"
-            :menuList="category"
-          />
           <v-list-item
-            v-else
+            v-for="(category, index) in $store.getters.getCategoriesJSON"
             :key="index"
             @click="changeCategory(category.id)"
+            id="sub_category_menu"
           >
-            <v-list-item-title>{{ category.name }}</v-list-item-title>
+            <v-list-item-title 
+              class="sub_category_title"
+            >
+              {{ category.name }}
+              <SubCategoryMenu
+                v-if="category.childs && category.childs.length != 0"
+                :menuList="category.childs"
+              />  
+            </v-list-item-title>
           </v-list-item>
-        </template>
       </v-list>
       
     </v-menu>
@@ -57,3 +57,7 @@ export default {
     }
 }
 </script>
+
+<style>
+
+</style>

@@ -38,4 +38,23 @@
 
 .page_title {
   margin: 20px 0px 0px 20px;
+  text-align: left;
+}
+
+.sub_category_title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#sub_category_menu {
+  padding-right: 0px;
+}
+
+.sub_category_btn {
+  margin-left: 10px;
+  border-radius: 8px;
+  width: 15px;
+  height: 15px;
+  box-shadow: none;
 }
