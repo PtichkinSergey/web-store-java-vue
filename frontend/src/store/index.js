@@ -6,7 +6,8 @@ export default createStore({
     goods: [],
     categories: [],
     comments: [],
-    basket: []
+    basket: [],
+    sort_mode: 'ascending',
   },
   getters: {
     getGoodsTotalCount(state) {
@@ -146,12 +147,20 @@ export default createStore({
           return;
         }
       }
+    },
+    changeSortMode(state) {
+      if(state.sortMode == 'descending') {
+        state.sortMode = 'ascending';
+      }
+      else {
+        state.sortMode = 'descending';
+      }
     }
   },
   actions: {
       fetchGoods({ commit }, category) {
           const baseURL = "http://localhost:5000/api/goods";
-          axios.get(baseURL, { params: { category: category }})
+          axios.get(baseURL, { params: { category: category, sort: this.state.sort_mode}})
           .then(response => {
               commit("setGoodsData", response.data);
           })

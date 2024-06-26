@@ -38,8 +38,18 @@ public class GoodServiceImpl implements GoodService {
     }
 
     @Override
+    public List<Good> readAllOrderByCostDesc() {
+        return goodRepository.findAllByOrderByCostDesc();
+    }
+
+    @Override
+    public List<Good> readAllOrderByCostAsc() {
+        return goodRepository.findAllByOrderByCostAsc();
+    }
+
+    @Override
     public List<Good> selectByCategory(int category_id) {
-        List<Good> allGoods = goodRepository.findAll();
+        List<Good> allGoods = goodRepository.findAllByOrderByCostDesc();
         List<Good> filteredList = new ArrayList<Good>();
         for(int i = 0; i < allGoods.size(); i++) {
             Set<Category> categories = allGoods.get(i).getCategories();

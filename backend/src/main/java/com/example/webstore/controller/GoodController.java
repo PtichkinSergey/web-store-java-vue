@@ -32,15 +32,19 @@ public class GoodController {
 
     // Получение списка товаров по выбранной категории
     @GetMapping("/goods")
-    public ResponseEntity<List<Good>> getAllGoods(@RequestParam("category") Integer ctgId) {
-        System.out.println("Category id: " + ctgId);
+    public ResponseEntity<List<Good>> getAllGoods(@RequestParam("category") Integer ctgId, @RequestParam("sort") String sort) {
         try {
             List<Good> goodList = new ArrayList<Good>();
             if(ctgId > 0) {
                 goodService.selectByCategory(ctgId).forEach(goodList::add);
             }
             else {
-                goodService.readAll().forEach(goodList::add);
+                if(sort.equals("descending")) {
+                    goodService.readAllOrderByCostDesc().forEach(goodList::add);
+                }
+                else {
+                    goodService.readAllOrderByCostAsc().forEach(goodList::add);
+                }
             }
             if (goodList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
