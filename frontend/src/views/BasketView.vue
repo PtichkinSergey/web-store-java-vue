@@ -1,11 +1,11 @@
 <template>
     <div>
         <Toolbar/>
-        <div v-if="basket.length > 0">
+        <div v-if="basket != null">
             <h3 class="page_title">Корзина</h3>
         </div>
         <div 
-            v-if="basket.length > 0"
+            v-if="basket != null"
             id="basket"
         >
             <v-list 
@@ -49,7 +49,7 @@
             </v-list>
             <div class="card" id="summary">
                 <h3>Ваш заказ:</h3>
-                <p>Всего товаров: {{ this.$store.getters.getGoodsTotalCount }}</p>
+                <p>Всего товаров: {{ this.basketTotalCount() }}</p>
                 <p>Итого: {{ orderSum(basket.filter((good) => good.selected)) }} руб.</p>
                 <v-btn>Оформить заказ</v-btn>
             </div>
@@ -69,17 +69,11 @@
         },
         name: 'basket',
         data: () => ({
-            basket: []
+            basket: null
         }),
         methods: {
             fetchBasket() {
-                this.basket = this.$store.state.basket;
-            },
-            increaseGoodCount(id) {
-                this.$store.commit('increaseBasketGoodCount', id);
-            },
-            decreaseGoodCount(id) {
-                this.$store.commit('decreaseBasketGoodCount', id);
+                this.basket = JSON.parse(localStorage.getItem('basket'));
             },
             orderSum(basket_goods) {
                 let sum = 0;
@@ -87,7 +81,45 @@
                     sum += basket_good.good.cost * basket_good.count_in_basket;
                 }
                 return sum;
-            }
+            },
+            basketTotalCount() {
+                let totalCount = 0;
+                for(let basket_good of this.basket){
+                    totalCount += basket_good.count_in_basket;
+                }
+                return totalCount;
+            },
+            removeGood(id) {
+                this.basket = this.basket.filter((basket_good) => basket_good.good.id != id);
+                if(this.basket.length < 1) {
+                    this.basket = null
+                    localStorage.removeItem('basket');
+                }
+                else {
+                    localStorage.setItem('basket', JSON.stringify(this.basket));
+                }
+            },
+            increaseGoodCount(id) {
+                for(let basket_good of this.basket){
+                    if(basket_good.good.id == id) {
+                        basket_good.count_in_basket ++;
+                        localStorage.setItem('basket', JSON.stringify(this.basket));
+                        return;
+                    }
+                }
+            },
+            decreaseGoodCount(id) {
+                for(let basket_good of this.basket){
+                    if(basket_good.good.id == id) {
+                        basket_good.count_in_basket --;
+                        if(basket_good.count_in_basket < 1) {
+                            this.removeGood(id);
+                        }
+                        localStorage.setItem('basket', JSON.stringify(this.basket));
+                        return;
+                    }
+                }
+            },
         },
         mounted() {
             this.fetchBasket();

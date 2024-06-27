@@ -24,11 +24,11 @@
           </v-btn>
         </div>
         
-
         <v-btn @click="this.$router.push('/basket');"
         >
             Корзина
             <v-icon>mdi-cart</v-icon>
+            {{ basketSize }}
         </v-btn>
         </v-toolbar>
     </v-card>
@@ -45,6 +45,11 @@ export default {
   methods: {
     logout() {
       this.$store.commit('logout');
+    }
+  },
+  computed: {
+    basketSize() {
+      return localStorage.getItem('basket') ? `(${JSON.parse(localStorage.getItem('basket')).length})` : "";
     }
   }
 }

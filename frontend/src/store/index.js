@@ -9,17 +9,9 @@ export default createStore({
     goods: [],
     categories: [],
     comments: [],
-    basket: [],
     sort_mode: 'ascending',
   },
   getters: {
-    getGoodsTotalCount(state) {
-      let totalCount = 0;
-      for(let basket_good of state.basket){
-        totalCount += basket_good.count_in_basket;
-      }
-      return totalCount;
-    },
     getCategoryById: (state) => (id) => {
       if(state.categories.length < 1){
         return null;
@@ -124,32 +116,20 @@ export default createStore({
       state.categories = state.categories.filter((category) => category.id != id);
     },
     addGoodToBasket(state, good) {
-      if(!state.basket.includes((basket_good) => basket_good.good.id == good.id)) {
-        let basket_good = {good: good, count_in_basket: 1, selected: true};
-        state.basket.push(basket_good);
+      let basket = [];
+      if(localStorage.getItem('basket') != null) {
+        basket = JSON.parse(localStorage.getItem('basket'));
       }
-    },
-    removeGoodFromBasket(state, id) {
-      state.basket = state.basket.filter((basket_good) => basket_good.good.id != id);
-    },
-    increaseBasketGoodCount(state, id) {
-      for(let basket_good of state.basket){
-        if(basket_good.good.id == id) {
-          basket_good.count_in_basket ++;
-          return;
+      if(basket) {
+        if(basket.filter((basket_good) => basket_good.good.id == good.id).length < 1) {
+            let basket_good = {good: good, count_in_basket: 1, selected: true};
+            basket.push(basket_good);
         }
       }
-    },
-    decreaseBasketGoodCount(state, id) {
-      for(let basket_good of state.basket){
-        if(basket_good.good.id == id) {
-          basket_good.count_in_basket --;
-          if(basket_good.count_in_basket < 1) {
-            state.basket = state.basket.filter((basket_good) => basket_good.good.id != id);
-          }
-          return;
-        }
+      else {
+        basket.push(basket_good);
       }
+      localStorage.setItem('basket', JSON.stringify(basket));
     },
     setAuthData(state, data) {
       state.jwt = data.jwt;
