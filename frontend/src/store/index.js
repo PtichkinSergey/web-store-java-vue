@@ -9,7 +9,8 @@ export default createStore({
     goods: [],
     categories: [],
     comments: [],
-    sort_mode: 'ascending',
+    basket: [],
+    sort_mode: 'ascending'
   },
   getters: {
     getCategoryById: (state) => (id) => {
@@ -46,7 +47,15 @@ export default createStore({
       }
       return path_to_category
     },
-
+    getBasketTotalSize(state) {
+      let totalSize = 0;
+      for(let basket_good of state.basket) {
+          if(basket_good.selected) {
+            totalSize += basket_good.count_in_basket;
+          }
+      }
+      return totalSize;
+    },
     getCategoriesJSON(state) {
       let parser = function(list, category) {
         if(category.parent_id == null){
@@ -116,25 +125,18 @@ export default createStore({
       state.categories = state.categories.filter((category) => category.id != id);
     },
     addGoodToBasket(state, good) {
-      let basket = [];
-      if(localStorage.getItem('basket') != null) {
-        basket = JSON.parse(localStorage.getItem('basket'));
+      if(state.basket.filter((basket_good) => basket_good.good.id == good.id).length < 1) {
+        state.basket.push({good: good, count_in_basket: 1, selected: true});
+        localStorage.setItem('basket', JSON.stringify(state.basket));
       }
-      if(basket) {
-        if(basket.filter((basket_good) => basket_good.good.id == good.id).length < 1) {
-            let basket_good = {good: good, count_in_basket: 1, selected: true};
-            basket.push(basket_good);
-        }
-      }
-      else {
-        basket.push(basket_good);
-      }
-      localStorage.setItem('basket', JSON.stringify(basket));
     },
     setAuthData(state, data) {
       state.jwt = data.jwt;
       state.auth_email = data.auth_email;
       state.auth_user_name = data.auth_user_name;
+    },
+    setBasketData(state, data) {
+      state.basket = data;
     },
     logout(state){
       state.jwt = null;
@@ -179,6 +181,10 @@ export default createStore({
           .catch(e => {
               console.log(e); 
           });
+      },
+      fetchBasket({ commit }) {
+        let data = JSON.parse(localStorage.getItem('basket'));
+        commit("setBasketData", data);
       },
       fetchAuthenticateUser({ commit }) {
         const baseURL = "http://localhost:5000/api/auth_user";

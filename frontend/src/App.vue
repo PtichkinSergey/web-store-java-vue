@@ -4,8 +4,11 @@
 <script>
 export default{
   mounted() {
-    if(localStorage.getItem('jwt') != null) {
+    if(localStorage.getItem('jwt') != 'null') {
       this.$store.dispatch('fetchAuthenticateUser');
+    }
+    if(localStorage.getItem('basket') != 'null') {
+      this.$store.dispatch('fetchBasket');
     }
   }
 }

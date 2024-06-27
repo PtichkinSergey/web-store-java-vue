@@ -1,11 +1,11 @@
 <template>
     <div>
         <Toolbar/>
-        <div v-if="basket != null">
+        <div v-if="basket.length > 0">
             <h3 class="page_title">Корзина</h3>
         </div>
         <div 
-            v-if="basket != null"
+            v-if="basket.length > 0"
             id="basket"
         >
             <v-list 
@@ -49,8 +49,8 @@
             </v-list>
             <div class="card" id="summary">
                 <h3>Ваш заказ:</h3>
-                <p>Всего товаров: {{ this.basketTotalCount() }}</p>
-                <p>Итого: {{ orderSum(basket.filter((good) => good.selected)) }} руб.</p>
+                <p>Всего товаров: {{ basketTotalSize }}</p>
+                <p>Итого: {{ totalCost }} руб.</p>
                 <v-btn>Оформить заказ</v-btn>
             </div>
         </div>
@@ -69,30 +69,15 @@
         },
         name: 'basket',
         data: () => ({
-            basket: null
+            basket: []
         }),
         methods: {
             fetchBasket() {
-                this.basket = JSON.parse(localStorage.getItem('basket'));
-            },
-            orderSum(basket_goods) {
-                let sum = 0;
-                for(let basket_good of basket_goods) {
-                    sum += basket_good.good.cost * basket_good.count_in_basket;
-                }
-                return sum;
-            },
-            basketTotalCount() {
-                let totalCount = 0;
-                for(let basket_good of this.basket){
-                    totalCount += basket_good.count_in_basket;
-                }
-                return totalCount;
+                this.basket = this.$store.state.basket;
             },
             removeGood(id) {
                 this.basket = this.basket.filter((basket_good) => basket_good.good.id != id);
                 if(this.basket.length < 1) {
-                    this.basket = null
                     localStorage.removeItem('basket');
                 }
                 else {
@@ -119,10 +104,33 @@
                         return;
                     }
                 }
+            }
+        },
+        computed: {
+            totalCost() {
+                let cost = 0;
+                for(let basket_good of this.basket) {
+                    if(basket_good.selected) {
+                        cost += basket_good.good.cost * basket_good.count_in_basket;
+                    }
+                }
+                return cost;
             },
+            basketTotalSize() {
+                let totalCount = 0;
+                for(let basket_good of this.basket) {
+                    if(basket_good.selected) {
+                        totalCount += basket_good.count_in_basket;
+                    }
+                }
+                return totalCount;
+            }
         },
         mounted() {
             this.fetchBasket();
+        },
+        unmounted() {
+            
         }
     }
 </script>
