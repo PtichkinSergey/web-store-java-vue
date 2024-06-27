@@ -42,7 +42,6 @@ export default {
         },
     },
     mounted() {
-        console.log(this.$store.state.sort_mode)
         this.sort_mode = this.$store.state.sort_mode;
     }
 }

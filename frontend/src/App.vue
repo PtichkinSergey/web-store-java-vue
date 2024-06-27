@@ -5,7 +5,6 @@
 export default{
   mounted() {
     if(localStorage.getItem('jwt') != null) {
-      console.log("Poooogggers");
       this.$store.dispatch('fetchAuthenticateUser');
     }
   }
