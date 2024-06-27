@@ -2,7 +2,7 @@ package com.example.webstore.service;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.webstore.web.JwtAuthenticationResponse;
@@ -30,12 +30,16 @@ public class AuthenticationService {
      */
     public JwtAuthenticationResponse signUp(SignUpRequest request) {
         User user = new User(request.getFirstName(), request.getSecondName(), request.getEmail(), passwordEncoder.encode(request.getPassword()), Role.USER);
-        if(userService.getByEmail(request.getEmail()) != null){
-            return new JwtAuthenticationResponse(null, null, "Пользователь с таким адресом уже существует!");
+        try {
+            if(userService.getByEmail(request.getEmail()) != null){
+                return new JwtAuthenticationResponse(null, null, "Пользователь с таким адресом уже существует!");
+            }
+        } catch (UsernameNotFoundException e) {
+            userService.create(user);
+            String jwt = jwtService.generateToken(user);
+            return new JwtAuthenticationResponse(jwt, user.getUsername(), null);
         }
-        userService.create(user);
-        String jwt = jwtService.generateToken(user);
-        return new JwtAuthenticationResponse(jwt, user.getUsername(), null);
+        return new JwtAuthenticationResponse(null, null, "Ошибка регистрации!");
     }
 
     /**

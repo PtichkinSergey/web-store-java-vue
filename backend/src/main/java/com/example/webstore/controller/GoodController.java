@@ -1,14 +1,18 @@
 package com.example.webstore.controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.webstore.model.Category;
 import com.example.webstore.model.Good;
+import com.example.webstore.service.CategoryServiceImpl;
 import com.example.webstore.service.GoodServiceImpl;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,21 +29,41 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RequestMapping("/api")
 public class GoodController {
     private final GoodServiceImpl goodService;
+    private final CategoryServiceImpl categoryService;
 
-    public GoodController(GoodServiceImpl goodService) {
+    public GoodController(GoodServiceImpl goodService, CategoryServiceImpl categoryService) {
         this.goodService = goodService;
+        this.categoryService = categoryService;
     }
 
     // Получение списка товаров по выбранной категории
     @GetMapping("/goods")
-    public ResponseEntity<List<Good>> getAllGoods(@RequestParam("category") Integer ctgId) {
+    public ResponseEntity<List<Good>> getAllGoods(@RequestParam("category") Integer ctgId, @RequestParam("sort") String sort) {
         try {
             List<Good> goodList = new ArrayList<Good>();
             if(ctgId > 0) {
-                goodService.selectByCategory(ctgId).forEach(goodList::add);
+                Set<Category> categories = new HashSet<>();
+                Optional<Category> ctg = categoryService.findById(ctgId);
+                if(ctg.isPresent()) {
+                    categories.add(ctg.get());
+                }
+                else {
+                    return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+                if(sort.equals("descending")) {
+                    goodService.readByCategoryOrderByCostDesc(categories).forEach(goodList::add);
+                }
+                else {
+                    goodService.readByCategoryOrderByCostAsc(categories).forEach(goodList::add);
+                }
             }
             else {
-                goodService.readAll().forEach(goodList::add);
+                if(sort.equals("descending")) {
+                    goodService.readAllOrderByCostDesc().forEach(goodList::add);
+                }
+                else {
+                    goodService.readAllOrderByCostAsc().forEach(goodList::add);
+                }
             }
             if (goodList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);

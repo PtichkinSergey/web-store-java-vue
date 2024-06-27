@@ -29,7 +29,7 @@ public class JWTService {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
-                .expiresAt(now.plus(1, ChronoUnit.HOURS)) // настройка времени действия токена
+                .expiresAt(now.plus(6, ChronoUnit.HOURS)) // настройка времени действия токена
                 .subject(user.getEmail())
                 .claim("id", user.getId())
                 .claim("name", user.getFirstName() + " " + user.getSecondName())
@@ -99,7 +99,7 @@ public class JWTService {
      * @param token токен
      * @return true, если токен просрочен
      */
-    private boolean isTokenExpired(String token) {
+    public boolean isTokenExpired(String token) {
         return extractExpiration(token).isBefore(Instant.now());
     }
 

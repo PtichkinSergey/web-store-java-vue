@@ -1,31 +1,32 @@
 <template>
     <v-menu :location="location">
       <template v-slot:activator="{ props: menu }">
-          <v-list-item
+          <v-btn
             v-bind="mergeProps(menu)"
+            icon="mdi-chevron-right"
+            class="sub_category_btn"
           >
-            {{ menuList.name + " >"}}
-          </v-list-item>
+          </v-btn>
       </template>
       <v-list>
-        <template
-          v-for="(category, index) in menuList.childs"
-        >
-          <SubCategoryMenu
-            v-if="category.childs && category.childs.length != 0"
-            :key="category.id"
-            :menuList="category"
-          />
           <v-list-item
-            v-else
+            v-for="(category, index) in menuList"
             :key="index"
             @click="changeCategory(category.id)"
+            id="sub_category_menu"
           >
-            <v-list-item-title>{{ category.name }}</v-list-item-title>
+            <v-list-item-title
+              class="sub_category_title"
+            >
+              {{ category.name }}
+              <SubCategoryMenu
+                v-if="category.childs && category.childs.length != 0"
+                :key="category.id"
+                :menuList="category.childs"
+              />
+            </v-list-item-title>
           </v-list-item>
-        </template>
       </v-list>
-      
     </v-menu>
 </template>
 
@@ -38,7 +39,7 @@ export default {
     name: 'SubCategoryMenu',
     props: {
       menuList: {
-          type: Object,
+          type: Array,
           default: () => {},
       },
     },

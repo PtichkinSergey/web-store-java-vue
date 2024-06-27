@@ -34,7 +34,6 @@ public class CategoryController {
             if (categoryList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-            
             return new ResponseEntity<>(categoryList, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
