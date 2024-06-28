@@ -130,7 +130,7 @@
             this.fetchBasket();
         },
         unmounted() {
-            
+            this.$store.commit('setBasketData', this.basket);
         }
     }
 </script>
