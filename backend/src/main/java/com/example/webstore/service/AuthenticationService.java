@@ -31,11 +31,7 @@ public class AuthenticationService {
     public JwtAuthenticationResponse signUp(SignUpRequest request) {
         User user = new User(request.getFirstName(), request.getSecondName(), request.getEmail(), passwordEncoder.encode(request.getPassword()), Role.USER);
         try {
-<<<<<<< HEAD
-            if(userService.getByEmail(request.getEmail()) != null){
-=======
             if(userService.getByEmail(request.getEmail()) != null) {
->>>>>>> comments
                 return new JwtAuthenticationResponse(null, null, "Пользователь с таким адресом уже существует!");
             }
         } catch (UsernameNotFoundException e) {
@@ -43,11 +39,7 @@ public class AuthenticationService {
             String jwt = jwtService.generateToken(user);
             return new JwtAuthenticationResponse(jwt, user.getUsername(), null);
         }
-<<<<<<< HEAD
         return new JwtAuthenticationResponse(null, null, "Ошибка регистрации!");
-=======
-        return null;
->>>>>>> comments
     }
 
     /**

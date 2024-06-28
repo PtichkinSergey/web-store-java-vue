@@ -5,6 +5,8 @@
             v-bind="mergeProps(menu)"
             icon="mdi-chevron-right"
             class="sub_category_btn"
+            density="compact"
+            variant="text"
           >
           </v-btn>
       </template>

@@ -12,11 +12,8 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-<<<<<<< HEAD
 import org.springframework.security.oauth2.jwt.JwtValidationException;
-=======
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
->>>>>>> comments
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;

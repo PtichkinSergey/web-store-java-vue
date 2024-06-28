@@ -30,11 +30,20 @@
                 <div>
                    <p>{{good.cost}} руб.</p>
                     <v-btn
+                        v-if="$store.getters.getBasketContainsGood(good.id)"
+                        id="basket_forward_btn"
+                        @click="this.$router.push('/basket')"
+                        variant="outlined"
+                    >
+                        В корзине
+                    </v-btn>
+                    <v-btn
+                        v-else
                         @click="addToBasket(good)"
-                        class="add_to_basket_btn"
+                        id="add_to_basket_btn"
                         :disabled="good.count < 1"
                     >
-                        В корзину
+                        Купить
                     </v-btn> 
                 </div>
                 

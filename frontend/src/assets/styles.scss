@@ -22,9 +22,12 @@
   cursor: pointer;
   text-decoration: none;
 }
-.add_to_basket_btn {
-  background-color: rgb(107, 119, 228);
+#add_to_basket_btn {
+  background-color: $main_btn_color;
   color: white;
+}
+#basket_forward_btn {
+  color: $main_btn_color
 }
 .card {
   background-color: white;

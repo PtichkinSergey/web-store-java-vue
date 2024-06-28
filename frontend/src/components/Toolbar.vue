@@ -27,7 +27,7 @@
         <v-btn 
             @click="this.$router.push('/basket');"
         >
-            Корзина({{ $store.state.basket.length }})
+            Корзина
             <v-icon>mdi-cart</v-icon>
             ({{ $store.getters.getBasketTotalSize }})
         </v-btn>

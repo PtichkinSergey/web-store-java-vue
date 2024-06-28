@@ -56,6 +56,23 @@ export default createStore({
       }
       return totalSize;
     },
+    getBasketTotalCost(state) {
+      let cost = 0;
+      for(let basket_good of state.basket) {
+          if(basket_good.selected) {
+              cost += basket_good.good.cost * basket_good.count_in_basket;
+          }
+      }
+      return cost;
+    },
+    getBasketContainsGood: (state) => (id) => {
+      for(let basket_good of state.basket) {
+        if(basket_good.good.id == id) {
+          return true;
+        }
+      }
+      return false;
+    },
     getCategoriesJSON(state) {
       let parser = function(list, category) {
         if(category.parent_id == null){
@@ -142,6 +159,15 @@ export default createStore({
       if(state.basket.filter((basket_good) => basket_good.good.id == good.id).length < 1) {
         state.basket.push({good: good, count_in_basket: 1, selected: true});
         localStorage.setItem('basket', JSON.stringify(state.basket));
+      }
+    },
+    removeGoodFromBasket(state, id) {
+      state.basket = state.basket.filter((basket_good) => basket_good.good.id == id)
+      if(state.basket.length < 1) {
+        localStorage.removeItem('basket');
+      }
+      else {
+        localStorage.setItem('basket', JSON.stringify(this.basket));
       }
     },
     setAuthData(state, data) {
