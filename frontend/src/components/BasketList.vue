@@ -47,9 +47,14 @@
                     </a>
                 </div>
 
-                <div id="cost">
-                    <p>{{ basket_good.good.cost }} руб.</p>
+                <div
+                    id="cost_info"
+                    v-if="$store.state.auth_email"
+                >
+                    <p>{{basket_good.good.cost * (1 - basket_good.good.discount)}} руб.</p>
+                    <s id="cost_with_discount">{{basket_good.good.cost}} руб.</s>
                 </div>
+                <p v-else>{{basket_good.good.cost}} руб.</p>
             </div>
         </v-list-item>
     </v-list>
@@ -130,8 +135,5 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-#cost {
-    width: 5vw;
 }
 </style>

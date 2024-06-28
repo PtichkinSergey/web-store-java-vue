@@ -27,8 +27,15 @@
                     <p v-else-if="good.count == 0">Нет в наличии</p>
                     <p v-else>Мало</p>
                 </div>
-                <div>
-                   <p>{{good.cost}} руб.</p>
+                <div id="cost">
+                    <div
+                        id="cost_info"
+                        v-if="$store.state.auth_email"
+                    >
+                        <p>{{good.cost * (1 - good.discount)}} руб.</p>
+                        <s id="cost_with_discount">{{good.cost}} руб.</s>
+                    </div>
+                    <p v-else>{{good.cost}} руб.</p>
                     <v-btn
                         v-if="$store.getters.getBasketContainsGood(good.id)"
                         id="basket_forward_btn"
@@ -107,5 +114,11 @@ export default {
 #image {
     width: 12vw;
     height: 8vw;
+}
+#cost {
+    width: 10vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 </style>

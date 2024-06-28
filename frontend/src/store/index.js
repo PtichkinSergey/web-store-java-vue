@@ -65,6 +65,15 @@ export default createStore({
       }
       return cost;
     },
+    getTotalDiscount(state) {
+      let discount = 0;
+      for(let basket_good of state.basket) {
+          if(basket_good.selected) {
+            discount += basket_good.good.cost * basket_good.count_in_basket * (state.auth_email ? basket_good.good.discount : 0);
+          }
+      }
+      return discount;
+    },
     getBasketContainsGood: (state) => (id) => {
       for(let basket_good of state.basket) {
         if(basket_good.good.id == id) {
@@ -106,6 +115,7 @@ export default createStore({
           id: good.id,
           name: good.name,
           cost: good.cost,
+          discount: good.discount,
           count: good.count,
           manufacturer: good.manufacturer,
           categories: good.categories,
@@ -162,12 +172,12 @@ export default createStore({
       }
     },
     removeGoodFromBasket(state, id) {
-      state.basket = state.basket.filter((basket_good) => basket_good.good.id == id)
+      state.basket = state.basket.filter((basket_good) => basket_good.good.id != id)
       if(state.basket.length < 1) {
         localStorage.removeItem('basket');
       }
       else {
-        localStorage.setItem('basket', JSON.stringify(this.basket));
+        localStorage.setItem('basket', JSON.stringify(state.basket));
       }
     },
     setAuthData(state, data) {

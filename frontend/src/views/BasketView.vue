@@ -15,7 +15,18 @@
             <div class="card" id="summary">
                 <h3>Ваш заказ:</h3>
                 <p>Всего товаров: {{ $store.getters.getBasketTotalSize }}</p>
-                <p>Итого: {{ $store.getters.getBasketTotalCost }} руб.</p>
+                <p 
+                    id="discount"
+                    v-if="$store.state.auth_email"
+                >
+                    Скидка: {{ $store.getters.getTotalDiscount }} руб.
+                </p>
+                <p v-if="$store.state.auth_email">
+                    Итого: <b>{{ $store.getters.getBasketTotalCost - $store.getters.getTotalDiscount }} руб.</b>
+                </p>
+                <p v-else>
+                    Итого: <b>{{ $store.getters.getBasketTotalCost }} руб.</b>
+                </p>
                 <v-btn
                     id="execute_order_btn"
                 >
@@ -56,5 +67,8 @@
 }
 #execute_order_btn {
     background-color: #a0c715;
+}
+#discount {
+    color: $discount;
 }
 </style>

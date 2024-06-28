@@ -30,11 +30,14 @@ export default {
 <style>
 #navbar {
   display: flex;
+  justify-content: space-between;
+  width: 80vw;
 }
 #navbar_path {
   align-self: flex-start;
 }
 #navbar_switch {
   align-self: flex-end;
+  margin-right: 40px;
 }
 </style>

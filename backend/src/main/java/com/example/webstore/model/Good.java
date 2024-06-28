@@ -28,6 +28,9 @@ public class Good {
     @Column(name = "cost")
     private int cost;
 
+    @Column(name = "discount")
+    private float discount;
+
     @Column(name = "count")
     private int count;
 
@@ -54,13 +57,10 @@ public class Good {
     )
     private Set<Category> categories = new HashSet<Category>();
 
-    // @OneToMany
-    // @JoinColumn(name = "good_id")
-    // private Set<Comment> comments = new HashSet<Comment>();
-
-    public Good(String name, int cost, int count, String manufacturer, String description, String imagePath) {
+    public Good(String name, int cost, float discount, int count, String manufacturer, String description, String imagePath) {
         this.name = name;
         this.cost = cost;
+        this.discount = discount;
         this.count = count;
         this.manufacturer = manufacturer;
         this.description = description;
@@ -85,6 +85,14 @@ public class Good {
 
     public int getCount() {
         return count;
+    }
+
+    public float getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(float discount) {
+        this.discount = discount;
     }
 
     public String getManufacturer() {

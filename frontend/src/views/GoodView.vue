@@ -28,7 +28,14 @@
                         <p v-else>
                             Нет в наличии
                         </p>
-                        <p>{{ this.good.cost }} руб.</p>
+                        <div
+                            id="cost_info"
+                            v-if="$store.state.auth_email"
+                        >
+                            <p>{{good.cost * (1 - good.discount)}} руб.</p>
+                            <s id="cost_with_discount">{{good.cost}} руб.</s>
+                        </div>
+                        <p v-else>{{good.cost}} руб.</p>
                         <v-btn
                             v-if="$store.getters.getBasketContainsGood(this.good.id)"
                             id="basket_forward_btn"
@@ -104,6 +111,7 @@
                     id: response.data.id,
                     name: response.data.name,
                     cost: response.data.cost,
+                    discount: 0.05,
                     count: response.data.count,
                     manufacturer: response.data.manufacturer,
                     categories: response.data.categories,
