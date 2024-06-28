@@ -20,7 +20,7 @@ import javax.persistence.ManyToMany;
 public class Good {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int good_id;
+    private int goodId;
 
     @Column(name = "name")
     private String name;
@@ -34,11 +34,11 @@ public class Good {
     @Column(name = "manufacturer")
     private String manufacturer;
 
-    @Column
+    @Column(name = "description")
     private String description;
 
-    @Column
-    private String image_path;
+    @Column(name = "image_path")
+    private String imagePath;
 
     @ManyToMany(cascade = {
         CascadeType.ALL
@@ -54,13 +54,17 @@ public class Good {
     )
     private Set<Category> categories = new HashSet<Category>();
 
-    public Good(String name, int cost, int count, String manufacturer, String description, String image_path) {
+    // @OneToMany
+    // @JoinColumn(name = "good_id")
+    // private Set<Comment> comments = new HashSet<Comment>();
+
+    public Good(String name, int cost, int count, String manufacturer, String description, String imagePath) {
         this.name = name;
         this.cost = cost;
         this.count = count;
         this.manufacturer = manufacturer;
         this.description = description;
-        this.image_path = image_path;
+        this.imagePath = imagePath;
     }
 
     public Good() {
@@ -68,7 +72,7 @@ public class Good {
     }
 
     public int getId() {
-        return good_id;
+        return goodId;
     }
 
     public String getName() {
@@ -111,12 +115,12 @@ public class Good {
         this.description = description;
     }
 
-    public String getImage_path() {
-        return image_path;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setImage_path(String image_path) {
-        this.image_path = image_path;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public Set<Category> getCategories() {
@@ -126,4 +130,13 @@ public class Good {
     public Set<Category> setCategories(Set<Category> categories) {
         return this.categories = categories;
     }
+
+    // public Set<Comment> getComments() {
+    //     return this.comments;
+    // }
+
+    // public void setComments(Set<Comment> comments) {
+    //     this.comments = comments;
+    // }
+    
 }

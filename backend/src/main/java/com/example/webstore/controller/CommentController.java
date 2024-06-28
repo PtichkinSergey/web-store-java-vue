@@ -12,6 +12,7 @@ import com.example.webstore.model.Comment;
 import com.example.webstore.service.CommentServiceImpl;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,10 +28,10 @@ public class CommentController {
     }
 
     @GetMapping("/comments")
-    public ResponseEntity<List<Comment>> getAllComments() {
+    public ResponseEntity<List<Comment>> getAllComments(@RequestParam("good_id") Integer goodId) {
         try {
             List<Comment> commentList = new ArrayList<Comment>();
-            commentService.readAll().forEach(commentList::add);
+            commentService.selectByGoodId(goodId).forEach(commentList::add);
             if (commentList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }

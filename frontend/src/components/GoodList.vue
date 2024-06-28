@@ -1,6 +1,6 @@
 <template>
     <v-list 
-        class="list"
+        id="good_list"
         v-if="$store.state.goods.length > 0"
     >
         <v-list-item
@@ -23,14 +23,14 @@
                     <p>{{good.description}}</p>
                 </div>
                 <div id="availability">
-                    <p v-if="good.count > 10">В наличии</p>
+                    <p v-if="good.count > 5">В наличии</p>
                     <p v-else-if="good.count == 0">Нет в наличии</p>
                     <p v-else>Мало</p>
                 </div>
                 <div>
                    <p>{{good.cost}} руб.</p>
                     <v-btn
-                        @click="this.addToBasket(good)"
+                        @click="addToBasket(good)"
                         class="add_to_basket_btn"
                         :disabled="good.count < 1"
                     >
@@ -77,6 +77,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#good_list {
+    background-color: $main_bcg_color;
+}
 .good_list_item {
     display: flex;
     align-items: center;

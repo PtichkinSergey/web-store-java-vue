@@ -1,5 +1,7 @@
 package com.example.webstore.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -9,17 +11,19 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+
 @Entity
 @Table(name = "comments")
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int comment_id;
+    private int commentId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "good_id")
     private Good good;
@@ -30,9 +34,7 @@ public class Comment {
     @Column(name = "rating")
     private int rating;
 
-    public Comment(User user, Good good, String text, int rating) {
-        this.user = user;
-        this.good = good;
+    public Comment(String text, int rating) {
         this.text = text;
         this.rating = rating;
     }
@@ -41,7 +43,7 @@ public class Comment {
     }
 
     public int getId() {
-        return comment_id;
+        return commentId;
     }
 
     public User getUser() {

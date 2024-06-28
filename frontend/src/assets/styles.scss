@@ -26,9 +26,6 @@
   background-color: rgb(107, 119, 228);
   color: white;
 }
-.list {
-  background-color: $main_bcg_color;
-}
 .card {
   background-color: white;
   border-radius: 15px;
@@ -57,4 +54,9 @@
   width: 15px;
   height: 15px;
   box-shadow: none;
+}
+
+.empty_page_header {
+  text-align: center;
+  margin: 20px auto;
 }

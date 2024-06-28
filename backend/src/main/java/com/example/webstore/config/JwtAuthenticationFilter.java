@@ -12,7 +12,11 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+<<<<<<< HEAD
 import org.springframework.security.oauth2.jwt.JwtValidationException;
+=======
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+>>>>>>> comments
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -58,8 +62,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         
         if (email.length() > 0 && SecurityContextHolder.getContext().getAuthentication() == null) {
-            User user = userService.getByEmail(email);
-
+            User user = null;
+            try {
+                user = userService.getByEmail(email);
+            } catch (UsernameNotFoundException e) {
+                return;
+            }   
             // Если токен валиден, то аутентифицируем пользователя
             if (jwtService.isTokenValid(jwt, user)) {
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
@@ -72,6 +80,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 context.setAuthentication(authToken);
                 SecurityContextHolder.setContext(context);
+            }
+            else {
+                return;
             }
         }
         filterChain.doFilter(request, response);
