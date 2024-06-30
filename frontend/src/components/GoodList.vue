@@ -30,10 +30,15 @@
                 <div id="cost">
                     <div
                         id="cost_info"
-                        v-if="$store.state.auth_email"
+                        v-if="$store.getters.getUserLoggedIn"
                     >
                         <p>{{good.cost * (1 - good.discount)}} руб.</p>
-                        <s id="cost_with_discount">{{good.cost}} руб.</s>
+                        <s 
+                            v-if="good.discount > 0"
+                            id="cost_with_discount"
+                        >
+                            {{good.cost}} руб.
+                        </s>
                     </div>
                     <p v-else>{{good.cost}} руб.</p>
                     <v-btn

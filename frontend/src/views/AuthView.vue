@@ -47,6 +47,7 @@
       Toolbar
     },
     methods: {
+      // Запрос на авторизацию пользователя
       login() {
         const baseURL = "http://localhost:5000/api/sign-in";
         let headers = {Authorization: ''};

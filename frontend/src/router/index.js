@@ -25,7 +25,7 @@ const routes = [
   },
   {
     path: '/auth',
-    name: 'authentification',
+    name: 'authentication',
     component: AuthView
   },
   {

@@ -19,14 +19,9 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    
-    @ManyToOne
-    @JoinColumn(name = "status_id")
-    private Status status;
 
-    public Order(User user, Status status) {
+    public Order(User user) {
         this.user = user;
-        this.status = status;
     }
 
     public Order() {
@@ -40,16 +35,8 @@ public class Order {
         return user;
     }
 
-    public Status getStatus() {
-        return status;
-    }
-
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
     }
 
 }

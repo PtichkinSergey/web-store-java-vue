@@ -13,6 +13,7 @@ export default createStore({
     sort_mode: 'ascending'
   },
   getters: {
+    // Возвращает категорию товаров по переданному id
     getCategoryById: (state) => (id) => {
       if(state.categories.length < 1){
         return null;
@@ -22,6 +23,7 @@ export default createStore({
       }
       return state.categories.filter((category) => category.id == id)[0].name;
     },
+    // Возвращает количество товаров, пренадлижащих категории
     getGoodsCountByCategory: (state) => (id) => {
       if(state.goods.length < 1) {
         return 0;
@@ -31,6 +33,7 @@ export default createStore({
       }
       return state.goods.filter((good) => good.categories.filter((ctg) => ctg.id == id).length > 0).length;
     },
+    // Возвращает полный путь до категории, начиная с корня через вложенные категории
     getPathToCategory: (state) => (id) => {
       if(state.categories.length == 0) {
         return null;
@@ -47,6 +50,7 @@ export default createStore({
       }
       return path_to_category
     },
+    // Общее количество товаров в корзине
     getBasketTotalSize(state) {
       let totalSize = 0;
       for(let basket_good of state.basket) {
@@ -56,6 +60,7 @@ export default createStore({
       }
       return totalSize;
     },
+    // Общая стоимость всех товаров без учёта скидок
     getBasketTotalCost(state) {
       let cost = 0;
       for(let basket_good of state.basket) {
@@ -65,6 +70,7 @@ export default createStore({
       }
       return cost;
     },
+    // Общая величина скидки по всем товарам в корзине
     getTotalDiscount(state) {
       let discount = 0;
       for(let basket_good of state.basket) {
@@ -74,6 +80,7 @@ export default createStore({
       }
       return discount;
     },
+    // Проверяет наличие товара в корзине
     getBasketContainsGood: (state) => (id) => {
       for(let basket_good of state.basket) {
         if(basket_good.good.id == id) {
@@ -82,20 +89,21 @@ export default createStore({
       }
       return false;
     },
+    // Формирует дерево категорий в формате JSON 
     getCategoriesJSON(state) {
       let parser = function(list, category) {
         if(category.parent_id == null){
           list.push({id: category.id, name: category.name, childs: []});
           return;
         }
-        // parent search
+        // ищем родителя
         for(let item of list){
           if(item.id == category.parent_id){
             item.childs.push({id: category.id, name: category.name, childs: []});
             return;
           }
           if(item.childs && item.childs.length != 0){
-            // recursive call for childs
+            // рекурсивный вызов для дочерних узлов
             parser(item.childs, category);
           }
         }
@@ -106,6 +114,10 @@ export default createStore({
         parser(categoryList, category);
       }
       return categoryList;
+    },
+    // Авторизован ли пользователь
+    getUserLoggedIn(state) {
+      return state.auth_user_name != null && state.auth_email != null && state.jwt != null;
     }
   },
   mutations: {
@@ -150,27 +162,17 @@ export default createStore({
       }));
       state.categories = mappedList;
     },
-    addGood(state, good) {
-      state.goods.push(good);
-    },
-    addCategory(state, category) {
-      state.categories.push(category);
-    },
     addComment(state, comment) {
       state.comments.push(comment);
     },
-    removeGood(state, id) {
-      state.goods = state.goods.filter((good) => good.id != id);
-    },
-    removeCategory(state, id) {
-      state.categories = state.categories.filter((category) => category.id != id);
-    },
+    //добавление товара в корзину
     addGoodToBasket(state, good) {
       if(state.basket.filter((basket_good) => basket_good.good.id == good.id).length < 1) {
         state.basket.push({good: good, count_in_basket: 1, selected: true});
         localStorage.setItem('basket', JSON.stringify(state.basket));
       }
     },
+    // удаление товара из корзины
     removeGoodFromBasket(state, id) {
       state.basket = state.basket.filter((basket_good) => basket_good.good.id != id)
       if(state.basket.length < 1) {
@@ -188,12 +190,14 @@ export default createStore({
     setBasketData(state, data) {
       state.basket = data;
     },
+    // выход из аккаунта
     logout(state){
       state.jwt = null;
       state.auth_user_name = null;
       state.auth_email = null;
       localStorage.removeItem('jwt')
     },
+    // переключение типа сортировки товаров в каталоге
     changeSortMode(state) {
       if(state.sort_mode == 'descending') {
         state.sort_mode = 'ascending';
@@ -201,6 +205,21 @@ export default createStore({
       else {
         state.sort_mode = 'descending';
       }
+    },
+    // Запрос на создание заказа
+    executeOrder(state) {
+      const baseURL = "http://localhost:5000/api/order-create";
+      let headers = {Authorization: ''};
+      if(this.state.jwt) {
+        headers.Authorization = 'Bearer ' + this.state.jwt;
+      }
+      axios.post(baseURL, {data: state.basket, headers: headers})
+      .then(response => {
+          alert(response.data);
+      })
+      .catch(e => {
+          console.log(e); 
+      });
     }
   },
   actions: {
@@ -260,6 +279,7 @@ export default createStore({
         let data = JSON.parse(localStorage.getItem('basket'));
         commit("setBasketData", data);
       },
+      // Восстановление данных авторизованного пользователя, при наличии корректного jwt в localStorage
       fetchAuthenticateUser({ commit }) {
         const baseURL = "http://localhost:5000/api/auth_user";
           let headers = {Authorization: ''};

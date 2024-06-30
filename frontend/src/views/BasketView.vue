@@ -17,11 +17,11 @@
                 <p>Всего товаров: {{ $store.getters.getBasketTotalSize }}</p>
                 <p 
                     id="discount"
-                    v-if="$store.state.auth_email"
+                    v-if="$store.getters.getUserLoggedIn"
                 >
                     Скидка: {{ $store.getters.getTotalDiscount }} руб.
                 </p>
-                <p v-if="$store.state.auth_email">
+                <p v-if="$store.getters.getUserLoggedIn">
                     Итого: <b>{{ $store.getters.getBasketTotalCost - $store.getters.getTotalDiscount }} руб.</b>
                 </p>
                 <p v-else>
@@ -29,6 +29,7 @@
                 </p>
                 <v-btn
                     id="execute_order_btn"
+                    @click="execute_order"
                 >
                     Оформить заказ
                 </v-btn>
@@ -45,6 +46,18 @@
             Toolbar, BasketList
         },
         name: 'basket',
+        methods: {
+            // Запрос на оформление заказа
+            execute_order() {
+                if(this.$store.getters.getUserLoggedIn) {
+                    this.$store.commit('executeOrder');
+                }
+                else {
+                    alert("Для оформления заказа вы должны быть авторизованы!");
+                    this.$router.push('/auth');
+                }
+            }
+        }
     }
 </script>
 

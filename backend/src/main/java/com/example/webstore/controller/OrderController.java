@@ -52,7 +52,7 @@ public class OrderController {
         }
     }
 
-    @PostMapping("/orders")
+    @PostMapping("/order-create")
     public String postMethodName(@RequestBody Order order) {
         orderService.create(order);
         return "success";

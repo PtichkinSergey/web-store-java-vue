@@ -30,10 +30,15 @@
                         </p>
                         <div
                             id="cost_info"
-                            v-if="$store.state.auth_email"
+                            v-if="$store.getters.getUserLoggedIn"
                         >
                             <p>{{good.cost * (1 - good.discount)}} руб.</p>
-                            <s id="cost_with_discount">{{good.cost}} руб.</s>
+                            <s 
+                                id="cost_with_discount"
+                                v-if="good.discount > 0"
+                            >
+                                {{good.cost}} руб.
+                            </s>
                         </div>
                         <p v-else>{{good.cost}} руб.</p>
                         <v-btn
@@ -55,9 +60,6 @@
                     </div>
                 </div>
              </v-card>
-            <CommentList
-                :good_id="good.id"
-            />
         </div>
         <div v-else>
             <h3>Загрузка...</h3>
@@ -67,7 +69,6 @@
 
 <script>
     import Toolbar from '@/components/Toolbar.vue'
-    import CommentList from "@/components/CommentList.vue"
     import axios from 'axios'
     export default {
         name: 'GoodView',
@@ -75,16 +76,9 @@
             good: null,
         }),
         components: {
-            Toolbar, CommentList
+            Toolbar
         },
         methods: {
-            async fetchGoods() {
-                let category = 0;
-                if(this.$route.query.category) {
-                    category = this.$route.query.category;
-                }
-                this.$store.dispatch('fetchGoods', category);
-            },
             addToBasket(good) {
                 this.$store.commit('addGoodToBasket', good);
             },

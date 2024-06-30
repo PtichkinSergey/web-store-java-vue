@@ -59,6 +59,7 @@
       Toolbar
     },
     methods: {
+      // Запрос на регистрацию пользователя
       register() {
         const baseURL = "http://localhost:5000/api/sign-up";
         let headers = {Authorization: ''};
