@@ -210,10 +210,16 @@ export default createStore({
     executeOrder(state) {
       const baseURL = "http://localhost:5000/api/order-create";
       let headers = {Authorization: ''};
-      if(this.state.jwt) {
-        headers.Authorization = 'Bearer ' + this.state.jwt;
+      if(state.jwt) {
+        headers.Authorization = 'Bearer ' + state.jwt;
       }
-      axios.post(baseURL, {data: state.basket, headers: headers})
+      let order_data = state.basket.map((basket_good) => {
+        return {
+          goodId: basket_good.good.id,
+          goodCount: basket_good.count_in_basket
+        }
+      });
+      axios.post(baseURL, order_data, { headers: headers})
       .then(response => {
           alert(response.data);
       })

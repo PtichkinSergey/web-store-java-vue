@@ -4,17 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.webstore.model.Good;
 import com.example.webstore.model.Order;
 import com.example.webstore.service.OrderServiceImpl;
+import com.example.webstore.web.OrderGood;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
@@ -52,9 +57,15 @@ public class OrderController {
         }
     }
 
+    @PutMapping("/{orderId}/good/{goodId}")
+    public Good assignOrderToGood(@PathVariable Integer orderId, @PathVariable Integer goodId) {
+        return orderService.assignOrderToGood(orderId, goodId);
+    }
+
     @PostMapping("/order-create")
-    public String postMethodName(@RequestBody Order order) {
-        orderService.create(order);
+    public String postMethodName(@RequestBody @Valid List<OrderGood> orderGoods) {
+        orderService.sendMail(orderGoods);
+        // добавть в базу
         return "success";
     }
 }
