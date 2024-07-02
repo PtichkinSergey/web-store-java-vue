@@ -17,7 +17,7 @@
                 <div>
                     <v-img 
                         id="image"
-                        :src= getImgUrl(basket_good.image_path)
+                        :src= getImgUrl(basket_good.good.image_path)
                     />
                 </div>
                 <div id="good_name">
@@ -98,7 +98,7 @@
             },
             getImgUrl(img) { 
                 if(img){
-                    return './assets/images/' + img;
+                    return require('@/assets/images/' + img);
                 }
                 return null;
             }
