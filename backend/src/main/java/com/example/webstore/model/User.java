@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,20 +25,21 @@ public class User implements UserDetails{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
 
-    @Column(name = "first_name")
+    @Column(name = "first_name", length = 255)
     private String firstName;
 
-    @Column(name = "second_name")
+    @Column(name = "second_name", length = 255)
     private String secondName;
 
-    @Column(name = "email")
+    @Email
+    @Column(name = "email", length = 255)
     private String email;
 
-    @Column(name = "password")
+    @Column(name = "password", length = 255)
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
+    @Column(name = "role", nullable = false, length = 10)
     private Role role;
 
     public User(String firstName, String secondName, String email, String password, Role role) {
