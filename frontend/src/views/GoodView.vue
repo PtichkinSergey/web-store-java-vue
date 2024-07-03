@@ -105,7 +105,7 @@
                     id: response.data.id,
                     name: response.data.name,
                     cost: response.data.cost,
-                    discount: 0.05,
+                    discount: response.data.discount,
                     count: response.data.count,
                     manufacturer: response.data.manufacturer,
                     categories: response.data.categories,

@@ -78,6 +78,11 @@ public class GoodServiceImpl implements GoodService {
     }
 
     @Override
+    public List<Good> updateAll(List<Good> goods) {
+        return goodRepository.saveAll(goods);
+    }
+
+    @Override
     public void delete(int id) {
         goodRepository.deleteById(id);
     }

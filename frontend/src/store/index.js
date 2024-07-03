@@ -216,15 +216,30 @@ export default createStore({
       let order_data = state.basket.map((basket_good) => {
         return {
           goodId: basket_good.good.id,
-          goodCount: basket_good.count_in_basket
+          goodQuantity: basket_good.count_in_basket
         }
       });
       axios.post(baseURL, order_data, { headers: headers})
       .then(response => {
-          alert(response.data);
+          if(response.status == 200){
+            alert("Заказ успешно оформлен!");
+            state.basket = [];
+            localStorage.removeItem('basket');
+          }
       })
       .catch(e => {
-          console.log(e); 
+        if(e.response.status == 401) {
+          alert("Ошибка авторизации!");
+        }
+        else if(e.response.status == 404) {
+          alert("Один из товаров не найден!");
+        }
+        else if(e.response.status == 451) {
+          alert("К сожалению, некоторые товары закончились(");
+        }
+        else {
+          alert("Ошибка при создании заказа! Код: " + e.response.status);
+        }
       });
     }
   },

@@ -17,7 +17,7 @@
                 <div>
                     <v-img 
                         id="image"
-                        :src= getImgUrl(basket_good.image_path)
+                        :src= getImgUrl(basket_good.good.image_path)
                     />
                 </div>
                 <div id="good_name">
@@ -47,14 +47,22 @@
                     </a>
                 </div>
 
-                <div
-                    id="cost_info"
-                    v-if="$store.state.auth_email"
-                >
-                    <p>{{basket_good.good.cost * (1 - basket_good.good.discount)}} руб.</p>
-                    <s id="cost_with_discount">{{basket_good.good.cost}} руб.</s>
+                <div id="cost">
+                    <div
+                        id="cost_info"
+                        v-if="$store.state.auth_email"
+                    >
+                        <p>{{basket_good.good.cost * (1 - basket_good.good.discount)}} руб.</p>
+                        <s 
+                            v-if="basket_good.good.discount > 0"
+                            id="cost_with_discount"
+                        >
+                            {{basket_good.good.cost}} руб.
+                        </s>
+                    </div>
+                    <p v-else>{{basket_good.good.cost}} руб.</p>
                 </div>
-                <p v-else>{{basket_good.good.cost}} руб.</p>
+                
             </div>
         </v-list-item>
     </v-list>
@@ -76,9 +84,11 @@
             increaseGoodCount(id) {
                 for(let basket_good of this.basket){
                     if(basket_good.good.id == id) {
-                        basket_good.count_in_basket ++;
-                        localStorage.setItem('basket', JSON.stringify(this.basket));
-                        return;
+                        if(basket_good.count_in_basket < basket_good.good.count) {
+                           basket_good.count_in_basket ++;
+                            localStorage.setItem('basket', JSON.stringify(this.basket));
+                            return; 
+                        }
                     }
                 }
             },
@@ -98,7 +108,7 @@
             },
             getImgUrl(img) { 
                 if(img){
-                    return './assets/images/' + img;
+                    return require('@/assets/images/' + img);
                 }
                 return null;
             }
@@ -135,5 +145,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+#cost {
+    width: 10vw;
 }
 </style>

@@ -3,16 +3,16 @@ package com.example.webstore.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.webstore.model.Good;
+import org.springframework.http.ResponseEntity;
+
 import com.example.webstore.model.Order;
-import com.example.webstore.web.OrderGood;
+import com.example.webstore.web.GoodQuantity;
 
 public interface OrderService {
-    public Order create(Order order);
+    public ResponseEntity<Order> create(List<GoodQuantity> goodQuantities);
     public List<Order> readAll();
     public Optional<Order> findById(int id);
     public Order update(Order order);
     public void delete(int id);
-    public void sendMail(List<OrderGood> orderGoods);
-    public Good assignOrderToGood(Integer orderId, Integer goodId);
+    public void sendMail(Order order);
 }

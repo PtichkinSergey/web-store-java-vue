@@ -17,5 +17,6 @@ public interface GoodService {
     public Good assignGoodToCategory(Integer goodId, Integer ctgId);
     public Optional<Good> findById(int id);
     public Good update(Good good);
+    public List<Good> updateAll(List<Good> goods);
     public void delete(int id);
 }

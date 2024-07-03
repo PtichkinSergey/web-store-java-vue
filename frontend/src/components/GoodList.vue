@@ -68,33 +68,56 @@
 </template>
 
 <script>
-export default {
-    name: "GoodList",
-    data: () => ({
-        
-    }),
-    methods: {
-        async fetchGoods() {
-            let category = 0;
-            if(this.$route.query.category) {
-                category = this.$route.query.category;
+    import axios from 'axios'
+    export default {
+        name: "GoodList",
+        data: () => ({
+            
+        }),
+        methods: {
+            async fetchGoods() {
+                let category = 0;
+                if(this.$route.query.category) {
+                    category = this.$route.query.category;
+                }
+                this.$store.dispatch('fetchGoods', category);
+            },
+            addToBasket(good) {
+                if(this.checkAvailable(good)) {
+                    this.$store.commit('addGoodToBasket', good);
+                }
+                else{
+                    //обнова
+                }
+            },
+            getImgUrl(img) { 
+                if(img){
+                    return require('@/assets/images/' + img);
+                }
+                return null;
+            },
+            checkAvailable(good) {
+                const baseURL = "http://localhost:5000/api/goods/" + good.id;
+                let headers = {Authorization: ''};
+                if(this.$store.state.jwt) {
+                    headers.Authorization = 'Bearer ' + this.$store.state.jwt;
+                }
+                return axios.get(baseURL, { headers: headers})
+                .then(response => {
+                    if(response.data.count > 0) {
+                        return true;
+                    }
+                    return false;
+                })
+                .catch(e => {
+                    console.log(e); 
+                });
             }
-            this.$store.dispatch('fetchGoods', category);
         },
-        addToBasket(good) {
-            this.$store.commit('addGoodToBasket', good);
+        mounted() {
+            this.fetchGoods();
         },
-        getImgUrl(img) { 
-            if(img){
-                return require('@/assets/images/' + img);
-            }
-            return null;
-        }
-    },
-    mounted() {
-        this.fetchGoods();
-    },
-}
+    }
 </script>
 
 <style lang="scss" scoped>

@@ -10,26 +10,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.webstore.model.Good;
 import com.example.webstore.model.Order;
 import com.example.webstore.service.OrderServiceImpl;
-import com.example.webstore.web.OrderGood;
+import com.example.webstore.web.GoodQuantity;
+
+import lombok.AllArgsConstructor;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api")
 public class OrderController {
     private final OrderServiceImpl orderService;
-
-    public OrderController(OrderServiceImpl orderService) {
-        this.orderService = orderService;
-    }
 
     @GetMapping("/orders")
     public ResponseEntity<List<Order>> getAllOrders() {
@@ -57,15 +54,8 @@ public class OrderController {
         }
     }
 
-    @PutMapping("/{orderId}/good/{goodId}")
-    public Good assignOrderToGood(@PathVariable Integer orderId, @PathVariable Integer goodId) {
-        return orderService.assignOrderToGood(orderId, goodId);
-    }
-
     @PostMapping("/order-create")
-    public String postMethodName(@RequestBody @Valid List<OrderGood> orderGoods) {
-        orderService.sendMail(orderGoods);
-        // добавть в базу
-        return "success";
+    public ResponseEntity<Order> OrderCreate(@RequestBody @Valid List<GoodQuantity> goodQuantities) {
+        return orderService.create(goodQuantities);
     }
 }

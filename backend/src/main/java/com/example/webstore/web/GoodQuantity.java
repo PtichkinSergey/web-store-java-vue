@@ -3,7 +3,7 @@ package com.example.webstore.web;
 import lombok.Data;
 
 @Data
-public class OrderGood {
+public class GoodQuantity {
     private int goodId;
-    private int goodCount;
+    private int goodQuantity;
 }
