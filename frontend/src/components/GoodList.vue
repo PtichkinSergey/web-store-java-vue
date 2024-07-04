@@ -10,7 +10,7 @@
             <div class="good_list_item">
                 <div id="image">
                     <v-img 
-                        :src="getImgUrl(good.image_path)"
+                        :src="getImgUrl(good.imagePath)"
                     />
                 </div>
                 <div id="description">
@@ -83,35 +83,40 @@
                 this.$store.dispatch('fetchGoods', category);
             },
             addToBasket(good) {
-                if(this.checkAvailable(good)) {
-                    this.$store.commit('addGoodToBasket', good);
-                }
-                else{
-                    //обнова
-                }
+                let promise = new Promise(async (resolve, reject) => {
+                    const baseURL = "http://localhost:5000/api/goods/" + good.id;
+                    let headers = {Authorization: ''};
+                    if(this.$store.state.jwt) {
+                        headers.Authorization = 'Bearer ' + this.$store.state.jwt;
+                    }
+                    return axios.get(baseURL, { headers: headers})
+                    .then(response => {
+                        if(response.data.count > 0) {
+                            resolve(response.data);
+                        }
+                        else {
+                            reject();
+                        }
+                    })
+                    .catch(e => {
+                        console.log(e); 
+                    });
+                })
+                promise.then(
+                    result => {
+                        console.log(result);
+                        this.$store.commit('addGoodToBasket', result);
+                    }, 
+                    () => {
+                        this.fetchGoods();
+                    }
+                )
             },
             getImgUrl(img) { 
                 if(img){
                     return require('@/assets/images/' + img);
                 }
                 return null;
-            },
-            checkAvailable(good) {
-                const baseURL = "http://localhost:5000/api/goods/" + good.id;
-                let headers = {Authorization: ''};
-                if(this.$store.state.jwt) {
-                    headers.Authorization = 'Bearer ' + this.$store.state.jwt;
-                }
-                return axios.get(baseURL, { headers: headers})
-                .then(response => {
-                    if(response.data.count > 0) {
-                        return true;
-                    }
-                    return false;
-                })
-                .catch(e => {
-                    console.log(e); 
-                });
             }
         },
         mounted() {

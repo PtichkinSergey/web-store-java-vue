@@ -17,7 +17,7 @@
                 <div>
                     <v-img 
                         id="image"
-                        :src= getImgUrl(basket_good.good.image_path)
+                        :src= getImgUrl(basket_good.good.imagePath)
                     />
                 </div>
                 <div id="good_name">
@@ -76,6 +76,7 @@
         methods: {
             fetchBasket() {
                 this.basket = this.$store.state.basket;
+                console.log(this.basket);
             },
             removeGood(id) {
                 this.basket = this.basket.filter((basket_good) => basket_good.good.id != id);

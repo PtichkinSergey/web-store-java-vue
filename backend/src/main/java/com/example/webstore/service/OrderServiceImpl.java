@@ -114,9 +114,9 @@ public class OrderServiceImpl implements OrderService {
                 message.append(orderDetail.getGood().getName() + ": " + orderDetail.getQuantity() + " * " + orderDetail.getGood().getCost());
                 if(orderDetail.getGood().getDiscount() > 0) {
                     float discount = orderDetail.getGood().getDiscount();
-                    message.append("- " + discount * 100 + "% ");
-                    message.append(" = "  + orderDetail.getQuantity() * orderDetail.getGood().getCost() * (1 - discount) + " руб.\n");
-                    orderAmount += orderDetail.getQuantity() * orderDetail.getGood().getCost() * (1 - discount);
+                    message.append("- " + (int)(discount * 100) + "% ");
+                    message.append(" = "  + Math.ceil(orderDetail.getQuantity() * orderDetail.getGood().getCost() * (1 - discount)) + " руб.\n");
+                    orderAmount += Math.ceil(orderDetail.getQuantity() * orderDetail.getGood().getCost() * (1 - discount));
                 }
                 else {
                     message.append(" = " + orderDetail.getQuantity() * orderDetail.getGood().getCost() + " руб.\n");

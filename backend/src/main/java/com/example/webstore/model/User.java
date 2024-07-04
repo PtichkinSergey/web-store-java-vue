@@ -25,10 +25,10 @@ public class User implements UserDetails{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
 
-    @Column(name = "first_name", length = 255)
+    @Column(name = "first_name", length = 50)
     private String firstName;
 
-    @Column(name = "second_name", length = 255)
+    @Column(name = "second_name", length = 50)
     private String secondName;
 
     @Email

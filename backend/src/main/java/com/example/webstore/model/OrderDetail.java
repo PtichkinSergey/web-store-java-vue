@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -26,6 +27,7 @@ public class OrderDetail implements Serializable{
     @JoinColumn(name = "good_id")
     private Good good; 
 
+    @NotNull
     private int quantity;
 
     public OrderDetail(Order order, Good good, int quantity) {

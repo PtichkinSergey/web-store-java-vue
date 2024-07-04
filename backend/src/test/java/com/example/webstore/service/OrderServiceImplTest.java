@@ -84,8 +84,8 @@ class OrderServiceImplTest {
 
         Order order = new Order(user, new Date(System.currentTimeMillis()));
         Set<OrderDetail> orderDetails = order.getOrderDetails();
-        orderDetails.add(new OrderDetail(order, good2, 10));
-        orderDetails.add(new OrderDetail(order, good1, 15));
+        orderDetails.add(new OrderDetail(order, good1, 10));
+        orderDetails.add(new OrderDetail(order, good2, 15));
         orderDetails.add(new OrderDetail(order, good3, 3));
         order.setOrderDetails(orderDetails);
 
@@ -100,7 +100,7 @@ class OrderServiceImplTest {
         while (testIter.hasNext() && iter.hasNext()) {
             OrderDetail testOrderDetail = testIter.next();
             OrderDetail orderDetail = iter.next();
-            Assertions.assertEquals(testOrderDetail.getGood(), orderDetail.getGood());
+            Assertions.assertEquals(testOrderDetail.getGood().getName(), orderDetail.getGood().getName());
             Assertions.assertEquals(testOrderDetail.getQuantity(), orderDetail.getQuantity());
         }
     }

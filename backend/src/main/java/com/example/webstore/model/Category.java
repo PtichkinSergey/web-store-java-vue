@@ -21,10 +21,10 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int categoryId;
 
-    @Column(name = "name")
+    @Column(name = "name", length = 50)
     private String name;
 
-    @Column(name = "parent_id")
+    @Column(name = "parent_id", nullable = true)
     private Integer parentId;
 
     @JsonIgnore

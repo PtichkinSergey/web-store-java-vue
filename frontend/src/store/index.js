@@ -132,18 +132,7 @@ export default createStore({
           manufacturer: good.manufacturer,
           categories: good.categories,
           description: good.description,
-          image_path: good.imagePath
-        };
-      });
-    },
-    setCommentsData(state, commentsData) {
-      state.comments = commentsData.map(comment => {
-        return {
-          id: comment.id,
-          author: `${comment.user.secondName} ${comment.user.firstName}`,
-          text: comment.text,
-          rating: comment.rating,
-          image_path: comment.imagePath
+          imagePath: good.imagePath
         };
       });
     },
@@ -161,9 +150,6 @@ export default createStore({
         }
       }));
       state.categories = mappedList;
-    },
-    addComment(state, comment) {
-      state.comments.push(comment);
     },
     //добавление товара в корзину
     addGoodToBasket(state, good) {
@@ -222,9 +208,10 @@ export default createStore({
       axios.post(baseURL, order_data, { headers: headers})
       .then(response => {
           if(response.status == 200){
-            alert("Заказ успешно оформлен!");
             state.basket = [];
             localStorage.removeItem('basket');
+            alert("Заказ успешно оформлен!")
+            window.location.reload();
           }
       })
       .catch(e => {
@@ -258,30 +245,6 @@ export default createStore({
               console.log(e); 
           });
       },
-      fetchComments({ commit }, good_id) {
-        const baseURL = "http://localhost:5000/api/comments";
-        let headers = {Authorization: ''};
-          if(this.state.jwt) {
-            headers.Authorization = 'Bearer ' + this.state.jwt;
-          }
-        axios.get(baseURL, { params: { good_id: good_id }, headers: headers})
-        .then(response => {
-            commit("setCommentsData", response.data);
-        })
-        .catch(e => {
-            console.log(e); 
-        });
-      },
-      sendComment({ commit }, comment) {
-        const baseURL = "http://localhost:5000/api/comments";
-        axios.post(baseURL)
-        .then(response => {
-            
-        })
-        .catch(e => {
-            console.log(e); 
-        });
-      }, 
       fetchCategories({ commit }) {
           const baseURL = "http://localhost:5000/api/categories";
           let headers = {Authorization: ''};

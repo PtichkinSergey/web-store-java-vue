@@ -10,7 +10,7 @@
                         {{ this.good.name }}
                     </h3>
                     <v-img 
-                        :src="getImgUrl(this.good.image_path)"
+                        :src="getImgUrl(this.good.imagePath)"
                     />
                 </div>
                 <div id="card_right">
@@ -80,7 +80,58 @@
         },
         methods: {
             addToBasket(good) {
-                this.$store.commit('addGoodToBasket', good);
+                let promise = new Promise(async (resolve, reject) => {
+                    const baseURL = "http://localhost:5000/api/goods/" + good.id;
+                    let headers = {Authorization: ''};
+                    if(this.$store.state.jwt) {
+                        headers.Authorization = 'Bearer ' + this.$store.state.jwt;
+                    }
+                    return axios.get(baseURL, { headers: headers})
+                    .then(response => {
+                        if(response.data.count > 0) {
+                            resolve(response.data);
+                        }
+                        else {
+                            reject();
+                        }
+                    })
+                    .catch(e => {
+                        console.log(e); 
+                    });
+                })
+                promise.then(
+                    result => {
+                        console.log(result);
+                        this.$store.commit('addGoodToBasket', result);
+                    }, 
+                    () => {
+                        this.fetchGood();
+                    }
+                )
+            },
+            fetchGood(){
+                const baseURL = "http://localhost:5000/api/goods/" + this.$route.params.id;
+                let headers = {Authorization: ''};
+                if(this.$store.state.jwt) {
+                    headers.Authorization = 'Bearer ' + this.$store.state.jwt;
+                }
+                axios.get(baseURL, { headers: headers})
+                .then(response => {
+                    this.good = {
+                        id: response.data.id,
+                        name: response.data.name,
+                        cost: response.data.cost,
+                        discount: response.data.discount,
+                        count: response.data.count,
+                        manufacturer: response.data.manufacturer,
+                        categories: response.data.categories,
+                        description: response.data.description,
+                        imagePath: response.data.imagePath
+                    }
+                })
+                .catch(e => {
+                    console.log(e); 
+                });
             },
             getImgUrl(img) { 
             if(img){
@@ -94,28 +145,7 @@
                 this.good = this.$store.state.goods.find((good) => good.id == this.$route.params.id );
                 return;
             }
-            const baseURL = "http://localhost:5000/api/goods/" + this.$route.params.id;
-            let headers = {Authorization: ''};
-            if(this.$store.state.jwt) {
-                headers.Authorization = 'Bearer ' + this.$store.state.jwt;
-            }
-            axios.get(baseURL, { headers: headers})
-            .then(response => {
-                this.good = {
-                    id: response.data.id,
-                    name: response.data.name,
-                    cost: response.data.cost,
-                    discount: response.data.discount,
-                    count: response.data.count,
-                    manufacturer: response.data.manufacturer,
-                    categories: response.data.categories,
-                    description: response.data.description,
-                    image_path: response.data.imagePath
-                }
-            })
-            .catch(e => {
-                console.log(e); 
-            });
+            this.fetchGood();
         }
     }
 </script>
