@@ -8,6 +8,10 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailAuthenticationException;
+import org.springframework.mail.MailException;
+import org.springframework.mail.MailParseException;
+import org.springframework.mail.MailSendException;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.webstore.model.Order;
@@ -56,6 +60,18 @@ public class OrderController {
 
     @PostMapping("/order-create")
     public ResponseEntity<Order> OrderCreate(@RequestBody @Valid List<GoodQuantity> goodQuantities) {
-        return orderService.create(goodQuantities);
+        ResponseEntity<Order> createResponse = orderService.create(goodQuantities);
+        if(createResponse.getStatusCode() == HttpStatus.OK) {
+            try {
+                orderService.sendMail(createResponse.getBody());
+            } catch (MailSendException e) {
+                return new ResponseEntity<>(null, HttpStatus.BAD_GATEWAY);
+            } catch (MailAuthenticationException e) {
+                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            } catch (MailParseException e) {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+        }
+        return createResponse;
     }
 }

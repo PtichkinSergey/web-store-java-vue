@@ -22,11 +22,23 @@ public class AuthController {
         this.authenticationService = authentificationService;
     }
 
+    /**
+     * Эндпоинт для запросов на регистрацию
+     * 
+     * @param request запрос на регистрацию
+     * @return ответ содержащий jwt или сообщение об ошибке
+     */
     @PostMapping("/sign-up")
     public JwtAuthenticationResponse signUp(@RequestBody @Valid SignUpRequest request) {
         return authenticationService.signUp(request);
     }
 
+    /**
+     * Эндпоинт для запросов на авторизацию
+     * 
+     * @param request запрос на авторизацию
+     * @return ответ содержащий jwt или сообщение об ошибке
+     */
     @PostMapping("/sign-in")
     public JwtAuthenticationResponse signIn(@RequestBody @Valid SignInRequest request) {
         return authenticationService.signIn(request);

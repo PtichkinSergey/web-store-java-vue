@@ -51,6 +51,9 @@ public class OrderServiceImpl implements OrderService {
                 Optional<Good> good = goodService.findById(goodQuantity.getGoodId());
                 if(good.isPresent()) {
                     int goodCount = good.get().getCount();
+                    if(goodQuantity.getGoodQuantity() < 1) {
+                        continue;
+                    }
                     if(goodCount - goodQuantity.getGoodQuantity() >= 0) {
                         good.get().setCount(goodCount - goodQuantity.getGoodQuantity());
                         updatedGoods.add(good.get());
@@ -66,7 +69,6 @@ public class OrderServiceImpl implements OrderService {
             }
             newOrder.setOrderDetails(orderDetails);
             goodService.updateAll(updatedGoods);
-            this.sendMail(newOrder);
             return new ResponseEntity<Order>(orderRepository.save(newOrder), HttpStatus.OK);
 		}
         else {

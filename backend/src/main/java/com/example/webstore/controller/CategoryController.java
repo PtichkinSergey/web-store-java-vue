@@ -14,8 +14,6 @@ import com.example.webstore.service.CategoryServiceImpl;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api")
@@ -26,6 +24,11 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+    /**
+     * Получение всех доступных категорий
+     * 
+     * @return ответ содержащий список категорий или код 500
+     */
     @GetMapping("/categories")
     public ResponseEntity<List<Category>> getAllCategories() {
         try {
@@ -41,6 +44,12 @@ public class CategoryController {
         }
     }
 
+    /**
+     * Получение категории по id
+     * 
+     * @param id 
+     * @return ответ с категорией или код 404
+     */
     @GetMapping("/categories/{id}")
     public ResponseEntity<Category> getCategoryById(@PathVariable("id") int id) {
         Optional<Category> categoryData = categoryService.findById(id);
@@ -49,11 +58,5 @@ public class CategoryController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-    }
-
-    @PostMapping("/categories")
-    public String postMethodName(@RequestBody Category category) {
-        categoryService.create(category);
-        return "success";
     }
 }

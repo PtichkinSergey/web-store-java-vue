@@ -24,6 +24,12 @@ public class JWTService {
     private final JwtDecoder decoder;
 
 
+    /**
+     * Генерация jwt по данным пользователя
+     * 
+     * @param user пользователь
+     * @return jwt
+     */
     public String generateToken(User user) {
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()

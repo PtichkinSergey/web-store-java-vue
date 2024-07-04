@@ -1,0 +1,108 @@
+package com.example.webstore.service;
+
+import static org.mockito.Mockito.when;
+
+import java.sql.Date;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailSender;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import com.example.webstore.model.Good;
+import com.example.webstore.model.Order;
+import com.example.webstore.model.OrderDetail;
+import com.example.webstore.model.Role;
+import com.example.webstore.model.User;
+import com.example.webstore.repository.OrderRepository;
+import com.example.webstore.web.GoodQuantity;
+
+@ExtendWith(MockitoExtension.class)
+class OrderServiceImplTest {
+    @InjectMocks
+    private OrderServiceImpl orderService;
+
+    @Mock
+    private OrderRepository orderRepository;
+
+    @Mock
+    private UserServiceImpl userService;
+
+    @Mock
+    private GoodServiceImpl goodService;
+
+    @Mock
+    private MailSender mailSender;
+
+    @Mock
+    private Authentication auth;
+
+    @BeforeEach
+    void initSecurityContext() {
+        when(auth.getName()).thenReturn("test.test@test.test");
+        SecurityContextHolder.getContext().setAuthentication(auth);
+    }
+
+    @AfterEach
+    void clearSecurityContext() {
+        SecurityContextHolder.clearContext();
+    }
+    
+    @Test
+    void createTestOK() {
+        GoodQuantity goodQuantity1 = new GoodQuantity(1, 15);
+        GoodQuantity goodQuantity2 = new GoodQuantity(2, 10);
+        GoodQuantity goodQuantity3 = new GoodQuantity(3, 3);
+
+        Good good1 = new Good("test1", 1000, 0, 22, "test", "test", "test");
+        Good good2 = new Good("test2", 1000, 0, 10, "test", "test", "test");
+        Good good3 = new Good("test3", 1000, 0, 4, "test", "test", "test");
+
+        User user = new User("Test", "Test", "test.test@test.test", "12345", Role.USER);
+        List<GoodQuantity> goodQuantities = Arrays.asList(goodQuantity1, goodQuantity2, goodQuantity3);
+
+        Mockito.when(orderRepository.save(Mockito.any(Order.class))).thenAnswer(i -> i.getArguments()[0]);
+        Mockito.when(userService.getByEmail("test.test@test.test")).thenReturn(user);
+        Mockito.when(goodService.findById(1)).thenReturn(Optional.of(good1));
+        Mockito.when(goodService.findById(2)).thenReturn(Optional.of(good2));
+        Mockito.when(goodService.findById(3)).thenReturn(Optional.of(good3));
+
+        Order order = new Order(user, new Date(System.currentTimeMillis()));
+        Set<OrderDetail> orderDetails = order.getOrderDetails();
+        orderDetails.add(new OrderDetail(order, good2, 10));
+        orderDetails.add(new OrderDetail(order, good1, 15));
+        orderDetails.add(new OrderDetail(order, good3, 3));
+        order.setOrderDetails(orderDetails);
+
+        ResponseEntity<Order> testResponse = orderService.create(goodQuantities);
+        Assertions.assertEquals(testResponse.getStatusCode(), HttpStatus.OK);
+        Order testOrder = testResponse.getBody();
+        Assertions.assertNotNull(testOrder);
+        Assertions.assertEquals(testOrder.getUser(), user);
+        Assertions.assertEquals(testOrder.getDate().toString(), order.getDate().toString());
+        Iterator<OrderDetail> testIter = testOrder.getOrderDetails().iterator();
+        Iterator<OrderDetail> iter = orderDetails.iterator();
+        while (testIter.hasNext() && iter.hasNext()) {
+            OrderDetail testOrderDetail = testIter.next();
+            OrderDetail orderDetail = iter.next();
+            Assertions.assertEquals(testOrderDetail.getGood(), orderDetail.getGood());
+            Assertions.assertEquals(testOrderDetail.getQuantity(), orderDetail.getQuantity());
+        }
+    }
+
+}
