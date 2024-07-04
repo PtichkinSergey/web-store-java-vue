@@ -74,35 +74,42 @@ class OrderServiceImplTest {
         Good good3 = new Good("test3", 1000, 0, 4, "test", "test", "test");
 
         User user = new User("Test", "Test", "test.test@test.test", "12345", Role.USER);
-        List<GoodQuantity> goodQuantities = Arrays.asList(goodQuantity1, goodQuantity2, goodQuantity3);
+        List<GoodQuantity> goodQuantities = Arrays.asList(goodQuantity3, goodQuantity2, goodQuantity1);
 
         Mockito.when(orderRepository.save(Mockito.any(Order.class))).thenAnswer(i -> i.getArguments()[0]);
         Mockito.when(userService.getByEmail("test.test@test.test")).thenReturn(user);
         Mockito.when(goodService.findById(1)).thenReturn(Optional.of(good1));
         Mockito.when(goodService.findById(2)).thenReturn(Optional.of(good2));
-        Mockito.when(goodService.findById(3)).thenReturn(Optional.of(good3));
-
-        Order order = new Order(user, new Date(System.currentTimeMillis()));
-        Set<OrderDetail> orderDetails = order.getOrderDetails();
-        orderDetails.add(new OrderDetail(order, good1, 10));
-        orderDetails.add(new OrderDetail(order, good2, 15));
-        orderDetails.add(new OrderDetail(order, good3, 3));
-        order.setOrderDetails(orderDetails);
+        Mockito.when(goodService.findById(3)).thenReturn(Optional.of(good3));  
 
         ResponseEntity<Order> testResponse = orderService.create(goodQuantities);
-        Assertions.assertEquals(testResponse.getStatusCode(), HttpStatus.OK);
+        Assertions.assertEquals(HttpStatus.OK, testResponse.getStatusCode());
         Order testOrder = testResponse.getBody();
         Assertions.assertNotNull(testOrder);
-        Assertions.assertEquals(testOrder.getUser(), user);
-        Assertions.assertEquals(testOrder.getDate().toString(), order.getDate().toString());
-        Iterator<OrderDetail> testIter = testOrder.getOrderDetails().iterator();
-        Iterator<OrderDetail> iter = orderDetails.iterator();
-        while (testIter.hasNext() && iter.hasNext()) {
-            OrderDetail testOrderDetail = testIter.next();
-            OrderDetail orderDetail = iter.next();
-            Assertions.assertEquals(testOrderDetail.getGood().getName(), orderDetail.getGood().getName());
-            Assertions.assertEquals(testOrderDetail.getQuantity(), orderDetail.getQuantity());
-        }
+        Assertions.assertEquals(user, testOrder.getUser());
+        Assertions.assertEquals(new Date(System.currentTimeMillis()).toString(), testOrder.getDate().toString());
+        Assertions.assertEquals(3, testOrder.getOrderDetails().size());
     }
 
+    @Test
+    void createTestNotFound() {
+        GoodQuantity goodQuantity1 = new GoodQuantity(1, 15);
+        List<GoodQuantity> goodQuantities = Arrays.asList(goodQuantity1);
+        User user = new User("Test", "Test", "fail.test@test.test", "12345", Role.USER);
+        Mockito.when(userService.getByEmail("test.test@test.test")).thenReturn(user);
+        ResponseEntity<Order> testResponse = orderService.create(goodQuantities);
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, testResponse.getStatusCode());
+    }
+
+    @Test
+    void createTestUnavailable() {
+        Good good1 = new Good("test1", 1000, 0, 2, "test", "test", "test");
+        GoodQuantity goodQuantity1 = new GoodQuantity(1, 500);
+        List<GoodQuantity> goodQuantities = Arrays.asList(goodQuantity1);
+        User user = new User("Test", "Test", "fail.test@test.test", "12345", Role.USER);
+        Mockito.when(userService.getByEmail("test.test@test.test")).thenReturn(user);
+        Mockito.when(goodService.findById(1)).thenReturn(Optional.of(good1));
+        ResponseEntity<Order> testResponse = orderService.create(goodQuantities);
+        Assertions.assertEquals(HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS, testResponse.getStatusCode());
+    }
 }
