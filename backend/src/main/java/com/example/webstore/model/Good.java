@@ -15,6 +15,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
+/**
+ * Класс сущности товара
+ */
 @Entity
 @Table(name = "goods")
 public class Good {

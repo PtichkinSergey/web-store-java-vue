@@ -18,6 +18,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+/**
+ * Класс сущности пользователя
+ */
 @Entity
 @Table(name = "users")
 public class User implements UserDetails{
@@ -128,5 +131,10 @@ public class User implements UserDetails{
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s %s %s %s %s", this.firstName, this.secondName, this.email, this.password, this.role);
     }
 }

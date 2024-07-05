@@ -9,6 +9,11 @@ import org.springframework.stereotype.Service;
 import com.example.webstore.model.Category;
 import com.example.webstore.repository.CategoryRepository;
 
+/**
+ * Сервис для работы с категориями товаров
+ * Внедряемые зависимости:
+ * categoryRepository - jpa репозиторий
+ */
 @Service
 public class CategoryServiceImpl implements CategoryService {
 

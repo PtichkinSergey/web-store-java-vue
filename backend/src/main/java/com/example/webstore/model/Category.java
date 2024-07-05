@@ -14,6 +14,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
+/**
+ * Класс сущности категории товаров
+ */
 @Entity
 @Table(name = "categories")
 public class Category {

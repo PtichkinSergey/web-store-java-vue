@@ -9,7 +9,6 @@ import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailAuthenticationException;
-import org.springframework.mail.MailException;
 import org.springframework.mail.MailParseException;
 import org.springframework.mail.MailSendException;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,12 +25,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+/**
+ * Контроллер запросов для доступа к данным заказов.
+ * Внедряемые зависимости: 
+ * orderService - сервис заказов
+ */
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api")
 public class OrderController {
     private final OrderServiceImpl orderService;
 
+    /**
+     * Эндпоинт для доступа к всем заказам
+     * @return Список всех заказов
+     */
     @GetMapping("/orders")
     public ResponseEntity<List<Order>> getAllOrders() {
         try {
@@ -48,6 +56,11 @@ public class OrderController {
         }
     }
 
+    /**
+     * Эндпоинт для доступа к заказу по id
+     * @param id
+     * @return Экземпляр заказа
+     */
     @GetMapping("/orders/{id}")
     public ResponseEntity<Order> getOrderById(@PathVariable("id") int id) {
         Optional<Order> orderData = orderService.findById(id);
@@ -58,8 +71,13 @@ public class OrderController {
         }
     }
 
+    /**
+     * Эндпоинт для создания заказа
+     * @param goodQuantities список сущностей GoodQuantity (id товара + их количество в заказе) 
+     * @return Созданный заказ
+     */
     @PostMapping("/order-create")
-    public ResponseEntity<Order> OrderCreate(@RequestBody @Valid List<GoodQuantity> goodQuantities) {
+    public ResponseEntity<Order> orderCreate(@RequestBody @Valid List<GoodQuantity> goodQuantities) {
         ResponseEntity<Order> createResponse = orderService.create(goodQuantities);
         if(createResponse.getStatusCode() == HttpStatus.OK) {
             try {

@@ -16,6 +16,12 @@ import com.example.webstore.model.User;
 import io.jsonwebtoken.impl.lang.Function;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Класс сервиса для работы с jwt. 
+ * Внедряемые зависимости: 
+ * encoder - кодировщик
+ * decoder - декодировщик
+ */
 @Service
 @RequiredArgsConstructor
 public class JWTService {

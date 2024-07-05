@@ -12,6 +12,11 @@ import com.example.webstore.web.JwtAuthenticationResponse;
 import com.example.webstore.web.SignInRequest;
 import com.example.webstore.web.SignUpRequest;
 
+/**
+ * Контроллер запросов на авторизацию/регистрацию.
+ * Внедряемые зависимости:
+ * authenticationService - сервис авторизации
+ */
 @RestController
 @RequestMapping("/api")
 public class AuthController {

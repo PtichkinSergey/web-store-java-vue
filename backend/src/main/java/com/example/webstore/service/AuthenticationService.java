@@ -14,6 +14,14 @@ import com.example.webstore.web.SignInRequest;
 import com.example.webstore.model.User;
 import com.example.webstore.model.Role;
 
+/**
+ * Сервис для регистрации и авторизации пользователей. 
+ * Внедряемые зависимости:
+ * userService - сервис для работы с пользователями
+ * jwtService - сервис для работы с jwt
+ * passwordEncoder - кодировщик паролей
+ * authenticationManager - менеджер аутентификации
+ */
 @AllArgsConstructor
 @Service
 public class AuthenticationService {

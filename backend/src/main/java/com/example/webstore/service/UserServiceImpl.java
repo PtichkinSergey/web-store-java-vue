@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service;
 import com.example.webstore.repository.UserRepository;
 import com.example.webstore.model.User;
 
+/**
+ * Класс сервиса по работе с пользователями. Внедряемые зависимости:
+ * userRepository - jpa репозиторий
+ */
 @Service
 public class UserServiceImpl implements UserService{
     
@@ -41,7 +45,6 @@ public class UserServiceImpl implements UserService{
 
     /**
      * Получение пользователя по имени пользователя
-     * <p>
      * Нужен для Spring Security
      *
      * @return пользователь

@@ -25,7 +25,13 @@ import com.example.webstore.web.GoodQuantity;
 
 import lombok.AllArgsConstructor;
 
-
+/**
+ * Класс сервиса для работы с заказами. Внедряемые зависимости: 
+ * orderRepository - jpa репозиторий
+ * mailSender - объект для отправки почты
+ * userService - сервис для работы с пользователями
+ * goodService - сервис для работы с товарами
+ */
 @Service
 @AllArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -37,6 +43,10 @@ public class OrderServiceImpl implements OrderService {
     private final UserServiceImpl userService;
     private final GoodServiceImpl goodService;
 
+    /**
+     * Метод создания заказа из сущностей GoodQuantity, содержащих id товара и их количество
+     * Возвращает созданный объект заказа
+     */
     @Override
     public ResponseEntity<Order> create(List<GoodQuantity> goodQuantities) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -96,6 +106,10 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.deleteById(id);
     }
     
+    /**
+     * Метод отправки сообщения на почту пользователя, указанной при регистрации
+     * Принимает сформированный заказ
+     */
     @Override 
     public void sendMail(Order order) {
         String subject = "Заказ в интернет магазине";

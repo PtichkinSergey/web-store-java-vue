@@ -11,7 +11,9 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
+/**
+ * Класс сущности для связи заказа и товаров в нём (id товара + количество в заказе)
+ */
 @Entity
 @Table(name = "order_details")
 public class OrderDetail implements Serializable{

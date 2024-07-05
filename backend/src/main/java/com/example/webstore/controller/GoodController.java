@@ -19,12 +19,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 
 
-// Контроллер сущности товара
+/**
+ * Контроллер запросов для доступа к товарам.
+ * Внедряемые зависимости: 
+ * goodService - сервис товаров
+ * categoryService - сервис категорий
+ */
 @RestController
 @RequestMapping("/api")
 public class GoodController {
@@ -86,14 +89,8 @@ public class GoodController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-    // Создание нового товара в базе
-    @PostMapping("/goods")
-    public String postMethodName(@RequestBody Good good) {
-        goodService.create(good);
-        return "success";
-    }
     
+    // Обработчик запроса на привязку товара к категории. Отрабатывает при инициализации.
     @PutMapping("/{goodId}/category/{ctgId}")
     public Good assignGoodToCategory(@PathVariable Integer goodId, @PathVariable Integer ctgId) {
         return goodService.assignGoodToCategory(goodId, ctgId);

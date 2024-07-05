@@ -15,6 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+/**
+ * Контроллер запросов для доступа к категориям товаров.
+ * Внедряемые зависимости: 
+ * categoryService - сервис категорий
+ */
 @RestController
 @RequestMapping("/api")
 public class CategoryController {
