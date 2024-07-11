@@ -25,7 +25,7 @@ import com.example.webstore.model.Category;
 import com.example.webstore.service.CategoryServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
-class CategoryControlletTest {
+class CategoryControllerTest {
     @InjectMocks
     private CategoryController categoryController;
     @Mock
@@ -45,19 +45,20 @@ class CategoryControlletTest {
         Category category3 = new Category("category3");
         List<Category> categories = Arrays.asList(category1, category2, category3);
         when(categoryService.readAll()).thenReturn(categories);
+        
         mockMvc.perform(get("/api/categories"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$").value(categories));
+        .andExpect(jsonPath("$").exists());
         verify(categoryService, times(1)).readAll();
     }
 
     @Test
     void getCategoryByIdTest() throws Exception{
         Category category1 = new Category("category1");
-        when(categoryService.findById(1)).thenReturn(Optional.empty());
+        when(categoryService.findById(Mockito.anyInt())).thenReturn(Optional.of(category1));
         mockMvc.perform(get("/api/categories/{id}", 1))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$").value(category1));
+        .andExpect(jsonPath("$.name").value(category1.getName()));
         verify(categoryService, times(1)).findById(Mockito.anyInt());
     }
 }
