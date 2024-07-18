@@ -12,14 +12,14 @@ import com.example.webstore.repository.CategoryRepository;
 /**
  * Сервис для работы с категориями товаров
  * Внедряемые зависимости:
- * categoryRepository - jpa репозиторий
+ * categoryRepository - crud репозиторий
  */
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
-    @Autowired
     private final CategoryRepository categoryRepository;
 
+    @Autowired
     public CategoryServiceImpl(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
@@ -31,7 +31,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> readAll() {
-        return categoryRepository.findAll();
+        return (List<Category>)categoryRepository.findAll();
     }
 
     @Override

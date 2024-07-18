@@ -2,20 +2,19 @@ package com.example.webstore.service;
 
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.MailException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.example.webstore.exceptions.GoodNotFoundException;
+import com.example.webstore.exceptions.NotEnoughGoodException;
+import com.example.webstore.exceptions.UnauthorizedUserException;
 import com.example.webstore.model.Good;
 import com.example.webstore.model.Order;
 import com.example.webstore.model.OrderDetail;
@@ -23,41 +22,44 @@ import com.example.webstore.model.User;
 import com.example.webstore.repository.OrderRepository;
 import com.example.webstore.web.GoodQuantity;
 
-import lombok.AllArgsConstructor;
-
 /**
  * Класс сервиса для работы с заказами. Внедряемые зависимости: 
- * orderRepository - jpa репозиторий
- * mailSender - объект для отправки почты
+ * orderRepository - crud репозиторий
  * userService - сервис для работы с пользователями
  * goodService - сервис для работы с товарами
  */
 @Service
-@AllArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-    @Autowired
     private final OrderRepository orderRepository;
-    @Autowired
-    private final MailSender mailSender;
+    private final MailService mailService;
     private final UserServiceImpl userService;
     private final GoodServiceImpl goodService;
+
+    @Autowired
+    public OrderServiceImpl(OrderRepository orderRepository, MailService mailService, UserServiceImpl userService, GoodServiceImpl goodService) {
+        this.orderRepository = orderRepository;
+        this.mailService = mailService;
+        this.userService = userService;
+        this.goodService = goodService;
+    }
 
     /**
      * Метод создания заказа из сущностей GoodQuantity, содержащих id товара и их количество
      * Возвращает созданный объект заказа
      */
     @Override
-    public ResponseEntity<Order> create(List<GoodQuantity> goodQuantities) {
+    public Order create(List<GoodQuantity> goodQuantities) throws NotEnoughGoodException, GoodNotFoundException, UnauthorizedUserException, MailException{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if(authentication != null) {
 			User user = userService.getByEmail(authentication.getName());
             Order newOrder = new Order(user, new Date(System.currentTimeMillis()));
+            StringBuilder message = new StringBuilder();
+            message.append("Ваш заказ от " + newOrder.getDate() + ": \n\n");
+            int orderAmount = 0;
             Set<OrderDetail> orderDetails = newOrder.getOrderDetails();
             List<Good> updatedGoods = new ArrayList<Good>();
-            Iterator<GoodQuantity> iter = goodQuantities.iterator();
-            while (iter.hasNext()) {
-                GoodQuantity goodQuantity = iter.next();
+            for (GoodQuantity goodQuantity : goodQuantities) {
                 Optional<Good> good = goodService.findById(goodQuantity.getGoodId());
                 if(good.isPresent()) {
                     int goodCount = good.get().getCount();
@@ -68,27 +70,41 @@ public class OrderServiceImpl implements OrderService {
                         good.get().setCount(goodCount - goodQuantity.getGoodQuantity());
                         updatedGoods.add(good.get());
                         orderDetails.add(new OrderDetail(newOrder, good.get(), goodQuantity.getGoodQuantity()));
+                        message.append(good.get().getName() + ": " + goodQuantity.getGoodQuantity() + " * " + good.get().getCost());
+                        if(good.get().getDiscount() > 0) {
+                            float discount = good.get().getDiscount();
+                            message.append("- " + (int)(discount * 100) + "% ");
+                            message.append(" = "  + Math.ceil(goodQuantity.getGoodQuantity() * good.get().getCost() * (1 - discount)) + " руб.\n");
+                            orderAmount += Math.ceil(goodQuantity.getGoodQuantity() * good.get().getCost() * (1 - discount));
+                        }
+                        else {
+                            message.append(" = " + goodQuantity.getGoodQuantity() * good.get().getCost() + " руб.\n");
+                            orderAmount += goodQuantity.getGoodQuantity() * good.get().getCost();
+                        }
                     }
                     else {
-                        return new ResponseEntity<>(HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS);
+                        throw new NotEnoughGoodException(String.format("Товара с id: %s недостаточно на складе для осуществления заказа!", goodQuantity.getGoodId()));
                     }                    
                 }
                 else {
-                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                    throw new GoodNotFoundException(String.format("Товар с id: %s не найден!", goodQuantity.getGoodId()));
                 }
             }
+            message.append("\nИтого: " + orderAmount + " руб.\n\n");
+            message.append("Спасибо за то, что выбрали наш магазин!!!");
             newOrder.setOrderDetails(orderDetails);
             goodService.updateAll(updatedGoods);
-            return new ResponseEntity<Order>(orderRepository.save(newOrder), HttpStatus.OK);
+            mailService.sendMail(message.toString());
+            return newOrder;
 		}
         else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            throw new UnauthorizedUserException("Пользователь не авторизован!");
         }
     }
 
     @Override
     public List<Order> readAll() {
-        return orderRepository.findAll();
+        return (List<Order>)orderRepository.findAll();
     }
 
     @Override
@@ -104,43 +120,5 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void delete(int id) {
         orderRepository.deleteById(id);
-    }
-    
-    /**
-     * Метод отправки сообщения на почту пользователя, указанной при регистрации
-     * Принимает сформированный заказ
-     */
-    @Override 
-    public void sendMail(Order order) {
-        String subject = "Заказ в интернет магазине";
-        StringBuilder message = new StringBuilder();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if(authentication != null) {
-            final SimpleMailMessage simpleMail = new SimpleMailMessage();
-            simpleMail.setFrom("sergey.ptichkin@gmail.com");
-            simpleMail.setTo(authentication.getName());
-            simpleMail.setSubject(subject);
-            message.append("Ваш заказ от " + order.getDate() + ": \n\n");
-            Iterator<OrderDetail> iter = order.getOrderDetails().iterator();
-            int orderAmount = 0;
-            while (iter.hasNext()) {
-                OrderDetail orderDetail = iter.next();
-                message.append(orderDetail.getGood().getName() + ": " + orderDetail.getQuantity() + " * " + orderDetail.getGood().getCost());
-                if(orderDetail.getGood().getDiscount() > 0) {
-                    float discount = orderDetail.getGood().getDiscount();
-                    message.append("- " + (int)(discount * 100) + "% ");
-                    message.append(" = "  + Math.ceil(orderDetail.getQuantity() * orderDetail.getGood().getCost() * (1 - discount)) + " руб.\n");
-                    orderAmount += Math.ceil(orderDetail.getQuantity() * orderDetail.getGood().getCost() * (1 - discount));
-                }
-                else {
-                    message.append(" = " + orderDetail.getQuantity() * orderDetail.getGood().getCost() + " руб.\n");
-                    orderAmount += orderDetail.getQuantity() * orderDetail.getGood().getCost();
-                }
-            }
-            message.append("\nИтого: " + orderAmount + " руб.\n\n");
-            message.append("Спасибо за то, что выбрали наш магазин!!!");
-            simpleMail.setText(message.toString());
-			this.mailSender.send(simpleMail);
-		}
     }
 }

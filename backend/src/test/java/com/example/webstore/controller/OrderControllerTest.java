@@ -22,9 +22,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -106,7 +104,7 @@ class OrderControllerTest {
         orderDetails.add(new OrderDetail(order, good2, 2));
         orderDetails.add(new OrderDetail(order, good3, 3));
         order.setOrderDetails(orderDetails);
-        when(orderService.create(goodQuantities)).thenReturn(new ResponseEntity<Order>(order, HttpStatus.OK));
+        when(orderService.create(goodQuantities)).thenReturn(order);
         mockMvc.perform(post("/api/order-create")
         .contentType(MediaType.APPLICATION_JSON)
         .content(goodsJson))

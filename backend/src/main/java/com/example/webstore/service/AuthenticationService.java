@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import com.example.webstore.web.JwtAuthenticationResponse;
 import com.example.webstore.web.SignUpRequest;
 
-import lombok.AllArgsConstructor;
-
 import com.example.webstore.web.SignInRequest;
 import com.example.webstore.model.User;
 import com.example.webstore.model.Role;
@@ -22,13 +20,19 @@ import com.example.webstore.model.Role;
  * passwordEncoder - кодировщик паролей
  * authenticationManager - менеджер аутентификации
  */
-@AllArgsConstructor
 @Service
 public class AuthenticationService {
     private final UserServiceImpl userService;
     private final JWTService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+
+    public AuthenticationService(UserServiceImpl userService, JWTService jwtService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+        this.userService = userService;
+        this.jwtService = jwtService;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+    }
 
     /**
      * Регистрация пользователя

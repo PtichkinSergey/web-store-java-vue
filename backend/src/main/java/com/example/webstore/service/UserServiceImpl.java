@@ -12,14 +12,14 @@ import com.example.webstore.model.User;
 
 /**
  * Класс сервиса по работе с пользователями. Внедряемые зависимости:
- * userRepository - jpa репозиторий
+ * userRepository - crud репозиторий
  */
 @Service
 public class UserServiceImpl implements UserService{
     
-    @Autowired
     private final UserRepository userRepository;
 
+    @Autowired
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<User> readAll() {
-        return userRepository.findAll();
+        return (List<User>)userRepository.findAll();
     }
 
     /**

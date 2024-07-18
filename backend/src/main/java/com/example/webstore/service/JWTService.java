@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import com.example.webstore.model.User;
 
 import io.jsonwebtoken.impl.lang.Function;
-import lombok.RequiredArgsConstructor;
 
 /**
  * Класс сервиса для работы с jwt. 
@@ -23,12 +22,15 @@ import lombok.RequiredArgsConstructor;
  * decoder - декодировщик
  */
 @Service
-@RequiredArgsConstructor
 public class JWTService {
 
     private final JwtEncoder encoder;
     private final JwtDecoder decoder;
 
+    public JWTService(JwtEncoder encoder, JwtDecoder decoder) {
+        this.encoder = encoder;
+        this.decoder = decoder;
+    }
 
     /**
      * Генерация jwt по данным пользователя

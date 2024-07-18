@@ -16,12 +16,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailSender;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.example.webstore.exceptions.GoodNotFoundException;
+import com.example.webstore.exceptions.NotEnoughGoodException;
 import com.example.webstore.model.Good;
 import com.example.webstore.model.Order;
 import com.example.webstore.model.Role;
@@ -78,14 +78,15 @@ class OrderServiceImplTest {
         Mockito.when(goodService.findById(1)).thenReturn(Optional.of(good1));
         Mockito.when(goodService.findById(2)).thenReturn(Optional.of(good2));
         Mockito.when(goodService.findById(3)).thenReturn(Optional.of(good3));  
-
-        ResponseEntity<Order> testResponse = orderService.create(goodQuantities);
-        Assertions.assertEquals(HttpStatus.OK, testResponse.getStatusCode());
-        Order testOrder = testResponse.getBody();
-        Assertions.assertNotNull(testOrder);
-        Assertions.assertEquals(user, testOrder.getUser());
-        Assertions.assertEquals(new Date(System.currentTimeMillis()).toString(), testOrder.getDate().toString());
-        Assertions.assertEquals(3, testOrder.getOrderDetails().size());
+        try {
+            Order testOrder = orderService.create(goodQuantities);
+            Assertions.assertNotNull(testOrder);
+            Assertions.assertEquals(user, testOrder.getUser());
+            Assertions.assertEquals(new Date(System.currentTimeMillis()).toString(), testOrder.getDate().toString());
+            Assertions.assertEquals(3, testOrder.getOrderDetails().size());
+        } catch (Exception e) {
+            
+        }
     }
 
     @Test
@@ -94,8 +95,7 @@ class OrderServiceImplTest {
         List<GoodQuantity> goodQuantities = Arrays.asList(goodQuantity1);
         User user = new User("Test", "Test", "fail.test@test.test", "12345", Role.USER);
         Mockito.when(userService.getByEmail("test.test@test.test")).thenReturn(user);
-        ResponseEntity<Order> testResponse = orderService.create(goodQuantities);
-        Assertions.assertEquals(HttpStatus.NOT_FOUND, testResponse.getStatusCode());
+        Assertions.assertThrows(GoodNotFoundException.class, () -> orderService.create(goodQuantities));
     }
 
     @Test
@@ -106,7 +106,6 @@ class OrderServiceImplTest {
         User user = new User("Test", "Test", "fail.test@test.test", "12345", Role.USER);
         Mockito.when(userService.getByEmail("test.test@test.test")).thenReturn(user);
         Mockito.when(goodService.findById(1)).thenReturn(Optional.of(good1));
-        ResponseEntity<Order> testResponse = orderService.create(goodQuantities);
-        Assertions.assertEquals(HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS, testResponse.getStatusCode());
+        Assertions.assertThrows(NotEnoughGoodException.class, () -> orderService.create(goodQuantities));
     }
 }

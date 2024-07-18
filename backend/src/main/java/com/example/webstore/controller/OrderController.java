@@ -13,11 +13,12 @@ import org.springframework.mail.MailParseException;
 import org.springframework.mail.MailSendException;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.webstore.exceptions.GoodNotFoundException;
+import com.example.webstore.exceptions.NotEnoughGoodException;
+import com.example.webstore.exceptions.UnauthorizedUserException;
 import com.example.webstore.model.Order;
 import com.example.webstore.service.OrderServiceImpl;
 import com.example.webstore.web.GoodQuantity;
-
-import lombok.AllArgsConstructor;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,10 +32,13 @@ import org.springframework.web.bind.annotation.RequestBody;
  * orderService - сервис заказов
  */
 @RestController
-@AllArgsConstructor
 @RequestMapping("/api")
 public class OrderController {
     private final OrderServiceImpl orderService;
+
+    public OrderController(OrderServiceImpl orderService) {
+        this.orderService = orderService;
+    }
 
     /**
      * Эндпоинт для доступа к всем заказам
@@ -78,18 +82,22 @@ public class OrderController {
      */
     @PostMapping("/order-create")
     public ResponseEntity<Order> orderCreate(@RequestBody @Valid List<GoodQuantity> goodQuantities) {
-        ResponseEntity<Order> createResponse = orderService.create(goodQuantities);
-        if(createResponse.getStatusCode() == HttpStatus.OK) {
-            try {
-                orderService.sendMail(createResponse.getBody());
-            } catch (MailSendException e) {
-                return new ResponseEntity<>(null, HttpStatus.BAD_GATEWAY);
-            } catch (MailAuthenticationException e) {
-                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-            } catch (MailParseException e) {
-                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-            }
+        Order newOrder;
+        try {
+            newOrder = orderService.create(goodQuantities);
+        } catch (NotEnoughGoodException e) {
+            return new ResponseEntity<>(null, HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS);
+        } catch (GoodNotFoundException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        } catch (UnauthorizedUserException e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (MailSendException e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_GATEWAY);
+        } catch (MailAuthenticationException e) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        } catch (MailParseException e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-        return createResponse;
+        return new ResponseEntity<>(newOrder, HttpStatus.OK);
     }
 }

@@ -23,7 +23,7 @@ import javax.persistence.OneToMany;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int orderId;
+    private int id;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -43,7 +43,7 @@ public class Order {
     }
 
     public int getId() {
-        return orderId;
+        return id;
     }
 
     public User getUser() {

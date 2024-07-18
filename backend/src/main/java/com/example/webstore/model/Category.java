@@ -22,7 +22,7 @@ import javax.persistence.ManyToMany;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int categoryId;
+    private int id;
 
     @Column(name = "name", length = 50)
     private String name;
@@ -42,7 +42,7 @@ public class Category {
     }
 
     public int getId() {
-        return categoryId;
+        return id;
     }
 
     public String getName() {

@@ -21,9 +21,12 @@ import org.springframework.web.bind.annotation.GetMapping;
  */
 @RestController
 @RequestMapping("/api")
-@AllArgsConstructor
 public class UserController {
     private final UserServiceImpl userService;
+
+	public UserController(UserServiceImpl userService) {
+		this.userService = userService;
+	}
 
 	/**
 	 * Эндпоинт для востановления авторизации пользователя, имеющего токен авторизации в localStorage

@@ -26,7 +26,7 @@ import javax.persistence.Id;
 public class User implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int userId;
+    private int id;
 
     @Column(name = "first_name", length = 50)
     private String firstName;
@@ -58,7 +58,7 @@ public class User implements UserDetails{
     }
 
     public int getId() {
-		return userId;
+		return id;
 	}
 
     public String getFirstName() {

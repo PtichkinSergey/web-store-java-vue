@@ -15,16 +15,15 @@ import com.example.webstore.repository.GoodRepository;
 /**
  * Сервис для работы с товарами.
  * Внедряемые зависимости: 
- * goodRepository - jpa репозиторий товаров
- * categoryRepository - jpa репозиторий категорий
+ * goodRepository - crud репозиторий товаров
+ * categoryRepository - crud репозиторий категорий
  */
 @Service
 public class GoodServiceImpl implements GoodService {
-    @Autowired
     private final GoodRepository goodRepository;
-    @Autowired
     private final CategoryRepository categoryRepository;
 
+    @Autowired
     public GoodServiceImpl(GoodRepository goodRepository, CategoryRepository categoryRepository) {
         this.goodRepository = goodRepository;
         this.categoryRepository = categoryRepository;
@@ -37,7 +36,7 @@ public class GoodServiceImpl implements GoodService {
 
     @Override
     public List<Good> readAll() {
-        return goodRepository.findAll();
+        return (List<Good>)goodRepository.findAll();
     }
 
     /**
@@ -45,7 +44,7 @@ public class GoodServiceImpl implements GoodService {
      */
     @Override
     public List<Good> readAllOrderByCostDesc() {
-        return goodRepository.findAllByOrderByCostDesc();
+        return goodRepository.findAllDesc();
     }
 
     /**
@@ -53,7 +52,7 @@ public class GoodServiceImpl implements GoodService {
      */
     @Override
     public List<Good> readAllOrderByCostAsc() {
-        return goodRepository.findAllByOrderByCostAsc();
+        return goodRepository.findAllAsc();
     }
 
     /**
@@ -99,7 +98,7 @@ public class GoodServiceImpl implements GoodService {
 
     @Override
     public List<Good> updateAll(List<Good> goods) {
-        return goodRepository.saveAll(goods);
+        return (List<Good>)goodRepository.saveAll(goods);
     }
 
     @Override
