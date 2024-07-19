@@ -37,7 +37,7 @@ public class CategoryController {
     @GetMapping("/categories")
     public ResponseEntity<List<Category>> getAllCategories() {
         try {
-            List<Category> categoryList = new ArrayList<Category>();
+            List<Category> categoryList = new ArrayList<>();
             categoryService.readAll().forEach(categoryList::add);
             if (categoryList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -45,7 +45,7 @@ public class CategoryController {
             return new ResponseEntity<>(categoryList, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

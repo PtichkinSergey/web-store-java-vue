@@ -32,7 +32,7 @@ import com.example.webstore.model.OrderDetail;
 import com.example.webstore.model.Role;
 import com.example.webstore.model.User;
 import com.example.webstore.service.OrderServiceImpl;
-import com.example.webstore.web.GoodQuantity;
+import com.example.webstore.requests.GoodQuantity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ExtendWith(MockitoExtension.class)
@@ -54,7 +54,7 @@ class OrderControllerTest {
 
     @Test
     void getAllOrdersTest() throws Exception{
-        User user = new User("user", "user", "test.test@test.test", "12345", Role.USER);
+        User user = new User("user", "user", "test.test@test.test", "12345", new Role("USER"));
         Order order = new Order(user, new Date(System.currentTimeMillis()));
         Good good1 = new Good("test1", 1000, 0, 22, "test", "test", "test");
         Set<OrderDetail> orderDetails = order.getOrderDetails();
@@ -63,7 +63,6 @@ class OrderControllerTest {
         List<Order> orders = Arrays.asList(order);
         when(orderService.readAll()).thenReturn(orders);
         mockMvc.perform(get("/api/orders"))
-        .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$").exists());
         verify(orderService, times(1)).readAll();
@@ -71,7 +70,7 @@ class OrderControllerTest {
 
     @Test
     void getOrderByIdTest() throws Exception{
-        User user = new User("user", "user", "test.test@test.test", "12345", Role.USER);
+        User user = new User("user", "user", "test.test@test.test", "12345", new Role("USER"));
         Order order = new Order(user, new Date(System.currentTimeMillis()));
         Good good1 = new Good("test1", 1000, 0, 22, "test", "test", "test");
         Set<OrderDetail> orderDetails = order.getOrderDetails();
@@ -97,18 +96,18 @@ class OrderControllerTest {
         List<GoodQuantity> goodQuantities = Arrays.asList(goodQuantity1, goodQuantity2, goodQuantity3);
         String goodsJson = objectMapper.writeValueAsString(goodQuantities);
 
-        User user = new User("user", "user", "test.test@test.test", "12345", Role.USER);
+        User user = new User("user", "user", "test.test@test.test", "12345", new Role("USER"));
         Order order = new Order(user, new Date(System.currentTimeMillis()));
         Set<OrderDetail> orderDetails = order.getOrderDetails();
         orderDetails.add(new OrderDetail(order, good1, 1));
         orderDetails.add(new OrderDetail(order, good2, 2));
         orderDetails.add(new OrderDetail(order, good3, 3));
         order.setOrderDetails(orderDetails);
-        when(orderService.create(goodQuantities)).thenReturn(order);
+        when(orderService.createOrderAndSendMail(goodQuantities)).thenReturn(order);
         mockMvc.perform(post("/api/order-create")
         .contentType(MediaType.APPLICATION_JSON)
         .content(goodsJson))
-        .andExpect(status().isOk())
+        .andExpect(status().isCreated())
         .andExpect(jsonPath("$.user.username").value(user.getUsername()))
         .andExpect(jsonPath("$.date").exists())
         .andExpect(jsonPath("$.orderDetails").exists());

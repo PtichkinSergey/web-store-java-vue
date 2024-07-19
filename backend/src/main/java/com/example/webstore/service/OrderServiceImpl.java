@@ -20,7 +20,7 @@ import com.example.webstore.model.Order;
 import com.example.webstore.model.OrderDetail;
 import com.example.webstore.model.User;
 import com.example.webstore.repository.OrderRepository;
-import com.example.webstore.web.GoodQuantity;
+import com.example.webstore.requests.GoodQuantity;
 
 /**
  * Класс сервиса для работы с заказами. Внедряемые зависимости: 
@@ -49,7 +49,7 @@ public class OrderServiceImpl implements OrderService {
      * Возвращает созданный объект заказа
      */
     @Override
-    public Order create(List<GoodQuantity> goodQuantities) throws NotEnoughGoodException, GoodNotFoundException, UnauthorizedUserException, MailException{
+    public Order createOrderAndSendMail(List<GoodQuantity> goodQuantities) throws NotEnoughGoodException, GoodNotFoundException, UnauthorizedUserException, MailException{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if(authentication != null) {
 			User user = userService.getByEmail(authentication.getName());
@@ -58,44 +58,47 @@ public class OrderServiceImpl implements OrderService {
             message.append("Ваш заказ от " + newOrder.getDate() + ": \n\n");
             int orderAmount = 0;
             Set<OrderDetail> orderDetails = newOrder.getOrderDetails();
-            List<Good> updatedGoods = new ArrayList<Good>();
+            List<Good> updatedGoods = new ArrayList<>();
             for (GoodQuantity goodQuantity : goodQuantities) {
-                Optional<Good> good = goodService.findById(goodQuantity.getGoodId());
+                int goodId = goodQuantity.getGoodId();
+                Optional<Good> good = goodService.findById(goodId);
                 if(good.isPresent()) {
                     int goodCount = good.get().getCount();
-                    if(goodQuantity.getGoodQuantity() < 1) {
+                    int quantity = goodQuantity.getQuantity();
+                    int cost = good.get().getCost();
+                    if(quantity < 1) {
                         continue;
                     }
-                    if(goodCount - goodQuantity.getGoodQuantity() >= 0) {
-                        good.get().setCount(goodCount - goodQuantity.getGoodQuantity());
+                    if(goodCount - quantity >= 0) {
+                        good.get().setCount(goodCount - quantity);
                         updatedGoods.add(good.get());
-                        orderDetails.add(new OrderDetail(newOrder, good.get(), goodQuantity.getGoodQuantity()));
-                        message.append(good.get().getName() + ": " + goodQuantity.getGoodQuantity() + " * " + good.get().getCost());
-                        if(good.get().getDiscount() > 0) {
-                            float discount = good.get().getDiscount();
+                        orderDetails.add(new OrderDetail(newOrder, good.get(), quantity));
+                        message.append(good.get().getName() + ": " + quantity + " * " + cost);
+                        float discount = good.get().getDiscount();
+                        if(discount > 0) {
                             message.append("- " + (int)(discount * 100) + "% ");
-                            message.append(" = "  + Math.ceil(goodQuantity.getGoodQuantity() * good.get().getCost() * (1 - discount)) + " руб.\n");
-                            orderAmount += Math.ceil(goodQuantity.getGoodQuantity() * good.get().getCost() * (1 - discount));
+                            message.append(" = "  + Math.ceil(quantity * cost * (1 - discount)) + " руб.\n");
+                            orderAmount += Math.ceil(quantity * cost * (1 - discount));
                         }
                         else {
-                            message.append(" = " + goodQuantity.getGoodQuantity() * good.get().getCost() + " руб.\n");
-                            orderAmount += goodQuantity.getGoodQuantity() * good.get().getCost();
+                            message.append(" = " + quantity * cost + " руб.\n");
+                            orderAmount += quantity * cost;
                         }
                     }
                     else {
-                        throw new NotEnoughGoodException(String.format("Товара с id: %s недостаточно на складе для осуществления заказа!", goodQuantity.getGoodId()));
+                        throw new NotEnoughGoodException(String.format("Товара с id: %s недостаточно на складе для осуществления заказа!", goodId));
                     }                    
                 }
                 else {
-                    throw new GoodNotFoundException(String.format("Товар с id: %s не найден!", goodQuantity.getGoodId()));
+                    throw new GoodNotFoundException(String.format("Товар с id: %s не найден!", goodId));
                 }
             }
             message.append("\nИтого: " + orderAmount + " руб.\n\n");
             message.append("Спасибо за то, что выбрали наш магазин!!!");
             newOrder.setOrderDetails(orderDetails);
             goodService.updateAll(updatedGoods);
-            mailService.sendMail(message.toString());
-            return newOrder;
+            mailService.sendMail(authentication, message.toString());
+            return orderRepository.save(newOrder);
 		}
         else {
             throw new UnauthorizedUserException("Пользователь не авторизован!");

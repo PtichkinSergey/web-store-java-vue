@@ -43,7 +43,7 @@ public class GoodController {
     @GetMapping("/goods")
     public ResponseEntity<List<Good>> getAllGoods(@RequestParam("category") Integer ctgId, @RequestParam("sort") String sort) {
         try {
-            List<Good> goodList = new ArrayList<Good>();
+            List<Good> goodList = new ArrayList<>();
             if(ctgId > 0) {
                 Set<Category> categories = new HashSet<>();
                 Optional<Category> ctg = categoryService.findById(ctgId);
@@ -51,7 +51,7 @@ public class GoodController {
                     categories.add(ctg.get());
                 }
                 else {
-                    return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+                    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
                 }
                 if(sort.equals("descending")) {
                     goodService.readByCategoryOrderByCostDesc(categories).forEach(goodList::add);
@@ -75,7 +75,7 @@ public class GoodController {
             return new ResponseEntity<>(goodList, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

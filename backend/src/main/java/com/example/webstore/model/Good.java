@@ -23,6 +23,7 @@ import javax.persistence.ManyToMany;
 public class Good {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
 
     @Column(name = "name", length = 50)
@@ -60,7 +61,7 @@ public class Good {
             @JoinColumn(name = "category_id")
         }
     )
-    private Set<Category> categories = new HashSet<Category>();
+    private Set<Category> categories = new HashSet<>();
 
     public Good(String name, int cost, float discount, int count, String manufacturer, String description, String imagePath) {
         this.name = name;

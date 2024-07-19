@@ -18,7 +18,7 @@ import com.example.webstore.exceptions.NotEnoughGoodException;
 import com.example.webstore.exceptions.UnauthorizedUserException;
 import com.example.webstore.model.Order;
 import com.example.webstore.service.OrderServiceImpl;
-import com.example.webstore.web.GoodQuantity;
+import com.example.webstore.requests.GoodQuantity;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,7 +47,7 @@ public class OrderController {
     @GetMapping("/orders")
     public ResponseEntity<List<Order>> getAllOrders() {
         try {
-            List<Order> orderList = new ArrayList<Order>();
+            List<Order> orderList = new ArrayList<>();
             orderService.readAll().forEach(orderList::add);
             if (orderList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -56,7 +56,7 @@ public class OrderController {
             return new ResponseEntity<>(orderList, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -80,24 +80,22 @@ public class OrderController {
      * @param goodQuantities список сущностей GoodQuantity (id товара + их количество в заказе) 
      * @return Созданный заказ
      */
-    @PostMapping("/order-create")
+    @PostMapping(path = "/order-create", consumes = "application/json", produces = "application/json")
     public ResponseEntity<Order> orderCreate(@RequestBody @Valid List<GoodQuantity> goodQuantities) {
-        Order newOrder;
         try {
-            newOrder = orderService.create(goodQuantities);
+            return new ResponseEntity<>(orderService.createOrderAndSendMail(goodQuantities), HttpStatus.CREATED);
         } catch (NotEnoughGoodException e) {
-            return new ResponseEntity<>(null, HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS);
+            return new ResponseEntity<>(HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS);
         } catch (GoodNotFoundException e) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (UnauthorizedUserException e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         } catch (MailSendException e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_GATEWAY);
+            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
         } catch (MailAuthenticationException e) {
-            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         } catch (MailParseException e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(newOrder, HttpStatus.OK);
     }
 }

@@ -1,14 +1,16 @@
 package com.example.webstore.service;
 
+import java.util.Optional;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.example.webstore.web.JwtAuthenticationResponse;
-import com.example.webstore.web.SignUpRequest;
+import com.example.webstore.responses.JwtAuthenticationResponse;
+import com.example.webstore.requests.SignUpRequest;
 
-import com.example.webstore.web.SignInRequest;
+import com.example.webstore.requests.SignInRequest;
 import com.example.webstore.model.User;
 import com.example.webstore.model.Role;
 
@@ -16,6 +18,7 @@ import com.example.webstore.model.Role;
  * Сервис для регистрации и авторизации пользователей. 
  * Внедряемые зависимости:
  * userService - сервис для работы с пользователями
+ * roleService - сервис для работы с ролями
  * jwtService - сервис для работы с jwt
  * passwordEncoder - кодировщик паролей
  * authenticationManager - менеджер аутентификации
@@ -23,12 +26,14 @@ import com.example.webstore.model.Role;
 @Service
 public class AuthenticationService {
     private final UserServiceImpl userService;
+    private final RoleServiceImpl roleService;
     private final JWTService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationService(UserServiceImpl userService, JWTService jwtService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+    public AuthenticationService(UserServiceImpl userService, RoleServiceImpl roleService, JWTService jwtService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
         this.userService = userService;
+        this.roleService = roleService;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
@@ -41,15 +46,18 @@ public class AuthenticationService {
      * @return токен
      */
     public JwtAuthenticationResponse signUp(SignUpRequest request) {
-        User user = new User(request.getFirstName(), request.getSecondName(), request.getEmail(), passwordEncoder.encode(request.getPassword()), Role.USER);
-        try {
-            if(userService.getByEmail(request.getEmail()) != null) {
-                return new JwtAuthenticationResponse(null, null, "Пользователь с таким адресом уже существует!");
+        Optional<Role> role = roleService.findByName("USER");
+        if (role.isPresent()) {
+            User user = new User(request.getFirstName(), request.getSecondName(), request.getEmail(), passwordEncoder.encode(request.getPassword()), role.get());
+            try {
+                if(userService.getByEmail(request.getEmail()) != null) {
+                    return new JwtAuthenticationResponse(null, null, "Пользователь с таким адресом уже существует!");
+                }
+            } catch (UsernameNotFoundException e) {
+                userService.create(user);
+                String jwt = jwtService.generateToken(user);
+                return new JwtAuthenticationResponse(jwt, user.getUsername(), null);
             }
-        } catch (UsernameNotFoundException e) {
-            userService.create(user);
-            String jwt = jwtService.generateToken(user);
-            return new JwtAuthenticationResponse(jwt, user.getUsername(), null);
         }
         return new JwtAuthenticationResponse(null, null, "Ошибка регистрации!");
     }

@@ -29,6 +29,8 @@ docker ps
 Должно быть поднято 4 контейнера: backend, frontend, webstore-postgresqldb, pgadmin_container
 
 2. Проверка заполнения базы данных.
+- Архитектура базы данных:
+![Архитектура бд](/data_model/Data%20Model.png "Архитектура базы данных")
 - Для проверки наполнения базы данных postgres перейдите в браузере на адрес
 ```
 http://localhost:5050

@@ -1,4 +1,4 @@
-package com.example.webstore.web;
+package com.example.webstore.requests;
 
 import lombok.Data;
 

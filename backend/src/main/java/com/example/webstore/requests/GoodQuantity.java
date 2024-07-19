@@ -1,4 +1,4 @@
-package com.example.webstore.web;
+package com.example.webstore.requests;
 
 import lombok.Data;
 
@@ -8,11 +8,11 @@ import lombok.Data;
 @Data
 public class GoodQuantity {
     private int goodId;
-    private int goodQuantity;
+    private int quantity;
     
-    public GoodQuantity(int goodId, int goodQuantity) {
+    public GoodQuantity(int goodId, int quantity) {
         this.goodId = goodId;
-        this.goodQuantity = goodQuantity;
+        this.quantity = quantity;
     }
 
     public GoodQuantity() {

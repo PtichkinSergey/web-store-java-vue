@@ -9,10 +9,10 @@ import com.example.webstore.exceptions.GoodNotFoundException;
 import com.example.webstore.exceptions.NotEnoughGoodException;
 import com.example.webstore.exceptions.UnauthorizedUserException;
 import com.example.webstore.model.Order;
-import com.example.webstore.web.GoodQuantity;
+import com.example.webstore.requests.GoodQuantity;
 
 public interface OrderService {
-    public Order create(List<GoodQuantity> goodQuantities) throws NotEnoughGoodException, GoodNotFoundException, UnauthorizedUserException, MailException;
+    public Order createOrderAndSendMail(List<GoodQuantity> goodQuantities) throws NotEnoughGoodException, GoodNotFoundException, UnauthorizedUserException, MailException;
     public List<Order> readAll();
     public Optional<Order> findById(int id);
     public Order update(Order order);

@@ -2,7 +2,7 @@ FROM maven:3.9.6-eclipse-temurin-8 as build
 WORKDIR /backend
 
 COPY . . 
-RUN mvn clean install
+RUN mvn clean package
 
 FROM openjdk:8
 WORKDIR /backend

@@ -202,12 +202,12 @@ export default createStore({
       let order_data = state.basket.map((basket_good) => {
         return {
           goodId: basket_good.good.id,
-          goodQuantity: basket_good.count_in_basket
+          quantity: basket_good.count_in_basket
         }
       });
       axios.post(baseURL, order_data, { headers: headers})
       .then(response => {
-          if(response.status == 200){
+          if(response.status == 201){
             state.basket = [];
             localStorage.removeItem('basket');
             alert("Заказ успешно оформлен!")

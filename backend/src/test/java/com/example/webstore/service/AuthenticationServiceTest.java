@@ -1,5 +1,7 @@
 package com.example.webstore.service;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,9 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.webstore.model.Role;
 import com.example.webstore.model.User;
-import com.example.webstore.web.JwtAuthenticationResponse;
-import com.example.webstore.web.SignInRequest;
-import com.example.webstore.web.SignUpRequest;
+import com.example.webstore.responses.JwtAuthenticationResponse;
+import com.example.webstore.requests.SignInRequest;
+import com.example.webstore.requests.SignUpRequest;
 
 @ExtendWith(MockitoExtension.class)
 class AuthenticationServiceTest {
@@ -23,6 +25,8 @@ class AuthenticationServiceTest {
     private AuthenticationService authenticationService;
     @Mock
     private UserServiceImpl userService;
+    @Mock
+    private RoleServiceImpl roleService;
     @Mock
     private JWTService jwtService;
     @Mock 
@@ -37,8 +41,10 @@ class AuthenticationServiceTest {
         request.setSecondName("test");
         request.setEmail("test.test@test.test");
         request.setPassword("1234");
-        User user = new User(request.getFirstName(), request.getSecondName(), request.getEmail(), "1234", Role.USER);
+        Role role = new Role("USER");
+        User user = new User(request.getFirstName(), request.getSecondName(), request.getEmail(), "1234", role);
         Mockito.when(userService.getByEmail(Mockito.anyString())).thenThrow(new UsernameNotFoundException(""));
+        Mockito.when(roleService.findByName("USER")).thenReturn(Optional.of(role));
         Mockito.when(jwtService.generateToken(Mockito.any(User.class))).thenAnswer(i -> i.getArgument(0).toString());
         Mockito.when(passwordEncoder.encode(Mockito.anyString())).thenAnswer(i -> i.getArgument(0));
         JwtAuthenticationResponse response = authenticationService.signUp(request);
@@ -51,7 +57,7 @@ class AuthenticationServiceTest {
         SignInRequest request = new SignInRequest();
         request.setEmail("test.test@test.test");
         request.setPassword("1234");
-        User user = new User("Test", "Test", request.getEmail(), "1234", Role.USER);
+        User user = new User("Test", "Test", request.getEmail(), "1234", new Role("USER"));
         Mockito.when(userService.getByEmail("test.test@test.test")).thenReturn(user);
         Mockito.when(jwtService.generateToken(Mockito.any(User.class))).thenAnswer(i -> i.getArgument(0).toString());
         JwtAuthenticationResponse response = authenticationService.signIn(request);

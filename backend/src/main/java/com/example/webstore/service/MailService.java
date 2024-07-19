@@ -27,16 +27,14 @@ public class MailService {
 
     /**
      * Метод отправки сообщения на почту пользователя, указанной при регистрации
-     * Принимает сформированный заказ
+     * Принимает токен аутентификации и текст сообщения
      */
-    public void sendMail(String message) throws MailException{
-        String subject = "Заказ в интернет магазине";
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public void sendMail(Authentication authentication, String message) throws MailException{
 		if(authentication != null) {
             final SimpleMailMessage simpleMail = new SimpleMailMessage();
             simpleMail.setFrom(addresser);
             simpleMail.setTo(authentication.getName());
-            simpleMail.setSubject(subject);
+            simpleMail.setSubject("Заказ в интернет магазине");
             simpleMail.setText(message);
 			this.mailSender.send(simpleMail);
 		}

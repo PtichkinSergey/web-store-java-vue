@@ -50,7 +50,7 @@ class UserControllerTest {
 
     @Test
     void getAuthenticatedUserTest() throws Exception {
-        User user1 = new User("user1", "user1", "test.test@test.test", "12345", Role.USER);
+        User user1 = new User("user1", "user1", "test.test@test.test", "12345", new Role("USER"));
         when(userService.getByEmail("test.test@test.test")).thenReturn(user1);
         mockMvc.perform(get("/api/auth_user"))
         .andExpect(status().isOk())

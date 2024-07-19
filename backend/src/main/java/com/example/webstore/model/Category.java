@@ -22,6 +22,7 @@ import javax.persistence.ManyToMany;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
 
     @Column(name = "name", length = 50)
@@ -32,7 +33,7 @@ public class Category {
 
     @JsonIgnore
     @ManyToMany(mappedBy = "categories")
-    private Set<Good> goods = new HashSet<Good>();
+    private Set<Good> goods = new HashSet<>();
 
     public Category(String name) {
         this.name = name;

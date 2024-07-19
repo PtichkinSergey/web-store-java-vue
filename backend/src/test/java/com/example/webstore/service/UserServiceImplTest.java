@@ -24,8 +24,8 @@ class UserServiceImplTest {
 
     @Test
     void getByEmailTest() {
-        User user1 = new User("Ivan", "Ivanov", "ivan.ivanov@mail.ru", "12345", Role.USER);
-        User user2 = new User("Petr", "Petrov", "piterP@gmail.com", "password", Role.USER);
+        User user1 = new User("Ivan", "Ivanov", "ivan.ivanov@mail.ru", "12345", new Role("USER"));
+        User user2 = new User("Petr", "Petrov", "piterP@gmail.com", "password", new Role("USER"));
         String email1 = "ivan.ivanov@mail.ru";
         String email2 = "piterP@gmail.com";
         Mockito.when(userRepository.findByEmail(email1)).thenReturn(Optional.of(user1));

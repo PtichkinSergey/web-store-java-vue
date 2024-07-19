@@ -11,10 +11,12 @@ import java.util.Set;
 
 
 public interface GoodRepository extends CrudRepository<Good, Integer>{
-    @Query(value = "Select a from Good a Order By Desc")
+    @Query(value = "Select a from Good a Order By a.cost Desc")
     List<Good> findAllDesc();
-    @Query(value = "Select a from Good a Order By Asc")
+    @Query(value = "Select a from Good a Order By a.cost Asc")
     List<Good> findAllAsc();
-    List<Good> findAllByCategoriesInOrderByCostDesc(Set<Category> categories);
-    List<Good> findAllByCategoriesInOrderByCostAsc(Set<Category> categories);
+    @Query(value = "Select g from Good g join g.categories c Where c in :categories Order By g.cost Desc")
+    List<Good> findByCategoriesDesc(Set<Category> categories);
+    @Query(value = "Select g from Good g join g.categories c Where c in :categories Order By g.cost Asc")
+    List<Good> findByCategoriesAsc(Set<Category> categories);
 }

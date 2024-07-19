@@ -60,7 +60,7 @@ public class GoodServiceImpl implements GoodService {
      */
     @Override
     public List<Good> readByCategoryOrderByCostAsc(Set<Category> categories) {
-        return goodRepository.findAllByCategoriesInOrderByCostAsc(categories);
+        return goodRepository.findByCategoriesAsc(categories);
     }
 
     /**
@@ -68,7 +68,7 @@ public class GoodServiceImpl implements GoodService {
      */
     @Override
     public List<Good> readByCategoryOrderByCostDesc(Set<Category> categories) {
-        return goodRepository.findAllByCategoriesInOrderByCostDesc(categories);
+        return goodRepository.findByCategoriesDesc(categories);
     }
 
     /**

@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.webstore.service.AuthenticationService;
-import com.example.webstore.web.JwtAuthenticationResponse;
-import com.example.webstore.web.SignInRequest;
-import com.example.webstore.web.SignUpRequest;
+import com.example.webstore.responses.JwtAuthenticationResponse;
+import com.example.webstore.requests.SignInRequest;
+import com.example.webstore.requests.SignUpRequest;
 
 /**
  * Контроллер запросов на авторизацию/регистрацию.
