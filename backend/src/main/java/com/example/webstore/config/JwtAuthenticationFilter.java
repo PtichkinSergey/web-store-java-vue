@@ -50,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         // Обрезаем префикс и получаем имя пользователя из токена
         String jwt = authHeader.substring(BEARER_PREFIX.length());
-        String email = "";
+        String email;
         try {
             email = jwtService.extractEmail(jwt);
         } catch (JwtValidationException e) {
@@ -58,7 +58,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         
-        if (email.length() > 0 && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (!email.isEmpty() && SecurityContextHolder.getContext().getAuthentication() == null) {
             User user = null;
             try {
                 user = userService.getByEmail(email);

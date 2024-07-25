@@ -31,7 +31,13 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationService(UserServiceImpl userService, RoleServiceImpl roleService, JWTService jwtService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+    public AuthenticationService(
+        UserServiceImpl userService, 
+        RoleServiceImpl roleService, 
+        JWTService jwtService, 
+        PasswordEncoder passwordEncoder, 
+        AuthenticationManager authenticationManager
+    ) {
         this.userService = userService;
         this.roleService = roleService;
         this.jwtService = jwtService;
@@ -79,7 +85,6 @@ public class AuthenticationService {
         }
         
         User user = userService.getByEmail(request.getEmail());
-        String jwt = jwtService.generateToken(user);
-        return new JwtAuthenticationResponse(jwt, user.getUsername(), null);
+        return new JwtAuthenticationResponse(jwtService.generateToken(user), user.getUsername(), null);
     }
 }

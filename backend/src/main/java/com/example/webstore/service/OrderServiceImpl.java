@@ -51,6 +51,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order createOrderAndSendMail(List<GoodQuantity> goodQuantities) throws NotEnoughGoodException, GoodNotFoundException, UnauthorizedUserException, MailException{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(authentication);
 		if(authentication != null) {
 			User user = userService.getByEmail(authentication.getName());
             Order newOrder = new Order(user, new Date(System.currentTimeMillis()));
@@ -98,9 +99,11 @@ public class OrderServiceImpl implements OrderService {
             newOrder.setOrderDetails(orderDetails);
             goodService.updateAll(updatedGoods);
             mailService.sendMail(authentication, message.toString());
+            System.out.println("NORM");
             return orderRepository.save(newOrder);
 		}
         else {
+            System.out.println("Ne norm");
             throw new UnauthorizedUserException("Пользователь не авторизован!");
         }
     }

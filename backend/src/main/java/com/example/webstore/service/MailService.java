@@ -30,13 +30,11 @@ public class MailService {
      * Принимает токен аутентификации и текст сообщения
      */
     public void sendMail(Authentication authentication, String message) throws MailException{
-		if(authentication != null) {
-            final SimpleMailMessage simpleMail = new SimpleMailMessage();
-            simpleMail.setFrom(addresser);
-            simpleMail.setTo(authentication.getName());
-            simpleMail.setSubject("Заказ в интернет магазине");
-            simpleMail.setText(message);
-			this.mailSender.send(simpleMail);
-		}
+        final SimpleMailMessage simpleMail = new SimpleMailMessage();
+        simpleMail.setFrom(addresser);
+        simpleMail.setTo(authentication.getName());
+        simpleMail.setSubject("Заказ в интернет магазине");
+        simpleMail.setText(message);
+        this.mailSender.send(simpleMail);
     }
 }

@@ -34,11 +34,6 @@ public class GoodServiceImpl implements GoodService {
         return goodRepository.save(good);
     }
 
-    @Override
-    public List<Good> readAll() {
-        return (List<Good>)goodRepository.findAll();
-    }
-
     /**
      * @return Выборка всего списка товаров в порядке убывания цены
      */

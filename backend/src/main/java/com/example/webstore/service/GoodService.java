@@ -9,7 +9,6 @@ import com.example.webstore.model.Good;
 
 public interface GoodService {
     public Good create(Good good);
-    public List<Good> readAll();
     public List<Good> readAllOrderByCostDesc();
     public List<Good> readAllOrderByCostAsc();
     public List<Good> readByCategoryOrderByCostDesc(Set<Category> categories);
