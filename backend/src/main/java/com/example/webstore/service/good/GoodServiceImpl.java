@@ -1,12 +1,17 @@
 package com.example.webstore.service.good;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.example.webstore.exceptions.UnknownCategoryException;
 import com.example.webstore.model.Category;
 import com.example.webstore.model.Good;
 import com.example.webstore.repository.CategoryRepository;
@@ -39,7 +44,9 @@ public class GoodServiceImpl implements GoodService {
      */
     @Override
     public List<Good> readAllOrderByCostDesc() {
-        return goodRepository.findAllDesc();
+        List<Good> goodList = new ArrayList<>();
+        goodRepository.findAllDesc().forEach(goodList::add);
+        return goodList;
     }
 
     /**
@@ -47,23 +54,9 @@ public class GoodServiceImpl implements GoodService {
      */
     @Override
     public List<Good> readAllOrderByCostAsc() {
-        return goodRepository.findAllAsc();
-    }
-
-    /**
-     * @return Выборка товаров по заданным категориям в порядке возрастания цены
-     */
-    @Override
-    public List<Good> readByCategoryOrderByCostAsc(Set<Category> categories) {
-        return goodRepository.findByCategoriesAsc(categories);
-    }
-
-    /**
-     * @return Выборка товаров по заданным категориям в порядке убывания цены
-     */
-    @Override
-    public List<Good> readByCategoryOrderByCostDesc(Set<Category> categories) {
-        return goodRepository.findByCategoriesDesc(categories);
+        List<Good> goodList = new ArrayList<>();
+        goodRepository.findAllAsc().forEach(goodList::add);
+        return goodList;
     }
 
     /**
@@ -100,5 +93,38 @@ public class GoodServiceImpl implements GoodService {
     public void delete(int id) {
         goodRepository.deleteById(id);
     }
-    
+
+    /**
+     * @param 
+     * @return Выборка товаров по заданным категориям в указанном порядке сортировки
+     */
+    @Override
+    public List<Good> readByCategoryWithSort(Integer ctgId, String sort) throws UnknownCategoryException{
+        List<Good> goodList = new ArrayList<>();
+        if(ctgId > 0) {
+            Set<Category> categories = new HashSet<>();
+            Optional<Category> ctg = categoryRepository.findById(ctgId);
+            if(ctg.isPresent()) {
+                categories.add(ctg.get());
+            }
+            else {
+                throw new UnknownCategoryException("Категория товаров отсутствует!");
+            }
+            if(sort.equals("descending")) {
+                goodRepository.findByCategoriesDesc(categories).forEach(goodList::add);
+            }
+            else {
+                goodRepository.findByCategoriesAsc(categories).forEach(goodList::add);
+            }
+        }
+        else {
+            if(sort.equals("descending")) {
+                goodList = readAllOrderByCostDesc();
+            }
+            else {
+                goodList = readAllOrderByCostAsc();
+            }
+        }
+        return goodList;
+    }
 }

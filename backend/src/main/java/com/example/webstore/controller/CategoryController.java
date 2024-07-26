@@ -37,8 +37,7 @@ public class CategoryController {
     @GetMapping("/categories")
     public ResponseEntity<List<Category>> getAllCategories() {
         try {
-            List<Category> categoryList = new ArrayList<>();
-            categoryService.readAll().forEach(categoryList::add);
+            List<Category> categoryList = categoryService.readAll();
             if (categoryList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }

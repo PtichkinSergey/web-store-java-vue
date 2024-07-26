@@ -47,8 +47,7 @@ public class OrderController {
     @GetMapping("/orders")
     public ResponseEntity<List<Order>> getAllOrders() {
         try {
-            List<Order> orderList = new ArrayList<>();
-            orderService.readAll().forEach(orderList::add);
+            List<Order> orderList = orderService.readAll();
             if (orderList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }

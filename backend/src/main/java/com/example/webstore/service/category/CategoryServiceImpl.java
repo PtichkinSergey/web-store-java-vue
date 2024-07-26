@@ -1,5 +1,6 @@
 package com.example.webstore.service.category;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +32,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> readAll() {
-        return (List<Category>)categoryRepository.findAll();
+        List<Category> categoryList = new ArrayList<>();
+        categoryRepository.findAll().forEach(categoryList::add);
+        return categoryList;
     }
 
     @Override

@@ -124,7 +124,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> readAll() {
-        return (List<Order>)orderRepository.findAll();
+        List<Order> orderList = new ArrayList<>();
+        orderRepository.findAll().forEach(orderList::add);
+        return orderList;
     }
 
     @Override

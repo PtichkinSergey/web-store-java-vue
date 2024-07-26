@@ -50,12 +50,12 @@ class GoodControllerTest {
         List<Good> goods = Arrays.asList(good1, good2, good3);
         Category category1 = new Category("category1");
         when(categoryService.findById(1)).thenReturn(Optional.of(category1));
-        when(goodService.readByCategoryOrderByCostDesc(Mockito.anySet())).thenReturn(goods);
+        when(goodService.readByCategoryWithSort(1, "descending")).thenReturn(goods);
         mockMvc.perform(get("/api/goods").param("category", "1").param("sort", "descending"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$").exists());
         verify(categoryService, times(1)).findById(Mockito.anyInt());
-        verify(goodService, times(1)).readByCategoryOrderByCostDesc(Mockito.anySet());
+        verify(goodService, times(1)).readByCategoryWithSort(Mockito.anyInt(), Mockito.anyString());
     }
 
     @Test
