@@ -1,4 +1,4 @@
-package com.example.webstore.service;
+package com.example.webstore.service.jwt;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.webstore.model.Category;
 import com.example.webstore.model.Good;
-import com.example.webstore.service.CategoryServiceImpl;
-import com.example.webstore.service.GoodServiceImpl;
+import com.example.webstore.service.category.CategoryServiceImpl;
+import com.example.webstore.service.good.GoodServiceImpl;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;

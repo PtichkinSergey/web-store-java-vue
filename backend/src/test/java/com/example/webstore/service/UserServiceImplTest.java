@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import com.example.webstore.model.Role;
 import com.example.webstore.model.User;
 import com.example.webstore.repository.UserRepository;
+import com.example.webstore.service.user.UserServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {

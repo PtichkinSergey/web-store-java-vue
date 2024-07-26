@@ -31,8 +31,8 @@ import com.example.webstore.model.Order;
 import com.example.webstore.model.OrderDetail;
 import com.example.webstore.model.Role;
 import com.example.webstore.model.User;
-import com.example.webstore.service.OrderServiceImpl;
 import com.example.webstore.requests.GoodQuantity;
+import com.example.webstore.service.order.OrderServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ExtendWith(MockitoExtension.class)

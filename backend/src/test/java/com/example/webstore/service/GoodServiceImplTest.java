@@ -14,6 +14,7 @@ import com.example.webstore.model.Category;
 import com.example.webstore.model.Good;
 import com.example.webstore.repository.CategoryRepository;
 import com.example.webstore.repository.GoodRepository;
+import com.example.webstore.service.good.GoodServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class GoodServiceImplTest {

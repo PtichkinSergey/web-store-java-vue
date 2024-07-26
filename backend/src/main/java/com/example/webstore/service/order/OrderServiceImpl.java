@@ -1,4 +1,4 @@
-package com.example.webstore.service;
+package com.example.webstore.service.order;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -21,6 +21,9 @@ import com.example.webstore.model.OrderDetail;
 import com.example.webstore.model.User;
 import com.example.webstore.repository.OrderRepository;
 import com.example.webstore.requests.GoodQuantity;
+import com.example.webstore.service.good.GoodServiceImpl;
+import com.example.webstore.service.mail.MailService;
+import com.example.webstore.service.user.UserServiceImpl;
 
 /**
  * Класс сервиса для работы с заказами. Внедряемые зависимости: 
@@ -51,12 +54,13 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order createOrderAndSendMail(List<GoodQuantity> goodQuantities) throws NotEnoughGoodException, GoodNotFoundException, UnauthorizedUserException, MailException{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(authentication);
 		if(authentication != null) {
 			User user = userService.getByEmail(authentication.getName());
             Order newOrder = new Order(user, new Date(System.currentTimeMillis()));
             StringBuilder message = new StringBuilder();
-            message.append("Ваш заказ от " + newOrder.getDate() + ": \n\n");
+            message.append("Ваш заказ от ");
+            message.append(newOrder.getDate());
+            message.append(": \n\n");
             int orderAmount = 0;
             Set<OrderDetail> orderDetails = newOrder.getOrderDetails();
             List<Good> updatedGoods = new ArrayList<>();
@@ -74,15 +78,25 @@ public class OrderServiceImpl implements OrderService {
                         good.get().setCount(goodCount - quantity);
                         updatedGoods.add(good.get());
                         orderDetails.add(new OrderDetail(newOrder, good.get(), quantity));
-                        message.append(good.get().getName() + ": " + quantity + " * " + cost);
+                        message.append(good.get().getName());
+                        message.append(": ");
+                        message.append(quantity);
+                        message.append(" * ");
+                        message.append(cost);
                         float discount = good.get().getDiscount();
                         if(discount > 0) {
-                            message.append("- " + (int)(discount * 100) + "% ");
-                            message.append(" = "  + Math.ceil(quantity * cost * (1 - discount)) + " руб.\n");
+                            message.append("- ");
+                            message.append((int)(discount * 100));
+                            message.append("% ");
+                            message.append(" = ");
+                            message.append(Math.ceil(quantity * cost * (1 - discount)));
+                            message.append(" руб.\n");
                             orderAmount += Math.ceil(quantity * cost * (1 - discount));
                         }
                         else {
-                            message.append(" = " + quantity * cost + " руб.\n");
+                            message.append(" = ");
+                            message.append(quantity * cost);
+                            message.append(" руб.\n");
                             orderAmount += quantity * cost;
                         }
                     }
@@ -94,16 +108,16 @@ public class OrderServiceImpl implements OrderService {
                     throw new GoodNotFoundException(String.format("Товар с id: %s не найден!", goodId));
                 }
             }
-            message.append("\nИтого: " + orderAmount + " руб.\n\n");
+            message.append("\nИтого: ");
+            message.append(orderAmount);
+            message.append(" руб.\n\n");
             message.append("Спасибо за то, что выбрали наш магазин!!!");
             newOrder.setOrderDetails(orderDetails);
             goodService.updateAll(updatedGoods);
             mailService.sendMail(authentication, message.toString());
-            System.out.println("NORM");
             return orderRepository.save(newOrder);
 		}
         else {
-            System.out.println("Ne norm");
             throw new UnauthorizedUserException("Пользователь не авторизован!");
         }
     }

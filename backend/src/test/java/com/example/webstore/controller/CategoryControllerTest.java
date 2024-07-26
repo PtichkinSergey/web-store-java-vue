@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.example.webstore.model.Category;
-import com.example.webstore.service.CategoryServiceImpl;
+import com.example.webstore.service.category.CategoryServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class CategoryControllerTest {

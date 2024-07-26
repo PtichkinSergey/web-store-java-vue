@@ -6,8 +6,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.webstore.model.User;
-import com.example.webstore.service.UserServiceImpl;
 import com.example.webstore.responses.FetchUserDataResponse;
+import com.example.webstore.service.user.UserServiceImpl;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;

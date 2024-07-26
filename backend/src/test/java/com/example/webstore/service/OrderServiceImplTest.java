@@ -27,6 +27,10 @@ import com.example.webstore.model.Role;
 import com.example.webstore.model.User;
 import com.example.webstore.repository.OrderRepository;
 import com.example.webstore.requests.GoodQuantity;
+import com.example.webstore.service.good.GoodServiceImpl;
+import com.example.webstore.service.mail.MailService;
+import com.example.webstore.service.order.OrderServiceImpl;
+import com.example.webstore.service.user.UserServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceImplTest {

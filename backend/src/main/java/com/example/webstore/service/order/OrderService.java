@@ -1,4 +1,4 @@
-package com.example.webstore.service;
+package com.example.webstore.service.order;
 
 import java.util.List;
 import java.util.Optional;

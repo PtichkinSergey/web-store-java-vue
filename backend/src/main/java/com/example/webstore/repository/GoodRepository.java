@@ -6,25 +6,21 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Repository;
 
 import com.example.webstore.model.Good;
 import com.example.webstore.model.Category;
 import java.util.Set;
 
-
+// Репозиторий для доступа к данным таблицы сущности товара
+@Repository
 public interface GoodRepository extends CrudRepository<Good, Integer>{
     @NonNull
-    @Query(value = "Select g from Good g where g.id = :id")
     public Optional<Good> findById(@NonNull Integer id);
 
     @NonNull
-    // @Query(value = 
-    //     "Insert into Good (name, cost, discount, count, manufacturer, description, image_path) " + 
-    //     "select :good.getName(), :good.getCost(), :good.getDiscount(), :good.getCount(), :good.getManufacturer(), :good.getDescription(), :good.getImagePath()"
-    // )
     public Good save(@NonNull Good good);
 
-    @Query(value = "Delete from Good g where g.id = :id")
     public void deleteById(@NonNull Integer id);
 
     @Query(value = "Select g from Good g Order By g.cost Desc")

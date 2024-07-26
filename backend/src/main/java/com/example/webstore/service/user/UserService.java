@@ -1,4 +1,4 @@
-package com.example.webstore.service;
+package com.example.webstore.service.user;
 
 import java.util.List;
 

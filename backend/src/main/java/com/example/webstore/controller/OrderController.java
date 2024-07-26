@@ -17,8 +17,8 @@ import com.example.webstore.exceptions.GoodNotFoundException;
 import com.example.webstore.exceptions.NotEnoughGoodException;
 import com.example.webstore.exceptions.UnauthorizedUserException;
 import com.example.webstore.model.Order;
-import com.example.webstore.service.OrderServiceImpl;
 import com.example.webstore.requests.GoodQuantity;
+import com.example.webstore.service.order.OrderServiceImpl;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -85,16 +85,22 @@ public class OrderController {
         try {
             return new ResponseEntity<>(orderService.createOrderAndSendMail(goodQuantities), HttpStatus.CREATED);
         } catch (NotEnoughGoodException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS);
         } catch (GoodNotFoundException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (UnauthorizedUserException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         } catch (MailSendException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
         } catch (MailAuthenticationException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         } catch (MailParseException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

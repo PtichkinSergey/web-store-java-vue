@@ -23,8 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.example.webstore.model.Category;
 import com.example.webstore.model.Good;
-import com.example.webstore.service.CategoryServiceImpl;
-import com.example.webstore.service.GoodServiceImpl;
+import com.example.webstore.service.category.CategoryServiceImpl;
+import com.example.webstore.service.good.GoodServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class GoodControllerTest {

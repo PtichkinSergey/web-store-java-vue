@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.example.webstore.model.Role;
 import com.example.webstore.model.User;
-import com.example.webstore.service.UserServiceImpl;
+import com.example.webstore.service.user.UserServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {

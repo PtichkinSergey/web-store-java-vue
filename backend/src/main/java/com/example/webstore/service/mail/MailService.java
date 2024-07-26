@@ -1,4 +1,4 @@
-package com.example.webstore.service;
+package com.example.webstore.service.mail;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
