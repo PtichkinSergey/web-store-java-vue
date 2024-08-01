@@ -1,4 +1,4 @@
-package com.example.webstore.service.authentication;
+package com.example.webstore.security.authentication;
 
 import java.util.Optional;
 
@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.webstore.responses.JwtAuthenticationResponse;
-import com.example.webstore.service.jwt.JWTService;
+import com.example.webstore.security.jwt.JWTService;
 import com.example.webstore.service.role.RoleServiceImpl;
 import com.example.webstore.service.user.UserServiceImpl;
 import com.example.webstore.requests.SignUpRequest;

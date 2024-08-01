@@ -61,12 +61,4 @@ public class Category {
     public void setParentId(Integer parentId) {
         this.parentId = parentId;
     }
-
-    public Set<Good> getGoods() {
-        return goods;
-    }
-
-    public void setGoods(Set<Good> goods) {
-        this.goods = goods;
-    }
 }

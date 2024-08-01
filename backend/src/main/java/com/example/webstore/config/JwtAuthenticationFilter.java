@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.example.webstore.model.User;
-import com.example.webstore.service.jwt.JWTService;
+import com.example.webstore.security.jwt.JWTService;
 import com.example.webstore.service.user.UserServiceImpl;
 
 

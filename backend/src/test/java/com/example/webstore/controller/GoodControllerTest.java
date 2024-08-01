@@ -21,9 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.example.webstore.model.Category;
 import com.example.webstore.model.Good;
-import com.example.webstore.service.category.CategoryServiceImpl;
 import com.example.webstore.service.good.GoodServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,8 +30,6 @@ class GoodControllerTest {
     private GoodController goodController;
     @Mock
     private GoodServiceImpl goodService;
-    @Mock 
-    private CategoryServiceImpl categoryService;
 
     private MockMvc mockMvc;
 
@@ -48,13 +44,10 @@ class GoodControllerTest {
         Good good2 = new Good("test2", 1000, 0, 10, "test", "test", "test");
         Good good3 = new Good("test3", 1000, 0, 4, "test", "test", "test");
         List<Good> goods = Arrays.asList(good1, good2, good3);
-        Category category1 = new Category("category1");
-        when(categoryService.findById(1)).thenReturn(Optional.of(category1));
         when(goodService.readByCategoryWithSort(1, "descending")).thenReturn(goods);
         mockMvc.perform(get("/api/goods").param("category", "1").param("sort", "descending"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$").exists());
-        verify(categoryService, times(1)).findById(Mockito.anyInt());
         verify(goodService, times(1)).readByCategoryWithSort(Mockito.anyInt(), Mockito.anyString());
     }
 

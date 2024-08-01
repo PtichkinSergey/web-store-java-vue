@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.webstore.responses.JwtAuthenticationResponse;
-import com.example.webstore.service.authentication.AuthenticationService;
+import com.example.webstore.security.authentication.AuthenticationService;
 import com.example.webstore.requests.SignInRequest;
 import com.example.webstore.requests.SignUpRequest;
 
