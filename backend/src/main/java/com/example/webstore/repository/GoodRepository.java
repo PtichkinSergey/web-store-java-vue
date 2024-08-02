@@ -24,14 +24,14 @@ public interface GoodRepository extends CrudRepository<Good, Integer>{
     public void deleteById(@NonNull Integer id);
 
     @Query(value = "Select g from Good g Order By g.cost Desc")
-    public List<Good> findAllDesc();
+    public Iterable<Good> findAllDesc();
 
     @Query(value = "Select g from Good g Order By g.cost Asc")
-    public List<Good> findAllAsc();
+    public Iterable<Good> findAllAsc();
 
     @Query(value = "Select g from Good g join g.categories c Where c in :categories Order By g.cost Desc")
-    public List<Good> findByCategoriesDesc(Set<Category> categories);
+    public Iterable<Good> findByCategoriesDesc(Set<Category> categories);
 
     @Query(value = "Select g from Good g join g.categories c Where c in :categories Order By g.cost Asc")
-    public List<Good> findByCategoriesAsc(Set<Category> categories);
+    public Iterable<Good> findByCategoriesAsc(Set<Category> categories);
 }

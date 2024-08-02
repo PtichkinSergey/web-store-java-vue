@@ -23,5 +23,5 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     public void deleteById(@NonNull Integer id);
 
     @NonNull
-    Optional<User> findByEmail(String email);
+    public Optional<User> findByEmail(String email);
 }

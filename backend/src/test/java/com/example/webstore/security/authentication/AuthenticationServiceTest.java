@@ -16,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.example.webstore.model.Role;
 import com.example.webstore.model.User;
 import com.example.webstore.responses.JwtAuthenticationResponse;
-import com.example.webstore.security.authentication.AuthenticationService;
 import com.example.webstore.security.jwt.JWTService;
 import com.example.webstore.service.role.RoleServiceImpl;
 import com.example.webstore.service.user.UserServiceImpl;

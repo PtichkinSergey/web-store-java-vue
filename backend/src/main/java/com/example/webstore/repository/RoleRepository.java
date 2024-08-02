@@ -23,5 +23,5 @@ public interface RoleRepository extends CrudRepository<Role, Integer>{
 
     public void deleteById(@NonNull Integer id);
     
-    Optional<Role> findByName(String name);
+    public Optional<Role> findByName(String name);
 }
