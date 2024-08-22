@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.example.webstore.exceptions.RoleNotFoundException;
 import com.example.webstore.model.Role;
 import com.example.webstore.model.User;
 import com.example.webstore.responses.JwtAuthenticationResponse;
@@ -38,7 +39,7 @@ class AuthenticationServiceTest {
     private AuthenticationManager authenticationManager;
 
     @Test 
-    void signUpTestOk() {
+    void signUpTestOk() throws RoleNotFoundException{
         SignUpRequest request = new SignUpRequest();
         request.setFirstName("test");
         request.setSecondName("test");
@@ -47,7 +48,7 @@ class AuthenticationServiceTest {
         Role role = new Role("USER");
         User user = new User(request.getFirstName(), request.getSecondName(), request.getEmail(), "1234", role);
         Mockito.when(userService.getByEmail(Mockito.anyString())).thenThrow(new UsernameNotFoundException(""));
-        Mockito.when(roleService.findByName("USER")).thenReturn(Optional.of(role));
+        Mockito.when(roleService.findByName("USER")).thenReturn(role);
         Mockito.when(jwtService.generateToken(Mockito.any(User.class))).thenAnswer(i -> i.getArgument(0).toString());
         Mockito.when(passwordEncoder.encode(Mockito.anyString())).thenAnswer(i -> i.getArgument(0));
         JwtAuthenticationResponse response = authenticationService.signUp(request);

@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,7 +53,7 @@ class GoodControllerTest {
     @Test
     void getGoodByIdTest() throws Exception{
         Good good1 = new Good("test1", 1000, 0, 22, "test", "test", "test");
-        when(goodService.findById(1)).thenReturn(Optional.of(good1));
+        when(goodService.findById(1)).thenReturn(good1);
         mockMvc.perform(get("/api/goods/{id}", 1))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.name").value(good1.getName()));

@@ -7,12 +7,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import java.sql.Date;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -76,7 +74,7 @@ class OrderControllerTest {
         Set<OrderDetail> orderDetails = order.getOrderDetails();
         orderDetails.add(new OrderDetail(order, good1, 1));
         order.setOrderDetails(orderDetails);
-        when(orderService.findById(1)).thenReturn(Optional.of(order));
+        when(orderService.findById(1)).thenReturn(order);
         mockMvc.perform(get("/api/orders/{id}", 1))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.user.username").value(user.getUsername()))

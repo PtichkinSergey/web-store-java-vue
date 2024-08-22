@@ -1,7 +1,6 @@
 package com.example.webstore.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.webstore.exceptions.GoodNotFoundException;
 import com.example.webstore.exceptions.NotEnoughGoodException;
+import com.example.webstore.exceptions.OrderNotFoundException;
 import com.example.webstore.exceptions.UnauthorizedUserException;
 import com.example.webstore.model.Order;
 import com.example.webstore.requests.GoodQuantity;
@@ -65,10 +65,10 @@ public class OrderController {
      */
     @GetMapping("/orders/{id}")
     public ResponseEntity<Order> getOrderById(@PathVariable("id") int id) {
-        Optional<Order> orderData = orderService.findById(id);
-        if (orderData.isPresent()) {
-            return new ResponseEntity<>(orderData.get(), HttpStatus.OK);
-        } else {
+        try {
+            Order order = orderService.findById(id);
+            return new ResponseEntity<>(order, HttpStatus.OK);
+        } catch (OrderNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

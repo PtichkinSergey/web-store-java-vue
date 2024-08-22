@@ -9,6 +9,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.webstore.exceptions.GoodNotFoundException;
 import com.example.webstore.exceptions.UnknownCategoryException;
 import com.example.webstore.model.Category;
 import com.example.webstore.model.Good;
@@ -73,8 +74,14 @@ public class GoodServiceImpl implements GoodService {
     }
 
     @Override
-    public Optional<Good> findById(int id) {
-        return goodRepository.findById(id);
+    public Good findById(int id) throws GoodNotFoundException{
+        Optional<Good> good = goodRepository.findById(id);
+        if (good.isPresent()) {
+            return good.get();
+        }
+        else {
+            throw new GoodNotFoundException(String.format("Товар с id: %s не найден!", id));
+        }
     }
 
     @Override

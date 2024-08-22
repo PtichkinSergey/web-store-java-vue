@@ -1,12 +1,12 @@
 package com.example.webstore.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.webstore.exceptions.UnknownCategoryException;
 import com.example.webstore.model.Category;
 import com.example.webstore.service.category.CategoryServiceImpl;
 
@@ -55,10 +55,10 @@ public class CategoryController {
      */
     @GetMapping("/categories/{id}")
     public ResponseEntity<Category> getCategoryById(@PathVariable("id") int id) {
-        Optional<Category> categoryData = categoryService.findById(id);
-        if (categoryData.isPresent()) {
-            return new ResponseEntity<>(categoryData.get(), HttpStatus.OK);
-        } else {
+        try {
+           Category category = categoryService.findById(id); 
+           return new ResponseEntity<>(category, HttpStatus.OK);
+        } catch (UnknownCategoryException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.webstore.responses.JwtAuthenticationResponse;
 import com.example.webstore.security.authentication.AuthenticationService;
+import com.example.webstore.exceptions.RoleNotFoundException;
 import com.example.webstore.requests.SignInRequest;
 import com.example.webstore.requests.SignUpRequest;
 
@@ -35,7 +36,11 @@ public class AuthController {
      */
     @PostMapping("/sign-up")
     public JwtAuthenticationResponse signUp(@RequestBody @Valid SignUpRequest request) {
-        return authenticationService.signUp(request);
+        try {
+            return authenticationService.signUp(request);
+        } catch (RoleNotFoundException e) {
+            return new JwtAuthenticationResponse(null, null, "Ошибка регистрации!");
+        }
     }
 
     /**

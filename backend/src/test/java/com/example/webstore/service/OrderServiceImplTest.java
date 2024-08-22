@@ -5,7 +5,6 @@ import static org.mockito.Mockito.when;
 import java.sql.Date;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -64,7 +63,7 @@ class OrderServiceImplTest {
     }
     
     @Test
-    void createTestOK() {
+    void createTestOK() throws GoodNotFoundException{
         GoodQuantity goodQuantity1 = new GoodQuantity(1, 15);
         GoodQuantity goodQuantity2 = new GoodQuantity(2, 10);
         GoodQuantity goodQuantity3 = new GoodQuantity(3, 3);
@@ -78,9 +77,9 @@ class OrderServiceImplTest {
 
         Mockito.when(orderRepository.save(Mockito.any(Order.class))).thenAnswer(i -> i.getArguments()[0]);
         Mockito.when(userService.getByEmail("test.test@test.test")).thenReturn(user);
-        Mockito.when(goodService.findById(1)).thenReturn(Optional.of(good1));
-        Mockito.when(goodService.findById(2)).thenReturn(Optional.of(good2));
-        Mockito.when(goodService.findById(3)).thenReturn(Optional.of(good3));  
+        Mockito.when(goodService.findById(1)).thenReturn(good1);
+        Mockito.when(goodService.findById(2)).thenReturn(good2);
+        Mockito.when(goodService.findById(3)).thenReturn(good3);  
         try {
             Order testOrder = orderService.createOrderAndSendMail(goodQuantities);
             Assertions.assertNotNull(testOrder);
@@ -102,13 +101,13 @@ class OrderServiceImplTest {
     }
 
     @Test
-    void createTestUnavailable() {
+    void createTestUnavailable() throws GoodNotFoundException{
         Good good1 = new Good("test1", 1000, 0, 2, "test", "test", "test");
         GoodQuantity goodQuantity1 = new GoodQuantity(1, 500);
         List<GoodQuantity> goodQuantities = Arrays.asList(goodQuantity1);
         User user = new User("Test", "Test", "fail.test@test.test", "12345", new Role("USER"));
         Mockito.when(userService.getByEmail("test.test@test.test")).thenReturn(user);
-        Mockito.when(goodService.findById(1)).thenReturn(Optional.of(good1));
+        Mockito.when(goodService.findById(1)).thenReturn(good1);
         Assertions.assertThrows(NotEnoughGoodException.class, () -> orderService.createOrderAndSendMail(goodQuantities));
     }
 }

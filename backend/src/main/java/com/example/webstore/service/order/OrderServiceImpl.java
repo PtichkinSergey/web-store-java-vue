@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.webstore.exceptions.GoodNotFoundException;
 import com.example.webstore.exceptions.NotEnoughGoodException;
+import com.example.webstore.exceptions.OrderNotFoundException;
 import com.example.webstore.exceptions.UnauthorizedUserException;
 import com.example.webstore.model.Good;
 import com.example.webstore.model.Order;
@@ -55,7 +56,8 @@ public class OrderServiceImpl implements OrderService {
     public Order createOrderAndSendMail(List<GoodQuantity> goodQuantities) throws NotEnoughGoodException, GoodNotFoundException, UnauthorizedUserException, MailException{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if(authentication != null) {
-			User user = userService.getByEmail(authentication.getName());
+            String emailBuyer = authentication.getName(); 
+            User user = userService.getByEmail(emailBuyer);
             Order newOrder = new Order(user, new Date(System.currentTimeMillis()));
             StringBuilder message = new StringBuilder();
             message.append("Ваш заказ от ");
@@ -66,47 +68,39 @@ public class OrderServiceImpl implements OrderService {
             List<Good> updatedGoods = new ArrayList<>();
             for (GoodQuantity goodQuantity : goodQuantities) {
                 int goodId = goodQuantity.getGoodId();
-                Optional<Good> good = goodService.findById(goodId);
-                if(good.isPresent()) {
-                    int goodCount = good.get().getCount();
-                    int quantity = goodQuantity.getQuantity();
-                    int cost = good.get().getCost();
-                    if(quantity < 1) {
-                        continue;
-                    }
-                    if(goodCount - quantity >= 0) {
-                        good.get().setCount(goodCount - quantity);
-                        updatedGoods.add(good.get());
-                        orderDetails.add(new OrderDetail(newOrder, good.get(), quantity));
-                        message.append(good.get().getName());
-                        message.append(": ");
-                        message.append(quantity);
-                        message.append(" * ");
-                        message.append(cost);
-                        float discount = good.get().getDiscount();
-                        if(discount > 0) {
-                            message.append("- ");
-                            message.append((int)(discount * 100));
-                            message.append("% ");
-                            message.append(" = ");
-                            message.append(Math.ceil(quantity * cost * (1 - discount)));
-                            message.append(" руб.\n");
-                            orderAmount += Math.ceil(quantity * cost * (1 - discount));
-                        }
-                        else {
-                            message.append(" = ");
-                            message.append(quantity * cost);
-                            message.append(" руб.\n");
-                            orderAmount += quantity * cost;
-                        }
+                Good good = goodService.findById(goodId);
+                int goodCount = good.getCount();
+                int quantity = goodQuantity.getQuantity();
+                int cost = good.getCost();
+                if(quantity < 1) {
+                    continue;
+                }
+                if(goodCount - quantity >= 0) {
+                    good.setCount(goodCount - quantity);
+                    updatedGoods.add(good);
+                    orderDetails.add(new OrderDetail(newOrder, good, quantity));
+                    message.append(good.getName()).append(": ").append(quantity).append(" * ").append(cost);
+                    float discount = good.getDiscount();
+                    if(discount > 0) {
+                        double orderPositionCost = Math.ceil(quantity * cost * (1 - discount));
+                        message.append("- ");
+                        message.append((int)(discount * 100));
+                        message.append("% ");
+                        message.append(" = ");
+                        message.append(orderPositionCost);
+                        message.append(" руб.\n");
+                        orderAmount += orderPositionCost;
                     }
                     else {
-                        throw new NotEnoughGoodException(String.format("Товара с id: %s недостаточно на складе для осуществления заказа!", goodId));
-                    }                    
+                        message.append(" = ");
+                        message.append(quantity * cost);
+                        message.append(" руб.\n");
+                        orderAmount += quantity * cost;
+                    }
                 }
                 else {
-                    throw new GoodNotFoundException(String.format("Товар с id: %s не найден!", goodId));
-                }
+                    throw new NotEnoughGoodException(String.format("Товара с id: %s недостаточно на складе для осуществления заказа!", goodId));
+                }                    
             }
             message.append("\nИтого: ");
             message.append(orderAmount);
@@ -114,7 +108,7 @@ public class OrderServiceImpl implements OrderService {
             message.append("Спасибо за то, что выбрали наш магазин!!!");
             newOrder.setOrderDetails(orderDetails);
             goodService.updateAll(updatedGoods);
-            mailService.sendMail(authentication, message.toString());
+            mailService.sendMail(emailBuyer, message.toString());
             return orderRepository.save(newOrder);
 		}
         else {
@@ -130,8 +124,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Optional<Order> findById(int id) {
-        return orderRepository.findById(id);
+    public Order findById(int id) throws OrderNotFoundException {
+        Optional<Order> order = orderRepository.findById(id);
+        if (order.isPresent()) {
+            return order.get();
+        }
+        else {
+            throw new OrderNotFoundException(String.format("Заказ с id: %s не найден!", id));
+        }
     }
 
     @Override

@@ -1,12 +1,12 @@
 package com.example.webstore.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.webstore.exceptions.GoodNotFoundException;
 import com.example.webstore.model.Good;
 import com.example.webstore.service.good.GoodServiceImpl;
 
@@ -49,10 +49,10 @@ public class GoodController {
     // Получение экземпляра конкретного товара
     @GetMapping("/goods/{id}")
     public ResponseEntity<Good> getGoodById(@PathVariable("id") int id) {
-        Optional<Good> goodData = goodService.findById(id);
-        if (goodData.isPresent()) {
-            return new ResponseEntity<>(goodData.get(), HttpStatus.OK);
-        } else {
+        try {
+            Good goodData = goodService.findById(id); 
+            return new ResponseEntity<>(goodData, HttpStatus.OK);
+        } catch (GoodNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

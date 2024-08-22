@@ -19,7 +19,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import com.example.webstore.model.Category;
 import com.example.webstore.service.category.CategoryServiceImpl;
@@ -39,7 +38,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    void getAllCategoriesTest() throws Exception{
+    void getAllCategoriesTest() throws Exception {
         Category category1 = new Category("category1");
         Category category2 = new Category("category2");
         Category category3 = new Category("category3");
@@ -53,9 +52,9 @@ class CategoryControllerTest {
     }
 
     @Test
-    void getCategoryByIdTest() throws Exception{
+    void getCategoryByIdTest() throws Exception {
         Category category1 = new Category("category1");
-        when(categoryService.findById(Mockito.anyInt())).thenReturn(Optional.of(category1));
+        when(categoryService.findById(Mockito.anyInt())).thenReturn(category1);
         mockMvc.perform(get("/api/categories/{id}", 1))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.name").value(category1.getName()));

@@ -28,10 +28,10 @@ public class MailService {
      * Метод отправки сообщения на почту пользователя, указанной при регистрации
      * Принимает токен аутентификации и текст сообщения
      */
-    public void sendMail(Authentication authentication, String message) throws MailException{
+    public void sendMail(String email, String message) throws MailException{
         final SimpleMailMessage simpleMail = new SimpleMailMessage();
         simpleMail.setFrom(addresser);
-        simpleMail.setTo(authentication.getName());
+        simpleMail.setTo(email);
         simpleMail.setSubject("Заказ в интернет магазине");
         simpleMail.setText(message);
         this.mailSender.send(simpleMail);

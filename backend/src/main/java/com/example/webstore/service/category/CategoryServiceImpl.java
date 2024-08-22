@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.webstore.exceptions.UnknownCategoryException;
 import com.example.webstore.model.Category;
 import com.example.webstore.repository.CategoryRepository;
 
@@ -38,8 +39,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Optional<Category> findById(int id) {
-        return categoryRepository.findById(id);
+    public Category findById(int id) throws UnknownCategoryException{
+        Optional<Category> category = categoryRepository.findById(id);
+        if (category.isPresent()) {
+            return category.get();
+        }
+        else {
+            throw new UnknownCategoryException("Категория товаров отсутствует!");
+        }
     }
 
     @Override

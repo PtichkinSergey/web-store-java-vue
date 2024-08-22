@@ -1,7 +1,5 @@
 package com.example.webstore.security.authentication;
 
-import java.util.Optional;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,6 +13,7 @@ import com.example.webstore.requests.SignUpRequest;
 
 import com.example.webstore.requests.SignInRequest;
 import com.example.webstore.model.User;
+import com.example.webstore.exceptions.RoleNotFoundException;
 import com.example.webstore.model.Role;
 
 /**
@@ -54,19 +53,17 @@ public class AuthenticationService {
      * @param request данные пользователя
      * @return токен
      */
-    public JwtAuthenticationResponse signUp(SignUpRequest request) {
-        Optional<Role> role = roleService.findByName("USER");
-        if (role.isPresent()) {
-            User user = new User(request.getFirstName(), request.getSecondName(), request.getEmail(), passwordEncoder.encode(request.getPassword()), role.get());
-            try {
-                if(userService.getByEmail(request.getEmail()) != null) {
-                    return new JwtAuthenticationResponse(null, null, "Пользователь с таким адресом уже существует!");
-                }
-            } catch (UsernameNotFoundException e) {
-                userService.create(user);
-                String jwt = jwtService.generateToken(user);
-                return new JwtAuthenticationResponse(jwt, user.getUsername(), null);
+    public JwtAuthenticationResponse signUp(SignUpRequest request) throws RoleNotFoundException{
+        Role role = roleService.findByName("USER");
+        User user = new User(request.getFirstName(), request.getSecondName(), request.getEmail(), passwordEncoder.encode(request.getPassword()), role);
+        try {
+            if(userService.getByEmail(request.getEmail()) != null) {
+                return new JwtAuthenticationResponse(null, null, "Пользователь с таким адресом уже существует!");
             }
+        } catch (UsernameNotFoundException e) {
+            userService.create(user);
+            String jwt = jwtService.generateToken(user);
+            return new JwtAuthenticationResponse(jwt, user.getUsername(), null);
         }
         return new JwtAuthenticationResponse(null, null, "Ошибка регистрации!");
     }

@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.webstore.exceptions.RoleNotFoundException;
 import com.example.webstore.model.Role;
 import com.example.webstore.repository.RoleRepository;
 
@@ -43,8 +44,14 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Optional<Role> findByName(String name) {
-        return roleRepository.findByName(name);
+    public Role findByName(String name) throws RoleNotFoundException {
+        Optional<Role> role = roleRepository.findByName(name);
+        if (role.isPresent()) {
+            return role.get();
+        }
+        else {
+            throw new RoleNotFoundException(String.format("Роль с именем %s не найдена!", name));
+        }
     }
     
 }
