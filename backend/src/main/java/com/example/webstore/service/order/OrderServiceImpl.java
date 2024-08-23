@@ -53,16 +53,14 @@ public class OrderServiceImpl implements OrderService {
      * Возвращает созданный объект заказа
      */
     @Override
-    public Order createOrderAndSendMail(List<GoodQuantity> goodQuantities) throws NotEnoughGoodException, GoodNotFoundException, UnauthorizedUserException, MailException{
+    public Order createOrderAndSendMail(List<GoodQuantity> goodQuantities) throws NotEnoughGoodException, GoodNotFoundException, UnauthorizedUserException, MailException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if(authentication != null) {
             String emailBuyer = authentication.getName(); 
             User user = userService.getByEmail(emailBuyer);
             Order newOrder = new Order(user, new Date(System.currentTimeMillis()));
             StringBuilder message = new StringBuilder();
-            message.append("Ваш заказ от ");
-            message.append(newOrder.getDate());
-            message.append(": \n\n");
+            message.append("Ваш заказ от ").append(newOrder.getDate()).append(": \n\n");
             int orderAmount = 0;
             Set<OrderDetail> orderDetails = newOrder.getOrderDetails();
             List<Good> updatedGoods = new ArrayList<>();
@@ -83,18 +81,11 @@ public class OrderServiceImpl implements OrderService {
                     float discount = good.getDiscount();
                     if(discount > 0) {
                         double orderPositionCost = Math.ceil(quantity * cost * (1 - discount));
-                        message.append("- ");
-                        message.append((int)(discount * 100));
-                        message.append("% ");
-                        message.append(" = ");
-                        message.append(orderPositionCost);
-                        message.append(" руб.\n");
+                        message.append("- ").append((int)(discount * 100)).append("% ").append(" = ").append(orderPositionCost).append(" руб.\n");
                         orderAmount += orderPositionCost;
                     }
                     else {
-                        message.append(" = ");
-                        message.append(quantity * cost);
-                        message.append(" руб.\n");
+                        message.append(" = ").append(quantity * cost).append(" руб.\n");
                         orderAmount += quantity * cost;
                     }
                 }
@@ -102,10 +93,7 @@ public class OrderServiceImpl implements OrderService {
                     throw new NotEnoughGoodException(String.format("Товара с id: %s недостаточно на складе для осуществления заказа!", goodId));
                 }                    
             }
-            message.append("\nИтого: ");
-            message.append(orderAmount);
-            message.append(" руб.\n\n");
-            message.append("Спасибо за то, что выбрали наш магазин!!!");
+            message.append("\nИтого: ").append(orderAmount).append(" руб.\n\n").append("Спасибо за то, что выбрали наш магазин!!!");
             newOrder.setOrderDetails(orderDetails);
             goodService.updateAll(updatedGoods);
             mailService.sendMail(emailBuyer, message.toString());

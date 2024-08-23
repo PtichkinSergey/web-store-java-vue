@@ -63,7 +63,7 @@ class OrderServiceImplTest {
     }
     
     @Test
-    void createTestOK() throws GoodNotFoundException{
+    void createTestOK() throws GoodNotFoundException {
         GoodQuantity goodQuantity1 = new GoodQuantity(1, 15);
         GoodQuantity goodQuantity2 = new GoodQuantity(2, 10);
         GoodQuantity goodQuantity3 = new GoodQuantity(3, 3);
@@ -92,16 +92,17 @@ class OrderServiceImplTest {
     }
 
     @Test
-    void createTestNotFound() {
+    void createTestNotFound() throws GoodNotFoundException {
         GoodQuantity goodQuantity1 = new GoodQuantity(1, 15);
         List<GoodQuantity> goodQuantities = Arrays.asList(goodQuantity1);
         User user = new User("Test", "Test", "fail.test@test.test", "12345", new Role("USER"));
         Mockito.when(userService.getByEmail("test.test@test.test")).thenReturn(user);
+        Mockito.when(goodService.findById(1)).thenThrow(GoodNotFoundException.class);
         Assertions.assertThrows(GoodNotFoundException.class, () -> orderService.createOrderAndSendMail(goodQuantities));
     }
 
     @Test
-    void createTestUnavailable() throws GoodNotFoundException{
+    void createTestUnavailable() throws GoodNotFoundException {
         Good good1 = new Good("test1", 1000, 0, 2, "test", "test", "test");
         GoodQuantity goodQuantity1 = new GoodQuantity(1, 500);
         List<GoodQuantity> goodQuantities = Arrays.asList(goodQuantity1);
