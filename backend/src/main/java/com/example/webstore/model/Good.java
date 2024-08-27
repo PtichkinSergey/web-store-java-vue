@@ -8,6 +8,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.data.annotation.Version;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -144,13 +147,4 @@ public class Good {
     public Set<Category> setCategories(Set<Category> categories) {
         return this.categories = categories;
     }
-
-    // public Set<Comment> getComments() {
-    //     return this.comments;
-    // }
-
-    // public void setComments(Set<Comment> comments) {
-    //     this.comments = comments;
-    // }
-    
 }

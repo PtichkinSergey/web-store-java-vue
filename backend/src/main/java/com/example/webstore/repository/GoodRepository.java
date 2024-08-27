@@ -2,6 +2,7 @@ package com.example.webstore.repository;
 
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.lang.NonNull;
@@ -19,6 +20,9 @@ public interface GoodRepository extends CrudRepository<Good, Integer>{
 
     @NonNull
     public Good save(@NonNull Good good);
+
+    @NonNull
+    public <T extends Good> Iterable<T> saveAll(@NonNull Iterable<T> entities);
 
     public void deleteById(@NonNull Integer id);
 

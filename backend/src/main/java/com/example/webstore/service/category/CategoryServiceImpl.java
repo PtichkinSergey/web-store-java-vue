@@ -39,12 +39,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category findById(int id) throws UnknownCategoryException{
+    public Category findById(int id) {
         Optional<Category> category = categoryRepository.findById(id);
         if (category.isPresent()) {
             return category.get();
-        }
-        else {
+        } else {
             throw new UnknownCategoryException("Категория товаров отсутствует!");
         }
     }

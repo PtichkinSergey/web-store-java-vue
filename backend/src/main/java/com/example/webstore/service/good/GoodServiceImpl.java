@@ -78,8 +78,7 @@ public class GoodServiceImpl implements GoodService {
         Optional<Good> good = goodRepository.findById(id);
         if (good.isPresent()) {
             return good.get();
-        }
-        else {
+        } else {
             throw new GoodNotFoundException(String.format("Товар с id: %s не найден!", id));
         }
     }
@@ -111,22 +110,18 @@ public class GoodServiceImpl implements GoodService {
             Optional<Category> ctg = categoryRepository.findById(ctgId);
             if(ctg.isPresent()) {
                 categories.add(ctg.get());
-            }
-            else {
+            } else {
                 throw new UnknownCategoryException("Категория товаров отсутствует!");
             }
             if(sort.equals("descending")) {
                 goodRepository.findByCategoriesDesc(categories).forEach(goodList::add);
-            }
-            else {
+            } else {
                 goodRepository.findByCategoriesAsc(categories).forEach(goodList::add);
             }
-        }
-        else {
+        } else {
             if(sort.equals("descending")) {
                 goodList = readAllOrderByCostDesc();
-            }
-            else {
+            } else {
                 goodList = readAllOrderByCostAsc();
             }
         }

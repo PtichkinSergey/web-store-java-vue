@@ -7,12 +7,11 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.MailException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.example.webstore.exceptions.GoodNotFoundException;
 import com.example.webstore.exceptions.NotEnoughGoodException;
 import com.example.webstore.exceptions.OrderNotFoundException;
 import com.example.webstore.exceptions.UnauthorizedUserException;
@@ -53,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
      * Возвращает созданный объект заказа
      */
     @Override
-    public Order createOrderAndSendMail(List<GoodQuantity> goodQuantities) throws NotEnoughGoodException, GoodNotFoundException, UnauthorizedUserException, MailException {
+    public Order createOrderAndSendMail(List<GoodQuantity> goodQuantities) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if(authentication != null) {
             String emailBuyer = authentication.getName(); 
@@ -83,13 +82,11 @@ public class OrderServiceImpl implements OrderService {
                         double orderPositionCost = Math.ceil(quantity * cost * (1 - discount));
                         message.append("- ").append((int)(discount * 100)).append("% ").append(" = ").append(orderPositionCost).append(" руб.\n");
                         orderAmount += orderPositionCost;
-                    }
-                    else {
+                    } else {
                         message.append(" = ").append(quantity * cost).append(" руб.\n");
                         orderAmount += quantity * cost;
                     }
-                }
-                else {
+                } else {
                     throw new NotEnoughGoodException(String.format("Товара с id: %s недостаточно на складе для осуществления заказа!", goodId));
                 }                    
             }
@@ -98,8 +95,7 @@ public class OrderServiceImpl implements OrderService {
             goodService.updateAll(updatedGoods);
             mailService.sendMail(emailBuyer, message.toString());
             return orderRepository.save(newOrder);
-		}
-        else {
+		} else {
             throw new UnauthorizedUserException("Пользователь не авторизован!");
         }
     }
@@ -112,12 +108,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order findById(int id) throws OrderNotFoundException {
+    public Order findById(int id) {
         Optional<Order> order = orderRepository.findById(id);
         if (order.isPresent()) {
             return order.get();
-        }
-        else {
+        } else {
             throw new OrderNotFoundException(String.format("Заказ с id: %s не найден!", id));
         }
     }

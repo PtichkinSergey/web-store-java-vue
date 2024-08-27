@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -67,8 +68,16 @@ public class SecurityConfig {
                 return corsConfiguration;
             }))
             .authorizeRequests( auth -> auth
-                    .antMatchers("/api/auth_user", "/api/order-create").authenticated()
-                    .anyRequest().permitAll()
+                    .antMatchers(HttpMethod.POST, "/api/sign-in", "/api/sign-up").permitAll()
+                    .antMatchers(HttpMethod.PUT, "/api/{goodId}/category/{ctgId}").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/categories", 
+                        "/api/categories/{id}",
+                        "/api/goods",
+                        "/api/goods/{id}",
+                        "/api/orders",
+                        "/api/orders/{id}"
+                    ).permitAll()
+                    .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)

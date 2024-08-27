@@ -48,8 +48,7 @@ public class RoleServiceImpl implements RoleService {
         Optional<Role> role = roleRepository.findByName(name);
         if (role.isPresent()) {
             return role.get();
-        }
-        else {
+        } else {
             throw new RoleNotFoundException(String.format("Роль с именем %s не найдена!", name));
         }
     }

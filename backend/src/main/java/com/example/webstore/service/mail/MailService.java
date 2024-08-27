@@ -2,6 +2,7 @@ package com.example.webstore.service.mail;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
  * mailSender - объект для отправки почты
  */
 @Service
+@PropertySource("classpath:/application.properties")
 public class MailService {
     private final MailSender mailSender;
     @Value("${spring.mail.username}")
