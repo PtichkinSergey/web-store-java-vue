@@ -39,9 +39,9 @@ class GoodControllerTest {
 
     @Test
     void getAllGoodsTest() throws Exception{
-        Good good1 = new Good("test1", 1000, 0, 22, "test", "test", "test");
-        Good good2 = new Good("test2", 1000, 0, 10, "test", "test", "test");
-        Good good3 = new Good("test3", 1000, 0, 4, "test", "test", "test");
+        Good good1 = new Good("test1", 1000, 0, 22, "test", "test", "test", 0);
+        Good good2 = new Good("test2", 1000, 0, 10, "test", "test", "test", 0);
+        Good good3 = new Good("test3", 1000, 0, 4, "test", "test", "test", 0);
         List<Good> goods = Arrays.asList(good1, good2, good3);
         when(goodService.readByCategoryWithSort(1, "descending")).thenReturn(goods);
         mockMvc.perform(get("/api/goods").param("category", "1").param("sort", "descending"))
@@ -52,7 +52,7 @@ class GoodControllerTest {
 
     @Test
     void getGoodByIdTest() throws Exception{
-        Good good1 = new Good("test1", 1000, 0, 22, "test", "test", "test");
+        Good good1 = new Good("test1", 1000, 0, 22, "test", "test", "test", 0);
         when(goodService.findById(1)).thenReturn(good1);
         mockMvc.perform(get("/api/goods/{id}", 1))
         .andExpect(status().isOk())

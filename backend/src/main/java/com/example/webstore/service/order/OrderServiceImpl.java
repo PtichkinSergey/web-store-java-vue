@@ -1,6 +1,8 @@
 package com.example.webstore.service.order;
 
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,15 +53,18 @@ public class OrderServiceImpl implements OrderService {
      * Метод создания заказа из сущностей GoodQuantity, содержащих id товара и их количество
      * Возвращает созданный объект заказа
      */
+    @Transactional
     @Override
     public Order createOrderAndSendMail(List<GoodQuantity> goodQuantities) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if(authentication != null) {
             String emailBuyer = authentication.getName(); 
             User user = userService.getByEmail(emailBuyer);
-            Order newOrder = new Order(user, new Date(System.currentTimeMillis()));
+            Order newOrder = new Order(user, new Timestamp(System.currentTimeMillis()));
+            String pattern = "dd.MM.yyyy HH:mm";
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
             StringBuilder message = new StringBuilder();
-            message.append("Ваш заказ от ").append(newOrder.getDate()).append(": \n\n");
+            message.append("Ваш заказ от ").append(dateFormatter.format(newOrder.getTimestamp().toLocalDateTime())).append(": \n\n");
             int orderAmount = 0;
             Set<OrderDetail> orderDetails = newOrder.getOrderDetails();
             List<Good> updatedGoods = new ArrayList<>();

@@ -27,7 +27,7 @@ class GoodServiceImplTest {
     
     @Test
     void assignGoodToCategory() {
-        Good good1 = new Good("Iphone", 150000, 0, 11, "Apple", "description", "PathToImg");
+        Good good1 = new Good("Iphone", 150000, 0, 11, "Apple", "description", "PathToImg", 0);
         Category category1 = new Category("Smartphone");
         Mockito.when(goodRepository.findById(1)).thenReturn(Optional.of(good1));
         Mockito.when(categoryRepository.findById(1)).thenReturn(Optional.of(category1));

@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,13 +32,13 @@ class OrderRepositoryTest {
     private RoleRepository roleRepository;
 
     private User testUser;
-    private Date now;
+    private Timestamp now;
 
     @BeforeEach
     void initDB() {
         roleRepository.save(new Role("USER"));
         testUser = userRepository.save(new User("Test", "Test", "test.test@test.test", "12345", roleRepository.findByName("USER").get()));
-        now = new Date(System.currentTimeMillis());
+        now = new Timestamp(System.currentTimeMillis());
     }
 
     @AfterEach

@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -53,8 +53,8 @@ class OrderControllerTest {
     @Test
     void getAllOrdersTest() throws Exception{
         User user = new User("user", "user", "test.test@test.test", "12345", new Role("USER"));
-        Order order = new Order(user, new Date(System.currentTimeMillis()));
-        Good good1 = new Good("test1", 1000, 0, 22, "test", "test", "test");
+        Order order = new Order(user, new Timestamp(System.currentTimeMillis()));
+        Good good1 = new Good("test1", 1000, 0, 22, "test", "test", "test", 0);
         Set<OrderDetail> orderDetails = order.getOrderDetails();
         orderDetails.add(new OrderDetail(order, good1, 1));
         order.setOrderDetails(orderDetails);
@@ -69,8 +69,8 @@ class OrderControllerTest {
     @Test
     void getOrderByIdTest() throws Exception{
         User user = new User("user", "user", "test.test@test.test", "12345", new Role("USER"));
-        Order order = new Order(user, new Date(System.currentTimeMillis()));
-        Good good1 = new Good("test1", 1000, 0, 22, "test", "test", "test");
+        Order order = new Order(user, new Timestamp(System.currentTimeMillis()));
+        Good good1 = new Good("test1", 1000, 0, 22, "test", "test", "test", 0);
         Set<OrderDetail> orderDetails = order.getOrderDetails();
         orderDetails.add(new OrderDetail(order, good1, 1));
         order.setOrderDetails(orderDetails);
@@ -78,7 +78,7 @@ class OrderControllerTest {
         mockMvc.perform(get("/api/orders/{id}", 1))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.user.username").value(user.getUsername()))
-        .andExpect(jsonPath("$.date").exists())
+        .andExpect(jsonPath("$.timestamp").exists())
         .andExpect(jsonPath("$.orderDetails").exists());
         verify(orderService, times(1)).findById(Mockito.anyInt());
     }
@@ -88,14 +88,14 @@ class OrderControllerTest {
         GoodQuantity goodQuantity1 = new GoodQuantity(1, 1);
         GoodQuantity goodQuantity2 = new GoodQuantity(2, 2);
         GoodQuantity goodQuantity3 = new GoodQuantity(3, 3);
-        Good good1 = new Good("test1", 1000, 0, 22, "test", "test", "test");
-        Good good2 = new Good("test2", 1000, 0, 10, "test", "test", "test");
-        Good good3 = new Good("test3", 1000, 0, 4, "test", "test", "test");
+        Good good1 = new Good("test1", 1000, 0, 22, "test", "test", "test", 0);
+        Good good2 = new Good("test2", 1000, 0, 10, "test", "test", "test", 0);
+        Good good3 = new Good("test3", 1000, 0, 4, "test", "test", "test", 0);
         List<GoodQuantity> goodQuantities = Arrays.asList(goodQuantity1, goodQuantity2, goodQuantity3);
         String goodsJson = objectMapper.writeValueAsString(goodQuantities);
 
         User user = new User("user", "user", "test.test@test.test", "12345", new Role("USER"));
-        Order order = new Order(user, new Date(System.currentTimeMillis()));
+        Order order = new Order(user, new Timestamp(System.currentTimeMillis()));
         Set<OrderDetail> orderDetails = order.getOrderDetails();
         orderDetails.add(new OrderDetail(order, good1, 1));
         orderDetails.add(new OrderDetail(order, good2, 2));
@@ -107,7 +107,7 @@ class OrderControllerTest {
         .content(goodsJson))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.user.username").value(user.getUsername()))
-        .andExpect(jsonPath("$.date").exists())
+        .andExpect(jsonPath("$.timestamp").exists())
         .andExpect(jsonPath("$.orderDetails").exists());
     }
     

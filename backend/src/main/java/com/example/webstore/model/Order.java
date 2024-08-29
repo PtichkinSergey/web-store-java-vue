@@ -1,6 +1,6 @@
 package com.example.webstore.model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,14 +31,15 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private Date date;
+    @JoinColumn(name = "timestamp")
+    private Timestamp timestamp;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private Set<OrderDetail> orderDetails = new HashSet<>();
 
-    public Order(User user, Date date) {
+    public Order(User user, Timestamp timestamp) {
         this.user = user;
-        this.date = date;
+        this.timestamp = timestamp;
     }
 
     public Order() {
@@ -56,12 +57,12 @@ public class Order {
         this.user = user;
     }
 
-    public Date getDate() {
-        return date;
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
     }
 
     public Set<OrderDetail> getOrderDetails() {

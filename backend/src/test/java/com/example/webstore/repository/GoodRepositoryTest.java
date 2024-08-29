@@ -28,23 +28,23 @@ class GoodRepositoryTest {
 
     @Test
     void saveTest() {
-        Good good1 = goodRepository.save(new Good("Iphone", 150000, 0, 11, "Apple", "description", "PathToImg"));
+        Good good1 = goodRepository.save(new Good("Iphone", 150000, 0, 11, "Apple", "description", "PathToImg", 0));
         assertTrue(good1.getId() > 0);
         goodRepository.deleteById(good1.getId());
     }
 
     @Test
     void findByIdTest() {
-        Good good1 = goodRepository.save(new Good("Iphone", 150000, 0, 11, "Apple", "description", "PathToImg"));
+        Good good1 = goodRepository.save(new Good("Iphone", 150000, 0, 11, "Apple", "description", "PathToImg", 0));
         assertEquals(good1.getId(), goodRepository.findById(good1.getId()).get().getId());
         goodRepository.deleteById(good1.getId());
     }
 
     @Test
     void findAllDescTest() {
-        goodRepository.save(new Good("test1", 100, 0, 11, "Apple", "description", "PathToImg"));
-        goodRepository.save(new Good("test2", 10000, 0, 11, "Apple", "description", "PathToImg"));
-        goodRepository.save(new Good("test3", 1000, 0, 11, "Apple", "description", "PathToImg"));
+        goodRepository.save(new Good("test1", 100, 0, 11, "Apple", "description", "PathToImg", 0));
+        goodRepository.save(new Good("test2", 10000, 0, 11, "Apple", "description", "PathToImg", 0));
+        goodRepository.save(new Good("test3", 1000, 0, 11, "Apple", "description", "PathToImg", 0));
         List<Good> goodList = new ArrayList<>();
         goodRepository.findAllDesc().forEach(goodList::add);
         assertEquals(3, goodList.size());
@@ -57,9 +57,9 @@ class GoodRepositoryTest {
 
     @Test
     void findAllAscTest() {
-        goodRepository.save(new Good("test", 100, 0, 11, "Apple", "description", "PathToImg"));
-        goodRepository.save(new Good("test", 10000, 0, 11, "Apple", "description", "PathToImg"));
-        goodRepository.save(new Good("test", 1000, 0, 11, "Apple", "description", "PathToImg"));
+        goodRepository.save(new Good("test", 100, 0, 11, "Apple", "description", "PathToImg", 0));
+        goodRepository.save(new Good("test", 10000, 0, 11, "Apple", "description", "PathToImg", 0));
+        goodRepository.save(new Good("test", 1000, 0, 11, "Apple", "description", "PathToImg", 0));
         List<Good> goodList = new ArrayList<>();
         goodRepository.findAllAsc().forEach(goodList::add);
         assertEquals(3, goodList.size());
@@ -72,7 +72,7 @@ class GoodRepositoryTest {
 
     @Test
     void deleteByIdTest() {
-        Good good1 = goodRepository.save(new Good("Iphone", 150000, 0, 11, "Apple", "description", "PathToImg"));
+        Good good1 = goodRepository.save(new Good("Iphone", 150000, 0, 11, "Apple", "description", "PathToImg", 0));
         goodRepository.deleteById(good1.getId());
         assertFalse(goodRepository.findById(good1.getId()).isPresent());
     }

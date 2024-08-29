@@ -3,6 +3,7 @@ package com.example.webstore.service;
 import static org.mockito.Mockito.when;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
@@ -68,9 +69,9 @@ class OrderServiceImplTest {
         GoodQuantity goodQuantity2 = new GoodQuantity(2, 10);
         GoodQuantity goodQuantity3 = new GoodQuantity(3, 3);
 
-        Good good1 = new Good("test1", 1000, 0, 22, "test", "test", "test");
-        Good good2 = new Good("test2", 1000, 0, 10, "test", "test", "test");
-        Good good3 = new Good("test3", 1000, 0, 4, "test", "test", "test");
+        Good good1 = new Good("test1", 1000, 0, 22, "test", "test", "test", 0);
+        Good good2 = new Good("test2", 1000, 0, 10, "test", "test", "test", 0);
+        Good good3 = new Good("test3", 1000, 0, 4, "test", "test", "test", 0);
 
         User user = new User("Test", "Test", "test.test@test.test", "12345", new Role("USER"));
         List<GoodQuantity> goodQuantities = Arrays.asList(goodQuantity3, goodQuantity2, goodQuantity1);
@@ -84,7 +85,7 @@ class OrderServiceImplTest {
             Order testOrder = orderService.createOrderAndSendMail(goodQuantities);
             Assertions.assertNotNull(testOrder);
             Assertions.assertEquals(user, testOrder.getUser());
-            Assertions.assertEquals(new Date(System.currentTimeMillis()).toString(), testOrder.getDate().toString());
+            Assertions.assertEquals(System.currentTimeMillis()/1000, testOrder.getTimestamp().getTime()/1000);
             Assertions.assertEquals(3, testOrder.getOrderDetails().size());
         } catch (Exception e) {
             
@@ -103,7 +104,7 @@ class OrderServiceImplTest {
 
     @Test
     void createTestUnavailable() throws GoodNotFoundException {
-        Good good1 = new Good("test1", 1000, 0, 2, "test", "test", "test");
+        Good good1 = new Good("test1", 1000, 0, 2, "test", "test", "test", 0);
         GoodQuantity goodQuantity1 = new GoodQuantity(1, 500);
         List<GoodQuantity> goodQuantities = Arrays.asList(goodQuantity1);
         User user = new User("Test", "Test", "fail.test@test.test", "12345", new Role("USER"));

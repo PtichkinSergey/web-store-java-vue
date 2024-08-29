@@ -7,9 +7,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
-
-import org.springframework.data.annotation.Version;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -52,6 +51,10 @@ public class Good {
     @Column(name = "image_path", length = 255)
     private String imagePath;
 
+    @Version
+    @Column(name = "version")
+    private int version;
+
     @ManyToMany(cascade = {
         CascadeType.ALL
     })
@@ -66,7 +69,7 @@ public class Good {
     )
     private Set<Category> categories = new HashSet<>();
 
-    public Good(String name, int cost, float discount, int count, String manufacturer, String description, String imagePath) {
+    public Good(String name, int cost, float discount, int count, String manufacturer, String description, String imagePath, int version) {
         this.name = name;
         this.cost = cost;
         this.discount = discount;
@@ -74,6 +77,7 @@ public class Good {
         this.manufacturer = manufacturer;
         this.description = description;
         this.imagePath = imagePath;
+        this.version = version;
     }
 
     public Good() {
@@ -138,6 +142,14 @@ public class Good {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public Set<Category> getCategories() {

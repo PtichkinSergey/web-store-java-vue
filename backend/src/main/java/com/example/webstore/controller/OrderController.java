@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailAuthenticationException;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class OrderController {
     private final OrderServiceImpl orderService;
 
+    @Autowired
     public OrderController(OrderServiceImpl orderService) {
         this.orderService = orderService;
     }

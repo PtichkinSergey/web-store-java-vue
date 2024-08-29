@@ -2,6 +2,7 @@ package com.example.webstore.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -30,6 +31,7 @@ public class OrderDetail implements Serializable{
     private Good good; 
 
     @NotNull
+    @Column(name = "quantity")
     private int quantity;
 
     public OrderDetail(Order order, Good good, int quantity) {
